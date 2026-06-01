@@ -1,0 +1,22 @@
+{
+  "unversionedId": "intro",
+  "id": "intro",
+  "title": "Introduction",
+  "description": "Welcome to AI-Native UI Runtime. This documentation describes the universal AST protocol, runtime architecture, and roadmap for AI-generated interfaces.",
+  "source": "@site/docs/intro.md",
+  "sourceDirName": ".",
+  "slug": "/intro",
+  "permalink": "/intro",
+  "draft": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "intro",
+    "title": "Introduction"
+  },
+  "sidebar": "docs",
+  "next": {
+    "title": "Architectural Design",
+    "permalink": "/architecture"
+  }
+}

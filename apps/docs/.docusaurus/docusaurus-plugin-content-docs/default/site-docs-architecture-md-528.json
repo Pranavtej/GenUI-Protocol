@@ -1,0 +1,26 @@
+{
+  "unversionedId": "architecture",
+  "id": "architecture",
+  "title": "Architectural Design",
+  "description": "This document details the design specifications, reactive model, and pipeline layers for the Generative UI Protocol (GUIP) reference runtime.",
+  "source": "@site/docs/architecture.md",
+  "sourceDirName": ".",
+  "slug": "/architecture",
+  "permalink": "/architecture",
+  "draft": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "architecture",
+    "title": "Architectural Design"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Introduction",
+    "permalink": "/intro"
+  },
+  "next": {
+    "title": "Protocol Specification",
+    "permalink": "/protocol"
+  }
+}

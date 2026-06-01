@@ -1,0 +1,29 @@
+{
+    "extends": "../../tsconfig.base.json",
+    "compilerOptions": {
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+        "outDir": "dist",
+        "rootDir": "src",
+        "types": [
+            "node"
+        ]
+    },
+    "include": [
+        "src/**/*.ts"
+    ],
+    "references": [
+        {
+            "path": "../../packages/ast"
+        },
+        {
+            "path": "../../packages/component-registry"
+        },
+        {
+            "path": "../../packages/protocol"
+        },
+        {
+            "path": "../../packages/validation"
+        }
+    ]
+}

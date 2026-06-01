@@ -1,0 +1,22 @@
+{
+    "name": "@ainative-ui/validation",
+    "version": "0.1.0",
+    "private": false,
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "build": "tsc -p tsconfig.json",
+        "lint": "echo 'No lint configured'",
+        "test": "echo 'No tests yet'"
+    },
+    "dependencies": {
+        "zod": "^3.23.0",
+        "ajv": "^8.20.0",
+        "@ainative-ui/ast": "workspace:0.1.0",
+        "@ainative-ui/schemas": "workspace:0.1.0",
+        "@ainative-ui/component-registry": "workspace:0.1.0"
+    },
+    "devDependencies": {
+        "typescript": "^5.5.4"
+    }
+}

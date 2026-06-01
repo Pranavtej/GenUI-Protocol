@@ -1,0 +1,22 @@
+{
+  "unversionedId": "roadmap",
+  "id": "roadmap",
+  "title": "Roadmap",
+  "description": "- Phase 1: AST, runtime core, React renderer, MCP server",
+  "source": "@site/docs/roadmap.md",
+  "sourceDirName": ".",
+  "slug": "/roadmap",
+  "permalink": "/roadmap",
+  "draft": false,
+  "tags": [],
+  "version": "current",
+  "frontMatter": {
+    "id": "roadmap",
+    "title": "Roadmap"
+  },
+  "sidebar": "docs",
+  "previous": {
+    "title": "Protocol Specification",
+    "permalink": "/protocol"
+  }
+}

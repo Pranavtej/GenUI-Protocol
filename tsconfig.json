@@ -1,0 +1,75 @@
+{
+    "extends": "./tsconfig.base.json",
+    "files": [],
+    "references": [
+        {
+            "path": "packages/ast"
+        },
+        {
+            "path": "packages/schemas"
+        },
+        {
+            "path": "packages/protocol"
+        },
+        {
+            "path": "packages/runtime-core"
+        },
+        {
+            "path": "packages/component-registry"
+        },
+        {
+            "path": "packages/state-engine"
+        },
+        {
+            "path": "packages/event-engine"
+        },
+        {
+            "path": "packages/stream-engine"
+        },
+        {
+            "path": "packages/theme-engine"
+        },
+        {
+            "path": "packages/validation"
+        },
+        {
+            "path": "packages/components-core"
+        },
+        {
+            "path": "packages/components-charts"
+        },
+        {
+            "path": "packages/components-data"
+        },
+        {
+            "path": "packages/components-forms"
+        },
+        {
+            "path": "packages/components-workflows"
+        },
+        {
+            "path": "packages/sdk-js"
+        },
+        {
+            "path": "packages/renderer-react"
+        },
+        {
+            "path": "packages/renderer-angular"
+        },
+        {
+            "path": "packages/renderer-vue"
+        },
+        {
+            "path": "packages/renderer-svelte"
+        },
+        {
+            "path": "packages/renderer-react-native"
+        },
+        {
+            "path": "packages/renderer-swiftui"
+        },
+        {
+            "path": "packages/renderer-flutter"
+        }
+    ]
+}

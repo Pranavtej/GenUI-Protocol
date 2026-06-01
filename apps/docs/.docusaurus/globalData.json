@@ -1,0 +1,48 @@
+{
+  "docusaurus-plugin-content-docs": {
+    "default": {
+      "path": "/",
+      "versions": [
+        {
+          "name": "current",
+          "label": "Next",
+          "isLast": true,
+          "path": "/",
+          "mainDocId": "intro",
+          "docs": [
+            {
+              "id": "architecture",
+              "path": "/architecture",
+              "sidebar": "docs"
+            },
+            {
+              "id": "intro",
+              "path": "/intro",
+              "sidebar": "docs"
+            },
+            {
+              "id": "protocol",
+              "path": "/protocol",
+              "sidebar": "docs"
+            },
+            {
+              "id": "roadmap",
+              "path": "/roadmap",
+              "sidebar": "docs"
+            }
+          ],
+          "draftIds": [],
+          "sidebars": {
+            "docs": {
+              "link": {
+                "path": "/intro",
+                "label": "intro"
+              }
+            }
+          }
+        }
+      ],
+      "breadcrumbs": true
+    }
+  }
+}

@@ -1,0 +1,29 @@
+name: CI
+
+on:
+    push:
+        branches: [main]
+    pull_request:
+        branches: [main]
+
+jobs:
+    build:
+        runs-on: macos-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: pnpm/action-setup@v2
+              with:
+                  version: 8
+            - run: pnpm install
+            - run: pnpm build
+
+    lint:
+        needs: build
+        runs-on: macos-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: pnpm/action-setup@v2
+              with:
+                  version: 8
+            - run: pnpm install
+            - run: pnpm lint

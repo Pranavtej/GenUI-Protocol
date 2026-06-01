@@ -1,0 +1,17 @@
+[project]
+name = "ai_native_ui_sdk"
+version = "0.1.0"
+description = "Python SDK for AI-Native UI Runtime"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+authors = [
+  { name = "AI-Native UI Runtime" }
+]
+
+[tool.poetry.dependencies]
+python = ">=3.11"
+
+[build-system]
+requires = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
