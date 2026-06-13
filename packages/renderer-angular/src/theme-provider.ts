@@ -1,0 +1,129 @@
+import { InjectionToken, Provider, APP_INITIALIZER } from '@angular/core';
+
+/**
+ * GUIP Theme CSS Content - injected at runtime
+ * This allows the renderer package to be completely self-contained
+ */
+const GUIP_DEFAULT_THEME_CSS = `
+:root {
+  --background: 240 10% 3.9%;
+  --foreground: 0 0% 98%;
+  --card: 240 10% 3.9%;
+  --card-foreground: 0 0% 98%;
+  --popover: 240 10% 3.9%;
+  --popover-foreground: 0 0% 98%;
+  --primary: 0 0% 98%;
+  --primary-foreground: 240 5.9% 10%;
+  --secondary: 240 3.7% 15.9%;
+  --secondary-foreground: 0 0% 98%;
+  --muted: 240 3.7% 15.9%;
+  --muted-foreground: 240 5% 64.9%;
+  --accent: 240 3.7% 15.9%;
+  --accent-foreground: 0 0% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 240 3.7% 15.9%;
+  --input: 240 3.7% 15.9%;
+  --ring: 240 4.9% 83.9%;
+  --radius: 0.5rem;
+}
+
+:root.light, .light, [data-theme="light"] {
+  --background: 0 0% 100%;
+  --foreground: 240 10% 3.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 240 10% 3.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 240 10% 3.9%;
+  --primary: 240 5.9% 10%;
+  --primary-foreground: 0 0% 98%;
+  --secondary: 240 4.8% 95.9%;
+  --secondary-foreground: 240 5.9% 10%;
+  --muted: 240 4.8% 95.9%;
+  --muted-foreground: 240 3.8% 46.1%;
+  --accent: 240 4.8% 95.9%;
+  --accent-foreground: 240 5.9% 10%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 240 5.9% 90%;
+  --input: 240 5.9% 90%;
+  --ring: 240 5.9% 10%;
+}
+
+.bg-background { background-color: hsl(var(--background) / 1); }
+.bg-card { background-color: hsl(var(--card) / 1); }
+.bg-muted { background-color: hsl(var(--muted) / 1); }
+.bg-primary { background-color: hsl(var(--primary) / 1); }
+.bg-secondary { background-color: hsl(var(--secondary) / 1); }
+.bg-destructive { background-color: hsl(var(--destructive) / 1); }
+.text-foreground { color: hsl(var(--foreground) / 1); }
+.text-card-foreground { color: hsl(var(--card-foreground) / 1); }
+.text-muted-foreground { color: hsl(var(--muted-foreground) / 1); }
+.text-primary { color: hsl(var(--primary) / 1); }
+.text-primary-foreground { color: hsl(var(--primary-foreground) / 1); }
+.text-secondary-foreground { color: hsl(var(--secondary-foreground) / 1); }
+.text-destructive { color: hsl(var(--destructive) / 1); }
+.text-destructive-foreground { color: hsl(var(--destructive-foreground) / 1); }
+.border { border: 1px solid hsl(var(--border) / 1); }
+.border-input { border-color: hsl(var(--input) / 1); }
+.border-b { border-bottom: 1px solid hsl(var(--border) / 1); }
+.border-l { border-left: 1px solid hsl(var(--border) / 1); }
+.border-destructive { border-color: hsl(var(--destructive) / 1); }
+.ring-offset-background { --tw-ring-offset-color: hsl(var(--background) / 1); }
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+}
+* { box-sizing: border-box; }
+button { font-family: inherit; }
+input, select, textarea { font-family: inherit; }
+`;
+
+const GUIP_THEME_TOKEN = new InjectionToken<string>('guip.theme.css');
+
+/**
+ * Injects GUIP default theme CSS into the document head
+ * This is called automatically when the renderer is initialized
+ */
+function initializeGuipTheme(themeCss: string): void {
+  if (typeof document === 'undefined') return; // SSR safety
+
+  // Check if theme is already injected
+  const existingStyle = document.getElementById('guip-theme-styles');
+  if (existingStyle) return;
+
+  // Create and inject style element
+  const style = document.createElement('style');
+  style.id = 'guip-theme-styles';
+  style.textContent = themeCss;
+  document.head.insertBefore(style, document.head.firstChild);
+}
+
+/**
+ * Provider factory: injects GUIP theme at app initialization
+ * Use this in your bootstrapApplication or AppConfig
+ */
+export function provideGuipTheme(customThemeCss?: string): Provider[] {
+  const themeCss = customThemeCss || GUIP_DEFAULT_THEME_CSS;
+
+  return [
+    { provide: GUIP_THEME_TOKEN, useValue: themeCss },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (themeCss: string) => () => initializeGuipTheme(themeCss),
+      deps: [GUIP_THEME_TOKEN],
+      multi: true
+    }
+  ];
+}
+
+/**
+ * Export for custom theme creation
+ */
+export { GUIP_DEFAULT_THEME_CSS, GUIP_THEME_TOKEN };

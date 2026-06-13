@@ -14,15 +14,7 @@
         "resolveJsonModule": true,
         "isolatedModules": false,
         "jsx": "preserve",
-        "baseUrl": ".",
-        "paths": {
-            "@ainative-ui/*": [
-                "packages/*/src"
-            ],
-            "@ainative-ui": [
-                "packages/*/src"
-            ]
-        }
+        "baseUrl": "."
     },
     "include": [
         "packages/**/*",

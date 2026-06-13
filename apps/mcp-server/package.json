@@ -5,7 +5,8 @@
     "type": "module",
     "main": "dist/index.js",
     "scripts": {
-        "dev": "ts-node src/index.ts",
+        "predev": "pnpm --filter @ainative-ui/ast build && pnpm --filter @ainative-ui/component-registry build && pnpm --filter @ainative-ui/protocol build && pnpm --filter @ainative-ui/validation build",
+        "dev": "node --enable-source-maps dist/index.js",
         "build": "tsc -p tsconfig.json",
         "lint": "echo 'No lint configured'",
         "test": "echo 'No tests yet'"

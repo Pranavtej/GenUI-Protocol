@@ -2,8 +2,8 @@
     "name": "@ainative-ui/stream-engine",
     "version": "0.1.0",
     "private": false,
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts",
+    "main": "dist/src/index.js",
+    "types": "dist/src/index.d.ts",
     "scripts": {
         "build": "tsc -p tsconfig.json",
         "lint": "echo 'No lint configured'",
@@ -14,5 +14,6 @@
     },
     "devDependencies": {
         "typescript": "^5.5.4"
-    }
+    },
+    "type": "module"
 }

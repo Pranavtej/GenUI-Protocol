@@ -13,3 +13,4 @@ packages/*/dist
 apps/*/dist
 .apps/**
 **/*.local
+*.tsbuildinfo

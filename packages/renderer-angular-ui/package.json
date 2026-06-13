@@ -1,0 +1,38 @@
+{
+  "name": "@ainative-ui/renderer-angular-ui",
+  "version": "0.1.0",
+  "private": false,
+  "description": "Headless, CDK-based UI components for GUIP renderers",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json && mkdir -p dist/theme && cp src/theme/default.css dist/theme/default.css",
+    "lint": "echo 'No lint configured'",
+    "test": "echo 'No tests yet'"
+  },
+  "peerDependencies": {
+    "@angular/cdk": "^18.0.0 || ^19.0.0",
+    "@angular/common": "^18.0.0 || ^19.0.0",
+    "@angular/core": "^18.0.0 || ^19.0.0",
+    "@angular/forms": "^18.0.0 || ^19.0.0"
+  },
+  "dependencies": {
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.4"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./theme": "./dist/theme/default.css"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "type": "module"
+}
