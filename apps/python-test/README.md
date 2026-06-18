@@ -1,0 +1,87 @@
+# FlowAI SaaS Agent
+
+A Python AI agent with **vector RAG knowledge base** that answers questions about FlowAI (a fictional SaaS company) and generates UI ASTs via MCP tools.
+
+## Architecture
+
+```
+User / Angular Test App
+    │
+    │  POST /chat/stream (SSE)
+    ▼
+┌──────────────────────────────┐
+│     FlowAI SaaS Agent         │
+│  - Vector RAG (.md files)     │
+│  - LLM (OpenAI / Anthropic)   │
+│  - MCP Tool Integration       │
+└──────┬───────────────────────┘
+       │ MCP tool calls (HTTP)
+       ▼
+┌──────────────────────────────┐
+│     GenUI MCP Server          │
+│  (Component Registry, AST)    │
+└──────────────────────────────┘
+```
+
+## Quick Start
+
+```bash
+# Install
+pip install -e ".[dev,server]"
+
+# Configure
+cp env.example .env
+# Edit .env with your API keys
+
+# Start the MCP server (in another terminal)
+cd apps/mcp-server && pnpm dev
+
+# Launch the FlowAI chat
+genui flow
+
+# Or start the API server (for test-app)
+genui serve
+```
+
+## Commands
+
+| Command | Description |
+|---------|-------------|
+| `genui flow` | Interactive chat with FlowAI SaaS agent |
+| `genui serve` | Start API server for frontend (default SaaS mode) |
+| `genui serve --mode genui` | Start API server in AST generator mode |
+| `genui chat` | Original GenUI AST generator chat |
+| `genui generate <prompt>` | Generate AST from prompt |
+
+## Knowledge Base
+
+The agent uses vector embeddings from `.md` files in `data/`:
+
+- `company-overview.md` — Company background and metrics
+- `sales-management.md` — Sales features and analytics
+- `lead-management.md` — Lead tracking and scoring
+- `crm-data.md` — CRM data, pipeline, revenue by region
+- `pricing.md` — Pricing plans and tiers
+- `faq.md` — Frequently asked questions
+
+## Streaming API
+
+The `/chat/stream` endpoint returns SSE events:
+
+```
+data: {"type": "text", "content": "Here are your Q2 metrics..."}
+data: {"type": "tool_call", "name": "generate_ast", "args": {...}}
+data: {"type": "tool_result", "name": "generate_ast", "content": "..."}
+data: {"type": "ast", "content": {"t": "kpi", ...}}
+data: {"type": "done"}
+```
+
+## API Endpoints
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/chat` | POST | Non-streaming chat |
+| `/chat/stream` | POST | SSE streaming chat |
+| `/health` | GET | Health check |
+| `/history/{thread_id}` | GET | Get messages |
+| `/history/{thread_id}` | DELETE | Reset thread |

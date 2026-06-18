@@ -12,7 +12,7 @@
     ],
     "references": [
         {
-            "path": "../../packages/ast"
+            "path": "../../packages/core/ast"
         }
     ]
 }

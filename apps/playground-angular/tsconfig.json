@@ -24,10 +24,12 @@
         "../../node_modules/tslib"
       ],
       "@ainative-ui/*": [
-        "../../packages/*/src"
-      ],
-      "@ainative-ui": [
-        "../../packages/*/src"
+        "../../packages/core/*/src",
+        "../../packages/runtime/*/src",
+        "../../packages/components/*/src",
+        "../../packages/renderers/*/src",
+        "../../packages/sdk/*/src",
+        "../../packages/tooling/*/src"
       ]
     }
   },

@@ -2,74 +2,30 @@
     "extends": "./tsconfig.base.json",
     "files": [],
     "references": [
-        {
-            "path": "packages/ast"
-        },
-        {
-            "path": "packages/schemas"
-        },
-        {
-            "path": "packages/protocol"
-        },
-        {
-            "path": "packages/runtime-core"
-        },
-        {
-            "path": "packages/component-registry"
-        },
-        {
-            "path": "packages/state-engine"
-        },
-        {
-            "path": "packages/event-engine"
-        },
-        {
-            "path": "packages/stream-engine"
-        },
-        {
-            "path": "packages/theme-engine"
-        },
-        {
-            "path": "packages/validation"
-        },
-        {
-            "path": "packages/components-core"
-        },
-        {
-            "path": "packages/components-charts"
-        },
-        {
-            "path": "packages/components-data"
-        },
-        {
-            "path": "packages/components-forms"
-        },
-        {
-            "path": "packages/components-workflows"
-        },
-        {
-            "path": "packages/sdk-js"
-        },
-        {
-            "path": "packages/renderer-react"
-        },
-        {
-            "path": "packages/renderer-angular"
-        },
-        {
-            "path": "packages/renderer-vue"
-        },
-        {
-            "path": "packages/renderer-svelte"
-        },
-        {
-            "path": "packages/renderer-react-native"
-        },
-        {
-            "path": "packages/renderer-swiftui"
-        },
-        {
-            "path": "packages/renderer-flutter"
-        }
+        { "path": "packages/core/ast" },
+        { "path": "packages/core/protocol" },
+        { "path": "packages/core/schemas" },
+        { "path": "packages/runtime/runtime-core" },
+        { "path": "packages/runtime/state-engine" },
+        { "path": "packages/runtime/event-engine" },
+        { "path": "packages/runtime/stream-engine" },
+        { "path": "packages/runtime/validation" },
+        { "path": "packages/components/component-registry" },
+        { "path": "packages/components/core" },
+        { "path": "packages/components/charts" },
+        { "path": "packages/components/data" },
+        { "path": "packages/components/forms" },
+        { "path": "packages/components/workflows" },
+        { "path": "packages/renderers/react" },
+        { "path": "packages/renderers/vue" },
+        { "path": "packages/renderers/svelte" },
+        { "path": "packages/renderers/react-native" },
+        { "path": "packages/renderers/swiftui" },
+        { "path": "packages/renderers/flutter" },
+        { "path": "packages/renderers/angular" },
+        { "path": "packages/renderers/angular-ui" },
+        { "path": "packages/sdk/js" },
+        { "path": "packages/tooling/testing" },
+        { "path": "packages/tooling/theme-engine" }
     ]
 }

@@ -7,7 +7,12 @@
     "packageManager": "pnpm@8.14.0",
     "workspaces": [
         "apps/*",
-        "packages/*"
+        "packages/core/*",
+        "packages/runtime/*",
+        "packages/components/*",
+        "packages/renderers/*",
+        "packages/sdk/*",
+        "packages/tooling/*"
     ],
     "devDependencies": {
         "@types/node": "^20.14.0",
@@ -30,6 +35,6 @@
         "dev:all": "turbo run dev",
         "lint": "turbo run lint",
         "test": "turbo run test",
-        "clean": "rimraf node_modules .turbo dist apps/*/dist packages/*/dist"
+        "clean": "rimraf node_modules .turbo dist apps/*/dist packages/core/*/dist packages/runtime/*/dist packages/components/*/dist packages/renderers/*/dist packages/sdk/*/dist packages/tooling/*/dist"
     }
 }
