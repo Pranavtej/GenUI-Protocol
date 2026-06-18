@@ -2,8 +2,8 @@
 module.exports = {
   content: [
     "./src/**/*.{html,ts}",
-    "../../packages/renderer-angular-ui/src/**/*.{html,ts}",
-    "../../packages/renderer-angular/src/**/*.{html,ts}",
+    "../../packages/renderers/angular-ui/src/**/*.{html,ts}",
+    "../../packages/renderers/angular/src/**/*.{html,ts}",
   ],
   theme: {
     extend: {},

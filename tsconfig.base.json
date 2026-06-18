@@ -19,5 +19,11 @@
     "include": [
         "packages/**/*",
         "apps/**/*"
+    ],
+    "exclude": [
+        "node_modules",
+        "**/dist",
+        "**/build",
+        "**/*.tsbuildinfo"
     ]
 }

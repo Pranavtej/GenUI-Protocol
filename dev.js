@@ -11,16 +11,16 @@ const APPS = {
     label: "Test App (Angular + SSE stream)",
     dir: "apps/test-app",
     deps: [
-      "packages/ast",
-      "packages/protocol",
-      "packages/runtime-core",
-      "packages/event-engine",
-      "packages/state-engine",
-      "packages/stream-engine",
-      "packages/validation",
-      "packages/component-registry",
-      "packages/renderer-angular-ui",
-      "packages/renderer-angular",
+      "packages/core/ast",
+      "packages/core/protocol",
+      "packages/runtime/runtime-core",
+      "packages/runtime/event-engine",
+      "packages/runtime/state-engine",
+      "packages/runtime/stream-engine",
+      "packages/runtime/validation",
+      "packages/components/component-registry",
+      "packages/renderers/angular-ui",
+      "packages/renderers/angular",
     ],
     cmd: "node node_modules/@angular/cli/bin/ng.js serve --open",
   },
@@ -28,23 +28,23 @@ const APPS = {
     label: "Playground Angular (AST Editor + Canvas)",
     dir: "apps/playground-angular",
     deps: [
-      "packages/ast",
-      "packages/protocol",
-      "packages/runtime-core",
-      "packages/event-engine",
-      "packages/state-engine",
-      "packages/stream-engine",
-      "packages/validation",
-      "packages/component-registry",
-      "packages/renderer-angular-ui",
-      "packages/renderer-angular",
+      "packages/core/ast",
+      "packages/core/protocol",
+      "packages/runtime/runtime-core",
+      "packages/runtime/event-engine",
+      "packages/runtime/state-engine",
+      "packages/runtime/stream-engine",
+      "packages/runtime/validation",
+      "packages/components/component-registry",
+      "packages/renderers/angular-ui",
+      "packages/renderers/angular",
     ],
     cmd: "node node_modules/@angular/cli/bin/ng.js serve --open",
   },
   "playground": {
     label: "Playground React (Vite + React)",
     dir: "apps/playground",
-    deps: ["packages/ast", "packages/protocol", "packages/runtime-core"],
+    deps: ["packages/core/ast", "packages/core/protocol", "packages/runtime/runtime-core"],
     cmd: "npx vite",
   },
   "docs": {
@@ -63,10 +63,10 @@ const APPS = {
     label: "MCP Server (Node.js)",
     dir: "apps/mcp-server",
     deps: [
-      "packages/ast",
-      "packages/protocol",
-      "packages/validation",
-      "packages/component-registry",
+      "packages/core/ast",
+      "packages/core/protocol",
+      "packages/runtime/validation",
+      "packages/components/component-registry",
     ],
     cmd: "node --enable-source-maps dist/index.js",
   },
@@ -153,11 +153,11 @@ async function main() {
     return;
   }
 
-  // Ensure dist of renderer-angular-ui has theme CSS
-  const uiDistTheme = path.join(ROOT, "packages/renderer-angular-ui/dist/theme/default.css");
+  // Ensure dist of angular-ui has theme CSS
+  const uiDistTheme = path.join(ROOT, "packages/renderers/angular-ui/dist/theme/default.css");
   const fs = require("fs");
   if (!fs.existsSync(uiDistTheme)) {
-    const uiSrcTheme = path.join(ROOT, "packages/renderer-angular-ui/src/theme/default.css");
+    const uiSrcTheme = path.join(ROOT, "packages/renderers/angular-ui/src/theme/default.css");
     if (fs.existsSync(uiSrcTheme)) {
       fs.mkdirSync(path.dirname(uiDistTheme), { recursive: true });
       fs.copyFileSync(uiSrcTheme, uiDistTheme);

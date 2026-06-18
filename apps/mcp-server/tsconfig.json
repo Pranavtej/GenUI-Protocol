@@ -14,16 +14,16 @@
     ],
     "references": [
         {
-            "path": "../../packages/ast"
+            "path": "../../packages/core/ast"
         },
         {
-            "path": "../../packages/component-registry"
+            "path": "../../packages/components/component-registry"
         },
         {
-            "path": "../../packages/protocol"
+            "path": "../../packages/core/protocol"
         },
         {
-            "path": "../../packages/validation"
+            "path": "../../packages/runtime/validation"
         }
     ]
 }

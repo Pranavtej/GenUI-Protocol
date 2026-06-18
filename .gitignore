@@ -10,6 +10,12 @@ coverage/
 .env*
 *.log
 packages/*/dist
+packages/core/*/dist
+packages/runtime/*/dist
+packages/components/*/dist
+packages/renderers/*/dist
+packages/sdk/*/dist
+packages/tooling/*/dist
 apps/*/dist
 .apps/**
 **/*.local

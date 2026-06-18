@@ -1,0 +1,52 @@
+{
+  "name": "@ainative-ui/renderer-react",
+  "version": "0.1.0",
+  "private": false,
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "lint": "echo 'No lint configured'",
+    "test": "echo 'No tests yet'"
+  },
+  "dependencies": {
+    "@ainative-ui/runtime-core": "workspace:0.1.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.4"
+  },
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/org/genui-protocol.git"
+  },
+  "bugs": {
+    "url": "https://github.com/org/genui-protocol/issues"
+  },
+  "homepage": "https://genui-protocol.dev",
+  "sideEffects": false,
+  "description": "GenUI Protocol \u2014 Renderer React",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/src/index.js",
+      "types": "./dist/src/index.d.ts"
+    }
+  },
+  "keywords": [
+    "genui",
+    "ai-native",
+    "ui",
+    "renderer-react"
+  ]
+}

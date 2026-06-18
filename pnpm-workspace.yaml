@@ -1,3 +1,8 @@
 packages:
   - "apps/*"
-  - "packages/*"
+  - "packages/core/*"
+  - "packages/runtime/*"
+  - "packages/components/*"
+  - "packages/renderers/*"
+  - "packages/sdk/*"
+  - "packages/tooling/*"
