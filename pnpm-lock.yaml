@@ -70,16 +70,16 @@ importers:
     dependencies:
       '@ainative-ui/ast':
         specifier: workspace:0.1.0
-        version: link:../../packages/ast
+        version: link:../../packages/core/ast
       '@ainative-ui/component-registry':
         specifier: workspace:0.1.0
-        version: link:../../packages/component-registry
+        version: link:../../packages/components/component-registry
       '@ainative-ui/protocol':
         specifier: workspace:0.1.0
-        version: link:../../packages/protocol
+        version: link:../../packages/core/protocol
       '@ainative-ui/validation':
         specifier: workspace:0.1.0
-        version: link:../../packages/validation
+        version: link:../../packages/runtime/validation
       '@modelcontextprotocol/sdk':
         specifier: ^1.29.0
         version: 1.29.0(zod@3.25.76)
@@ -116,7 +116,7 @@ importers:
     dependencies:
       '@ainative-ui/ast':
         specifier: workspace:0.1.0
-        version: link:../../packages/ast
+        version: link:../../packages/core/ast
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -144,28 +144,28 @@ importers:
     dependencies:
       '@ainative-ui/ast':
         specifier: workspace:0.1.0
-        version: link:../../packages/ast
+        version: link:../../packages/core/ast
       '@ainative-ui/component-registry':
         specifier: workspace:0.1.0
-        version: link:../../packages/component-registry
+        version: link:../../packages/components/component-registry
       '@ainative-ui/event-engine':
         specifier: workspace:0.1.0
-        version: link:../../packages/event-engine
+        version: link:../../packages/runtime/event-engine
       '@ainative-ui/renderer-angular':
         specifier: workspace:0.1.0
-        version: link:../../packages/renderer-angular
+        version: link:../../packages/renderers/angular
       '@ainative-ui/runtime-core':
         specifier: workspace:0.1.0
-        version: link:../../packages/runtime-core
+        version: link:../../packages/runtime/runtime-core
       '@ainative-ui/state-engine':
         specifier: workspace:0.1.0
-        version: link:../../packages/state-engine
+        version: link:../../packages/runtime/state-engine
       '@ainative-ui/stream-engine':
         specifier: workspace:0.1.0
-        version: link:../../packages/stream-engine
+        version: link:../../packages/runtime/stream-engine
       '@ainative-ui/validation':
         specifier: workspace:0.1.0
-        version: link:../../packages/validation
+        version: link:../../packages/runtime/validation
       '@angular/cdk':
         specifier: ^19.2.0
         version: 19.2.19(@angular/common@19.2.24)(@angular/core@19.2.24)(rxjs@7.8.2)
@@ -272,28 +272,28 @@ importers:
     dependencies:
       '@ainative-ui/ast':
         specifier: workspace:0.1.0
-        version: link:../../packages/ast
+        version: link:../../packages/core/ast
       '@ainative-ui/component-registry':
         specifier: workspace:0.1.0
-        version: link:../../packages/component-registry
+        version: link:../../packages/components/component-registry
       '@ainative-ui/event-engine':
         specifier: workspace:0.1.0
-        version: link:../../packages/event-engine
+        version: link:../../packages/runtime/event-engine
       '@ainative-ui/renderer-angular':
         specifier: workspace:0.1.0
-        version: link:../../packages/renderer-angular
+        version: link:../../packages/renderers/angular
       '@ainative-ui/runtime-core':
         specifier: workspace:0.1.0
-        version: link:../../packages/runtime-core
+        version: link:../../packages/runtime/runtime-core
       '@ainative-ui/state-engine':
         specifier: workspace:0.1.0
-        version: link:../../packages/state-engine
+        version: link:../../packages/runtime/state-engine
       '@ainative-ui/stream-engine':
         specifier: workspace:0.1.0
-        version: link:../../packages/stream-engine
+        version: link:../../packages/runtime/stream-engine
       '@ainative-ui/validation':
         specifier: workspace:0.1.0
-        version: link:../../packages/validation
+        version: link:../../packages/runtime/validation
       '@angular/cdk':
         specifier: ^19.2.0
         version: 19.2.19(@angular/common@19.2.24)(@angular/core@19.2.24)(rxjs@7.8.2)
@@ -371,23 +371,79 @@ importers:
         specifier: ~5.7.2
         version: 5.7.3
 
-  packages/ast:
+  packages/components/charts:
+    dependencies:
+      '@ainative-ui/ast':
+        specifier: workspace:0.1.0
+        version: link:../../core/ast
     devDependencies:
       typescript:
         specifier: ^5.5.4
-        version: 5.9.3
+        version: 5.7.3
 
-  packages/component-registry:
+  packages/components/component-registry:
     dependencies:
       '@ainative-ui/schemas':
         specifier: workspace:0.1.0
-        version: link:../schemas
+        version: link:../../core/schemas
     devDependencies:
       typescript:
         specifier: ^5.5.4
-        version: 5.9.3
+        version: 5.7.3
 
-  packages/components-charts:
+  packages/components/core:
+    dependencies:
+      '@ainative-ui/ast':
+        specifier: workspace:0.1.0
+        version: link:../../core/ast
+    devDependencies:
+      typescript:
+        specifier: ^5.5.4
+        version: 5.7.3
+
+  packages/components/data:
+    dependencies:
+      '@ainative-ui/ast':
+        specifier: workspace:0.1.0
+        version: link:../../core/ast
+    devDependencies:
+      typescript:
+        specifier: ^5.5.4
+        version: 5.7.3
+
+  packages/components/forms:
+    dependencies:
+      '@ainative-ui/ast':
+        specifier: workspace:0.1.0
+        version: link:../../core/ast
+    devDependencies:
+      typescript:
+        specifier: ^5.5.4
+        version: 5.7.3
+
+  packages/components/workflows:
+    dependencies:
+      '@ainative-ui/ast':
+        specifier: workspace:0.1.0
+        version: link:../../core/ast
+    devDependencies:
+      typescript:
+        specifier: ^5.5.4
+        version: 5.7.3
+
+  packages/core/ast:
+    devDependencies:
+      typescript:
+        specifier: ^5.5.4
+        version: 5.7.3
+
+  packages/core/protocol:
+    devDependencies:
+      typescript:
+        specifier: ^5.5.4
+        version: 5.7.3
+
+  packages/core/schemas:
     dependencies:
       '@ainative-ui/ast':
         specifier: workspace:0.1.0
@@ -395,74 +451,22 @@ importers:
     devDependencies:
       typescript:
         specifier: ^5.5.4
-        version: 5.9.3
+        version: 5.7.3
 
-  packages/components-core:
-    dependencies:
-      '@ainative-ui/ast':
-        specifier: workspace:0.1.0
-        version: link:../ast
-    devDependencies:
-      typescript:
-        specifier: ^5.5.4
-        version: 5.9.3
-
-  packages/components-data:
-    dependencies:
-      '@ainative-ui/ast':
-        specifier: workspace:0.1.0
-        version: link:../ast
-    devDependencies:
-      typescript:
-        specifier: ^5.5.4
-        version: 5.9.3
-
-  packages/components-forms:
-    dependencies:
-      '@ainative-ui/ast':
-        specifier: workspace:0.1.0
-        version: link:../ast
-    devDependencies:
-      typescript:
-        specifier: ^5.5.4
-        version: 5.9.3
-
-  packages/components-workflows:
-    dependencies:
-      '@ainative-ui/ast':
-        specifier: workspace:0.1.0
-        version: link:../ast
-    devDependencies:
-      typescript:
-        specifier: ^5.5.4
-        version: 5.9.3
-
-  packages/event-engine:
-    devDependencies:
-      typescript:
-        specifier: ^5.5.4
-        version: 5.9.3
-
-  packages/protocol:
-    devDependencies:
-      typescript:
-        specifier: ^5.5.4
-        version: 5.9.3
-
-  packages/renderer-angular:
+  packages/renderers/angular:
     dependencies:
       '@ainative-ui/event-engine':
         specifier: workspace:0.1.0
-        version: link:../event-engine
+        version: link:../../runtime/event-engine
       '@ainative-ui/renderer-angular-ui':
         specifier: workspace:0.1.0
-        version: link:../renderer-angular-ui
+        version: link:../angular-ui
       '@ainative-ui/runtime-core':
         specifier: workspace:0.1.0
-        version: link:../runtime-core
+        version: link:../../runtime/runtime-core
       '@ainative-ui/state-engine':
         specifier: workspace:0.1.0
-        version: link:../state-engine
+        version: link:../../runtime/state-engine
       '@angular/cdk':
         specifier: ^18.0.0 || ^19.0.0
         version: 19.2.19(@angular/common@19.2.24)(@angular/core@19.2.24)(rxjs@7.8.2)
@@ -481,9 +485,9 @@ importers:
     devDependencies:
       typescript:
         specifier: ^5.5.4
-        version: 5.9.3
+        version: 5.7.3
 
-  packages/renderer-angular-ui:
+  packages/renderers/angular-ui:
     dependencies:
       '@angular/cdk':
         specifier: ^18.0.0 || ^19.0.0
@@ -508,141 +512,112 @@ importers:
         specifier: ^5.5.4
         version: 5.7.3
 
-  packages/renderer-flutter:
+  packages/renderers/flutter:
     dependencies:
       '@ainative-ui/runtime-core':
         specifier: workspace:0.1.0
-        version: link:../runtime-core
+        version: link:../../runtime/runtime-core
     devDependencies:
       typescript:
         specifier: ^5.5.4
-        version: 5.9.3
+        version: 5.7.3
 
-  packages/renderer-react:
+  packages/renderers/react:
     dependencies:
       '@ainative-ui/runtime-core':
         specifier: workspace:0.1.0
-        version: link:../runtime-core
+        version: link:../../runtime/runtime-core
     devDependencies:
       typescript:
         specifier: ^5.5.4
-        version: 5.9.3
+        version: 5.7.3
 
-  packages/renderer-react-native:
+  packages/renderers/react-native:
     dependencies:
       '@ainative-ui/runtime-core':
         specifier: workspace:0.1.0
-        version: link:../runtime-core
+        version: link:../../runtime/runtime-core
     devDependencies:
       typescript:
         specifier: ^5.5.4
-        version: 5.9.3
+        version: 5.7.3
 
-  packages/renderer-svelte:
+  packages/renderers/svelte:
     dependencies:
       '@ainative-ui/runtime-core':
         specifier: workspace:0.1.0
-        version: link:../runtime-core
+        version: link:../../runtime/runtime-core
     devDependencies:
       typescript:
         specifier: ^5.5.4
-        version: 5.9.3
+        version: 5.7.3
 
-  packages/renderer-swiftui:
+  packages/renderers/swiftui:
     dependencies:
       '@ainative-ui/runtime-core':
         specifier: workspace:0.1.0
-        version: link:../runtime-core
+        version: link:../../runtime/runtime-core
     devDependencies:
       typescript:
         specifier: ^5.5.4
-        version: 5.9.3
+        version: 5.7.3
 
-  packages/renderer-vue:
+  packages/renderers/vue:
     dependencies:
       '@ainative-ui/runtime-core':
         specifier: workspace:0.1.0
-        version: link:../runtime-core
+        version: link:../../runtime/runtime-core
     devDependencies:
       typescript:
         specifier: ^5.5.4
-        version: 5.9.3
+        version: 5.7.3
 
-  packages/runtime-core:
+  packages/runtime/event-engine:
+    devDependencies:
+      typescript:
+        specifier: ^5.5.4
+        version: 5.7.3
+
+  packages/runtime/runtime-core:
     dependencies:
       '@ainative-ui/ast':
         specifier: workspace:0.1.0
-        version: link:../ast
+        version: link:../../core/ast
       '@ainative-ui/protocol':
         specifier: workspace:0.1.0
-        version: link:../protocol
+        version: link:../../core/protocol
     devDependencies:
       typescript:
         specifier: ^5.5.4
-        version: 5.9.3
+        version: 5.7.3
 
-  packages/schemas:
-    dependencies:
-      '@ainative-ui/ast':
-        specifier: workspace:0.1.0
-        version: link:../ast
+  packages/runtime/state-engine:
     devDependencies:
       typescript:
         specifier: ^5.5.4
-        version: 5.9.3
+        version: 5.7.3
 
-  packages/sdk-js:
-    dependencies:
-      '@ainative-ui/ast':
-        specifier: workspace:0.1.0
-        version: link:../ast
-      '@ainative-ui/validation':
-        specifier: workspace:0.1.0
-        version: link:../validation
-    devDependencies:
-      typescript:
-        specifier: ^5.5.4
-        version: 5.9.3
-
-  packages/state-engine:
-    devDependencies:
-      typescript:
-        specifier: ^5.5.4
-        version: 5.9.3
-
-  packages/stream-engine:
+  packages/runtime/stream-engine:
     dependencies:
       '@ainative-ui/protocol':
         specifier: workspace:0.1.0
-        version: link:../protocol
+        version: link:../../core/protocol
     devDependencies:
       typescript:
         specifier: ^5.5.4
-        version: 5.9.3
+        version: 5.7.3
 
-  packages/testing:
-    devDependencies:
-      typescript:
-        specifier: ^5.5.4
-        version: 5.9.3
-
-  packages/theme-engine:
-    devDependencies:
-      typescript:
-        specifier: ^5.5.4
-        version: 5.9.3
-
-  packages/validation:
+  packages/runtime/validation:
     dependencies:
       '@ainative-ui/ast':
         specifier: workspace:0.1.0
-        version: link:../ast
+        version: link:../../core/ast
       '@ainative-ui/component-registry':
         specifier: workspace:0.1.0
-        version: link:../component-registry
+        version: link:../../components/component-registry
       '@ainative-ui/schemas':
         specifier: workspace:0.1.0
-        version: link:../schemas
+        version: link:../../core/schemas
       ajv:
         specifier: ^8.20.0
         version: 8.20.0
@@ -652,7 +627,32 @@ importers:
     devDependencies:
       typescript:
         specifier: ^5.5.4
-        version: 5.9.3
+        version: 5.7.3
+
+  packages/sdk/js:
+    dependencies:
+      '@ainative-ui/ast':
+        specifier: workspace:0.1.0
+        version: link:../../core/ast
+      '@ainative-ui/validation':
+        specifier: workspace:0.1.0
+        version: link:../../runtime/validation
+    devDependencies:
+      typescript:
+        specifier: ^5.5.4
+        version: 5.7.3
+
+  packages/tooling/testing:
+    devDependencies:
+      typescript:
+        specifier: ^5.5.4
+        version: 5.7.3
+
+  packages/tooling/theme-engine:
+    devDependencies:
+      typescript:
+        specifier: ^5.5.4
+        version: 5.7.3
 
 packages:
 

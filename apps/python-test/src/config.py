@@ -14,6 +14,8 @@ class Settings(BaseSettings):
     temperature: float = 0.2
     api_host: str = "0.0.0.0"
     api_port: int = 8000
+    embedding_model: str = "text-embedding-3-small"
+    data_dir: str = ""
 
     model_config = {"env_prefix": "genui_", "env_file": ".env", "extra": "ignore"}
 

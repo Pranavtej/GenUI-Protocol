@@ -1,7 +1,7 @@
 [project]
 name = "genui-ai-agent"
 version = "0.1.0"
-description = "AI agent for GenUI Protocol — generates UIs from natural language using MCP"
+description = "FlowAI SaaS Agent — AI agent with vector RAG knowledge base that answers queries and generates UI ASTs via MCP tools"
 readme = "README.md"
 requires-python = ">=3.11"
 license = "MIT"
@@ -21,6 +21,8 @@ dependencies = [
     "langchain-openai>=0.3.0",
     "langchain-anthropic>=0.3.0",
     "langgraph>=0.3.0",
+    "numpy>=1.26.0",
+    "openai>=1.0.0",
 ]
 
 [project.optional-dependencies]
