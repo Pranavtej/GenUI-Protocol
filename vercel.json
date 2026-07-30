@@ -1,6 +1,6 @@
 {
-  "version": 2,
-  "framework": "nextjs",
-  "buildCommand": "pnpm --filter ai-native-ui-docs build",
-  "outputDirectory": "apps/docs/.next"
+    "version": 2,
+    "framework": "nextjs",
+    "buildCommand": "pnpm --filter ai-native-ui-docs build",
+    "outputDirectory": "apps/docs/.next"
 }
