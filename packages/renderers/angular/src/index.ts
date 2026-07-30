@@ -15,13 +15,17 @@ import {
     GridRenderer,
     KpiRenderer,
     DashboardRenderer,
+    ChartRenderer,
     GUIP_CORE_RENDERERS
 } from "./components/core-components";
 
 export * from "./provider";
 export * from "./dynamic-renderer.component";
+export * from "./renderer.component";
 export * from "./components/core-components";
 export { provideGuipTheme, GUIP_DEFAULT_THEME_CSS, GUIP_THEME_TOKEN } from "./theme-provider";
+
+export * from "./ui";
 
 export function provideGuipRenderer() {
     return [
@@ -40,5 +44,6 @@ export function provideGuipRenderer() {
         provideGuipComponent("flex", FlexRenderer),
         provideGuipComponent("kpi", KpiRenderer),
         provideGuipComponent("dashboard", DashboardRenderer),
+        provideGuipComponent("chart", ChartRenderer),
     ];
 }

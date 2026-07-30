@@ -3,7 +3,7 @@ import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { RuntimeTree, buildRuntimeTree } from "@ainative-ui/runtime-core";
 import { eventRouter, UIEvent } from "@ainative-ui/event-engine";
-import { DynamicRendererComponent } from "@ainative-ui/renderer-angular";
+import { DynamicRendererComponent } from "@ainative-ui/angular";
 import { ASTDocument } from "@ainative-ui/ast";
 
 interface ChatMessage {

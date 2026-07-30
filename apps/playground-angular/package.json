@@ -13,7 +13,7 @@
     "@ainative-ui/ast": "workspace:0.1.0",
     "@ainative-ui/component-registry": "workspace:0.1.0",
     "@ainative-ui/event-engine": "workspace:0.1.0",
-    "@ainative-ui/renderer-angular": "workspace:0.1.0",
+    "@ainative-ui/angular": "workspace:0.1.0",
     "@ainative-ui/runtime-core": "workspace:0.1.0",
     "@ainative-ui/state-engine": "workspace:0.1.0",
     "@ainative-ui/stream-engine": "workspace:0.1.0",

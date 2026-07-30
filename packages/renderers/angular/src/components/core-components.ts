@@ -1,4 +1,4 @@
-import { Component, Input, computed, forwardRef } from "@angular/core";
+import { Component, InputSignal, input, computed, forwardRef } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { RuntimeNode } from "@ainative-ui/runtime-core";
@@ -9,9 +9,10 @@ import {
   GuipTable, GuipThead, GuipTbody, GuipTr, GuipTh, GuipTd,
   GuipInput, GuipStack, GuipFlex, GuipGrid, GuipKpi,
   GuipSelect, GuipCheckbox,
-} from "@ainative-ui/renderer-angular-ui";
+  GuipChart,
+} from "../ui";
 
-export interface GuipComponent { node: RuntimeNode; }
+export interface GuipComponent { node: InputSignal<RuntimeNode>; }
 
 function str(p: any, key: string, fallback = ""): string {
   return String(p?.[key] ?? fallback);
@@ -34,7 +35,7 @@ function bool(p: any, key: string): boolean {
     <div class="min-h-screen bg-background p-6">
       <guip-card [title]="pageTitle" [subtitle]="pageSubtitle">
         <guip-stack gap="var(--guip-spacing-lg)">
-          @for (child of node.children; track child.id) {
+          @for (child of node().children; track child.id) {
             <guip-dynamic-renderer [node]="child"></guip-dynamic-renderer>
           }
         </guip-stack>
@@ -43,9 +44,9 @@ function bool(p: any, key: string): boolean {
   `
 })
 export class PageRenderer implements GuipComponent {
-  @Input({ required: true }) node!: RuntimeNode;
-  get pageTitle(): string { return str(this.node.p, "title"); }
-  get pageSubtitle(): string { return str(this.node.p, "subtitle"); }
+  node = input.required<RuntimeNode>();
+  get pageTitle(): string { return str(this.node().p, "title"); }
+  get pageSubtitle(): string { return str(this.node().p, "subtitle"); }
 }
 
 @Component({
@@ -55,7 +56,7 @@ export class PageRenderer implements GuipComponent {
   template: `
     <guip-card [title]="sectionTitle" [subtitle]="sectionDesc">
       <guip-stack gap="var(--guip-spacing-md)">
-        @for (child of node.children; track child.id) {
+        @for (child of node().children; track child.id) {
           <guip-dynamic-renderer [node]="child"></guip-dynamic-renderer>
         }
       </guip-stack>
@@ -63,9 +64,9 @@ export class PageRenderer implements GuipComponent {
   `
 })
 export class SectionRenderer implements GuipComponent {
-  @Input({ required: true }) node!: RuntimeNode;
-  get sectionTitle(): string { return str(this.node.p, "title"); }
-  get sectionDesc(): string { return str(this.node.p, "description"); }
+  node = input.required<RuntimeNode>();
+  get sectionTitle(): string { return str(this.node().p, "title"); }
+  get sectionDesc(): string { return str(this.node().p, "description"); }
 }
 
 @Component({
@@ -75,7 +76,7 @@ export class SectionRenderer implements GuipComponent {
   template: `
     <guip-card [title]="cardTitle" [subtitle]="cardSub">
       <guip-stack gap="var(--guip-spacing-md)">
-        @for (child of node.children; track child.id) {
+        @for (child of node().children; track child.id) {
           <guip-dynamic-renderer [node]="child"></guip-dynamic-renderer>
         }
       </guip-stack>
@@ -83,9 +84,9 @@ export class SectionRenderer implements GuipComponent {
   `
 })
 export class CardRenderer implements GuipComponent {
-  @Input({ required: true }) node!: RuntimeNode;
-  get cardTitle(): string { return str(this.node.p, "title"); }
-  get cardSub(): string { return str(this.node.p, "subtitle"); }
+  node = input.required<RuntimeNode>();
+  get cardTitle(): string { return str(this.node().p, "title"); }
+  get cardSub(): string { return str(this.node().p, "subtitle"); }
 }
 
 @Component({
@@ -95,8 +96,8 @@ export class CardRenderer implements GuipComponent {
   template: `<guip-text>{{ textContent }}</guip-text>`
 })
 export class TextRenderer implements GuipComponent {
-  @Input({ required: true }) node!: RuntimeNode;
-  get textContent(): string { return str(this.node.p, "content"); }
+  node = input.required<RuntimeNode>();
+  get textContent(): string { return str(this.node().p, "content"); }
 }
 
 @Component({
@@ -106,10 +107,10 @@ export class TextRenderer implements GuipComponent {
   template: `<guip-heading [level]="headingLevel()">{{ headingText }}</guip-heading>`
 })
 export class HeadingRenderer implements GuipComponent {
-  @Input({ required: true }) node!: RuntimeNode;
-  get headingText(): string { return str(this.node.p, "text"); }
+  node = input.required<RuntimeNode>();
+  get headingText(): string { return str(this.node().p, "text"); }
   headingLevel(): 1 | 2 | 3 | 4 | 5 | 6 {
-    const level = Number(this.node.p?.["level"] || 2);
+    const level = Number(this.node().p?.["level"] || 2);
     if (level >= 1 && level <= 6) return level as 1 | 2 | 3 | 4 | 5 | 6;
     return 2;
   }
@@ -126,12 +127,12 @@ export class HeadingRenderer implements GuipComponent {
   `
 })
 export class ButtonRenderer implements GuipComponent {
-  @Input({ required: true }) node!: RuntimeNode;
-  get btnLabel(): string { return str(this.node.p, "label"); }
-  get btnVariant(): string { return str(this.node.p, "variant", "default"); }
-  get btnSize(): string { return str(this.node.p, "size", "default"); }
+  node = input.required<RuntimeNode>();
+  get btnLabel(): string { return str(this.node().p, "label"); }
+  get btnVariant(): string { return str(this.node().p, "variant", "default"); }
+  get btnSize(): string { return str(this.node().p, "size", "default"); }
   onClick() {
-    eventRouter.dispatch({ type: "click", target: this.node.id, payload: { label: this.btnLabel } });
+    eventRouter.dispatch({ type: "click", target: this.node().id, payload: { label: this.btnLabel } });
   }
 }
 
@@ -153,17 +154,18 @@ export class ButtonRenderer implements GuipComponent {
   `
 })
 export class InputRenderer implements GuipComponent {
-  @Input({ required: true }) node!: RuntimeNode;
-  get inputPlaceholder(): string { return str(this.node.p, "placeholder"); }
-  get inputLabel(): string { return str(this.node.p, "label"); }
-  get inputDisabled(): boolean { return bool(this.node.p, "disabled"); }
-  get value(): string { return str(this.node.p, "value"); }
+  node = input.required<RuntimeNode>();
+  get inputPlaceholder(): string { return str(this.node().p, "placeholder"); }
+  get inputLabel(): string { return str(this.node().p, "label"); }
+  get inputDisabled(): boolean { return bool(this.node().p, "disabled"); }
+  get value(): string { return str(this.node().p, "value"); }
   set value(val: string) {
-    if (!this.node.p) this.node.p = {};
-    this.node.p["value"] = val;
+    const node = this.node();
+    if (!node.p) node.p = {};
+    node.p["value"] = val;
   }
-  onInput() { eventRouter.dispatch({ type: "input", target: this.node.id, payload: { value: this.value } }); }
-  onChange() { eventRouter.dispatch({ type: "change", target: this.node.id, payload: { value: this.value } }); }
+  onInput() { eventRouter.dispatch({ type: "input", target: this.node().id, payload: { value: this.value } }); }
+  onChange() { eventRouter.dispatch({ type: "change", target: this.node().id, payload: { value: this.value } }); }
 }
 
 @Component({
@@ -184,16 +186,17 @@ export class InputRenderer implements GuipComponent {
   `
 })
 export class TextareaRenderer implements GuipComponent {
-  @Input({ required: true }) node!: RuntimeNode;
-  get taPlaceholder(): string { return str(this.node.p, "placeholder"); }
-  get taDisabled(): boolean { return bool(this.node.p, "disabled"); }
-  get taRows(): number { return num(this.node.p, "rows", 3); }
-  get value(): string { return str(this.node.p, "value"); }
+  node = input.required<RuntimeNode>();
+  get taPlaceholder(): string { return str(this.node().p, "placeholder"); }
+  get taDisabled(): boolean { return bool(this.node().p, "disabled"); }
+  get taRows(): number { return num(this.node().p, "rows", 3); }
+  get value(): string { return str(this.node().p, "value"); }
   set value(val: string) {
-    if (!this.node.p) this.node.p = {};
-    this.node.p["value"] = val;
+    const node = this.node();
+    if (!node.p) node.p = {};
+    node.p["value"] = val;
   }
-  onChange() { eventRouter.dispatch({ type: "change", target: this.node.id, payload: { value: this.value } }); }
+  onChange() { eventRouter.dispatch({ type: "change", target: this.node().id, payload: { value: this.value } }); }
 }
 
 @Component({
@@ -214,17 +217,18 @@ export class TextareaRenderer implements GuipComponent {
   `
 })
 export class SelectRenderer implements GuipComponent {
-  @Input({ required: true }) node!: RuntimeNode;
-  get selLabel(): string { return str(this.node.p, "label"); }
-  get selPlaceholder(): string { return str(this.node.p, "placeholder"); }
-  get selDisabled(): boolean { return bool(this.node.p, "disabled"); }
-  options = computed(() => (this.node.p?.["options"] as { label: string; value: string }[]) || []);
-  get value(): string { return str(this.node.p, "value"); }
+  node = input.required<RuntimeNode>();
+  get selLabel(): string { return str(this.node().p, "label"); }
+  get selPlaceholder(): string { return str(this.node().p, "placeholder"); }
+  get selDisabled(): boolean { return bool(this.node().p, "disabled"); }
+  options = computed(() => (this.node().p?.["options"] as { label: string; value: string }[]) || []);
+  get value(): string { return str(this.node().p, "value"); }
   set value(val: string) {
-    if (!this.node.p) this.node.p = {};
-    this.node.p["value"] = val;
+    const node = this.node();
+    if (!node.p) node.p = {};
+    node.p["value"] = val;
   }
-  onChange() { eventRouter.dispatch({ type: "change", target: this.node.id, payload: { value: this.value } }); }
+  onChange() { eventRouter.dispatch({ type: "change", target: this.node().id, payload: { value: this.value } }); }
 }
 
 @Component({
@@ -240,14 +244,15 @@ export class SelectRenderer implements GuipComponent {
   `
 })
 export class CheckboxRenderer implements GuipComponent {
-  @Input({ required: true }) node!: RuntimeNode;
-  get cbLabel(): string { return str(this.node.p, "label"); }
-  get checked(): boolean { return !!this.node.p?.["checked"]; }
+  node = input.required<RuntimeNode>();
+  get cbLabel(): string { return str(this.node().p, "label"); }
+  get checked(): boolean { return !!this.node().p?.["checked"]; }
   set checked(val: boolean) {
-    if (!this.node.p) this.node.p = {};
-    this.node.p["checked"] = val;
+    const node = this.node();
+    if (!node.p) node.p = {};
+    node.p["checked"] = val;
   }
-  onChange() { eventRouter.dispatch({ type: "change", target: this.node.id, payload: { checked: this.checked } }); }
+  onChange() { eventRouter.dispatch({ type: "change", target: this.node().id, payload: { checked: this.checked } }); }
 }
 
 @Component({
@@ -278,9 +283,9 @@ export class CheckboxRenderer implements GuipComponent {
   `
 })
 export class TableRenderer implements GuipComponent {
-  @Input({ required: true }) node!: RuntimeNode;
-  columns = computed(() => (this.node.p?.["columns"] as { header: string; accessor: string }[]) || []);
-  tableData = computed(() => (this.node.p?.["data"] as Record<string, any>[]) || []);
+  node = input.required<RuntimeNode>();
+  columns = computed(() => (this.node().p?.["columns"] as { header: string; accessor: string }[]) || []);
+  tableData = computed(() => (this.node().p?.["data"] as Record<string, any>[]) || []);
 }
 
 @Component({
@@ -289,17 +294,17 @@ export class TableRenderer implements GuipComponent {
   imports: [CommonModule, forwardRef(() => DynamicRendererComponent), GuipFlex],
   template: `
     <guip-flex [gap]="flexGap" [justifyContent]="flexJustify" [alignItems]="flexAlign">
-      @for (child of node.children; track child.id) {
+      @for (child of node().children; track child.id) {
         <guip-dynamic-renderer [node]="child"></guip-dynamic-renderer>
       }
     </guip-flex>
   `
 })
 export class FlexRenderer implements GuipComponent {
-  @Input({ required: true }) node!: RuntimeNode;
-  get flexGap(): string { return str(this.node.p, "gap", "var(--guip-spacing-md)"); }
-  get flexJustify(): string { return str(this.node.p, "justifyContent", "flex-start"); }
-  get flexAlign(): string { return str(this.node.p, "alignItems", "stretch"); }
+  node = input.required<RuntimeNode>();
+  get flexGap(): string { return str(this.node().p, "gap", "var(--guip-spacing-md)"); }
+  get flexJustify(): string { return str(this.node().p, "justifyContent", "flex-start"); }
+  get flexAlign(): string { return str(this.node().p, "alignItems", "stretch"); }
 }
 
 @Component({
@@ -308,16 +313,16 @@ export class FlexRenderer implements GuipComponent {
   imports: [CommonModule, forwardRef(() => DynamicRendererComponent), GuipGrid],
   template: `
     <guip-grid [columns]="gridCols" [gap]="gridGap">
-      @for (child of node.children; track child.id) {
+      @for (child of node().children; track child.id) {
         <guip-dynamic-renderer [node]="child"></guip-dynamic-renderer>
       }
     </guip-grid>
   `
 })
 export class GridRenderer implements GuipComponent {
-  @Input({ required: true }) node!: RuntimeNode;
-  get gridCols(): number { return num(this.node.p, "columns", 1); }
-  get gridGap(): string { return str(this.node.p, "gap", "var(--guip-spacing-md)"); }
+  node = input.required<RuntimeNode>();
+  get gridCols(): number { return num(this.node().p, "columns", 1); }
+  get gridGap(): string { return str(this.node().p, "gap", "var(--guip-spacing-md)"); }
 }
 
 @Component({
@@ -331,16 +336,16 @@ export class GridRenderer implements GuipComponent {
   `
 })
 export class KpiRenderer implements GuipComponent {
-  @Input({ required: true }) node!: RuntimeNode;
-  get kpiLabel(): string { return str(this.node.p, "label"); }
-  get kpiValue(): string { return str(this.node.p, "value"); }
-  get kpiSubtext(): string { return str(this.node.p, "subtext"); }
+  node = input.required<RuntimeNode>();
+  get kpiLabel(): string { return str(this.node().p, "label"); }
+  get kpiValue(): string { return str(this.node().p, "value"); }
+  get kpiSubtext(): string { return str(this.node().p, "subtext"); }
   get kpiTrend(): "up" | "down" | "neutral" | "" {
-    const v = this.node.p?.["trend"];
+    const v = this.node().p?.["trend"];
     if (v === "up" || v === "down" || v === "neutral") return v;
     return "";
   }
-  get kpiTrendValue(): string { return str(this.node.p, "trendValue"); }
+  get kpiTrendValue(): string { return str(this.node().p, "trendValue"); }
 }
 
 @Component({
@@ -349,18 +354,39 @@ export class KpiRenderer implements GuipComponent {
   imports: [CommonModule, GuipStack, forwardRef(() => DynamicRendererComponent)],
   template: `
     <guip-stack gap="var(--guip-spacing-lg)">
-      @for (child of node.children; track child.id) {
+      @for (child of node().children; track child.id) {
         <guip-dynamic-renderer [node]="child"></guip-dynamic-renderer>
       }
     </guip-stack>
   `
 })
 export class DashboardRenderer implements GuipComponent {
-  @Input({ required: true }) node!: RuntimeNode;
+  node = input.required<RuntimeNode>();
+}
+
+@Component({
+  selector: "guip-chart-renderer",
+  standalone: true,
+  imports: [CommonModule, GuipChart],
+  template: `
+    <div style="width:100%;">
+      <guip-chart [type]="chartType" [data]="chartData" [chartHeight]="chartHeight"
+                  [colorScheme]="chartColorScheme"></guip-chart>
+    </div>
+  `
+})
+export class ChartRenderer implements GuipComponent {
+  node = input.required<RuntimeNode>();
+  get chartType(): string { return str(this.node().p, "type", "line"); }
+  get chartData(): { label: string; value: number }[] {
+    return (this.node().p?.["data"] as { label: string; value: number }[]) || [];
+  }
+  get chartHeight(): number { return num(this.node().p, "height", 260); }
+  get chartColorScheme(): string { return str(this.node().p, "colorScheme", "default"); }
 }
 
 export const GUIP_CORE_RENDERERS = [
   PageRenderer, SectionRenderer, CardRenderer, TextRenderer, HeadingRenderer,
   ButtonRenderer, InputRenderer, TextareaRenderer, SelectRenderer, CheckboxRenderer,
-  TableRenderer, FlexRenderer, GridRenderer, KpiRenderer, DashboardRenderer,
+  TableRenderer, FlexRenderer, GridRenderer, KpiRenderer, DashboardRenderer, ChartRenderer,
 ];
