@@ -1,0 +1,22 @@
+---
+title: Concepts
+description: Core mental models behind ASTs, runtime trees, and renderer adapters.
+---
+
+# Concepts
+
+## The AST contract
+
+The AST is the primary contract between AI generation and UI rendering. It describes components, props, children, and events in a compact form.
+
+## Runtime tree
+
+The runtime tree is the normalized representation created from the AST and used for reconciliation and patching.
+
+## Renderer adapters
+
+Renderers stay thin by consuming runtime nodes and adapting them to host UI primitives.
+
+## Event flow
+
+Events are serialized and routed through the runtime so that interactions can be handled by agents or backend workflows.

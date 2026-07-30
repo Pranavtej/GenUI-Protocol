@@ -1,0 +1,41 @@
+---
+title: Protocol Reference
+description: The compact AST structure, component catalog, and event contract used by GenUI Protocol.
+---
+
+# Protocol Reference
+
+The protocol uses a compact AST document that can be rendered across frameworks without generating UI code.
+
+## AST shape
+
+```ts
+export type UINode = {
+  id?: string;
+  t: string;
+  p?: Record<string, any>;
+  c?: UINode[];
+};
+```
+
+## Component examples
+
+- `page`
+- `card`
+- `kpi`
+- `chart`
+- `workflow`
+
+## Event contract
+
+```json
+{
+  "type": "click",
+  "target": "node_button_2ef4",
+  "timestamp": "2026-05-30T18:00:00.000Z"
+}
+```
+
+## Notes
+
+This reference remains intentionally compact so that AI systems can emit it efficiently while renderers remain simple.

@@ -1,0 +1,40 @@
+---
+title: Quick Start
+description: Build and validate a small AST from the runtime package.
+---
+
+# Quick Start
+
+This page gives you a minimal path from installation to a valid AST document.
+
+## Build an AST
+
+```ts
+import { buildRuntimeTree } from '@ainative-ui/runtime-core';
+
+const ast = {
+  t: 'page',
+  p: { title: 'Revenue Overview' },
+  c: [{ t: 'kpi', p: { label: 'Revenue', value: '$124K' } }]
+};
+
+const tree = buildRuntimeTree(ast);
+console.log(tree);
+```
+
+## Validate an AST
+
+```ts
+import { validateASTDocument } from '@ainative-ui/validation';
+
+const result = validateASTDocument(ast);
+if (result.valid) {
+  console.log('AST is valid');
+} else {
+  console.error(result.errors);
+}
+```
+
+## Next step
+
+Move on to the [Architecture guide](/architecture) for a deeper explanation of the runtime pipeline.

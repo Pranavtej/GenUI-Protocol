@@ -1,0 +1,41 @@
+---
+title: Examples
+description: Practical example documents for dashboards, workflows, and protocol usage.
+---
+
+# Examples
+
+The repository includes examples in the playground apps, the protocol docs, and the Python test harness.
+
+## Dashboard example
+
+```ts
+const ast = {
+  t: 'page',
+  p: { title: 'Revenue Overview' },
+  c: [
+    { t: 'kpi', p: { label: 'Revenue', value: '$124K' } },
+    { t: 'kpi', p: { label: 'Users', value: '12,847' } }
+  ]
+};
+```
+
+## Workflow example
+
+```json
+{
+  "t": "workflow",
+  "p": {
+    "steps": [
+      { "id": "1", "name": "Collect", "status": "done" },
+      { "id": "2", "name": "Review", "status": "pending" }
+    ]
+  }
+}
+```
+
+## Related content
+
+- [Protocol reference](/protocol)
+- [Architecture guide](/architecture)
+- [Quick Start](/quick-start)

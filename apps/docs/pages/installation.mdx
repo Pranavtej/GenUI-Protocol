@@ -1,0 +1,41 @@
+---
+title: Installation
+description: Install the GenUI Protocol monorepo and its supporting toolchain.
+---
+
+# Installation
+
+Use the repository root to install dependencies and build the workspace.
+
+## Install dependencies
+
+```bash
+pnpm install
+```
+
+## Build packages
+
+```bash
+pnpm build
+```
+
+## Development workflow
+
+```bash
+pnpm dev
+```
+
+## Workspace layout
+
+- apps: demos and tooling
+- packages: runtime, schemas, renderers, SDKs
+- tools: repository automation
+
+## Troubleshooting
+
+If `pnpm` is unavailable, install it with:
+
+```bash
+corepack enable
+pnpm --version
+```

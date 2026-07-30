@@ -1,0 +1,25 @@
+---
+title: Architecture
+description: Overview of the runtime layers and the AST-based architecture behind GenUI Protocol.
+---
+
+import { Mermaid } from '../components/Mermaid';
+
+# Architecture
+
+GenUI Protocol decouples AI-generated UI from renderer-specific implementation details. The runtime creates a normalized tree from the AST, reconciles updates, and routes events back to the host system.
+
+<Mermaid chart={`graph TD\nA[Universal AST] --> B[Runtime Tree]\nB --> C[Reconciliation]\nC --> D[Renderer Adapters]\nD --> E[React / Angular / Vue / Svelte / Native]`} />
+
+## Core layers
+
+1. AI layer – generate AST payloads from component metadata and MCP discovery.
+2. Runtime layer – normalize, reconcile, patch, and route events.
+3. Renderer layer – adapt the runtime tree to the target framework.
+
+## Design goals
+
+- Keep the interface declarative
+- Preserve portability across frameworks
+- Avoid unsafe arbitrary code execution
+- Support incremental updates and streaming events

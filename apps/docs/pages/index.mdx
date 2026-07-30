@@ -1,0 +1,65 @@
+import { Cards, Card } from 'nextra/components';
+import { ArrowRight, BookOpen, Cpu, LayoutGrid, Rocket } from 'lucide-react';
+
+# GenUI Protocol Documentation
+
+Welcome to the documentation hub for GenUI Protocol, the universal AST-based protocol for AI-generated interfaces.
+
+<div className="not-prose mt-8 grid gap-6 lg:grid-cols-[1.3fr_0.7fr]">
+  <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-900 to-slate-700 p-8 text-white shadow-sm dark:border-slate-800">
+    <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-slate-300">Universal AI UI Protocol</p>
+    <h2 className="text-3xl font-semibold">Build once, render everywhere.</h2>
+    <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-300">
+      Generate a single compact AST from your AI workflow and render it in React, Angular, Vue, Svelte, React Native, SwiftUI, or Flutter without code generation.
+    </p>
+    <div className="mt-6 flex flex-wrap gap-3">
+      <a href="/getting-started" className="rounded-lg bg-white px-4 py-2 font-medium text-slate-900">Get Started</a>
+      <a href="https://github.com/Pranavtej/GenUI-Protocol" className="rounded-lg border border-white/20 px-4 py-2 font-medium text-white">GitHub</a>
+    </div>
+  </div>
+  <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+    <p className="text-sm font-semibold text-slate-500">Quick example</p>
+    <pre className="mt-4 overflow-x-auto rounded-lg bg-slate-950 p-4 text-sm text-slate-100">
+{`const ast = {
+  t: "page",
+  p: { title: "Dashboard" },
+  c: [{ t: "card", p: { title: "Metrics" } }]
+};`}
+    </pre>
+  </div>
+</div>
+
+<Cards className="mt-10">
+  <Card icon={<Rocket />} title="Getting Started" href="/getting-started">
+    Install the runtime, understand the architecture, and start building your first AST.
+  </Card>
+  <Card icon={<BookOpen />} title="Protocol Reference" href="/protocol">
+    Learn the compact AST format, component catalog, and event contract.
+  </Card>
+  <Card icon={<LayoutGrid />} title="Architecture" href="/architecture">
+    Review the runtime layers, reconciliation model, and renderer boundaries.
+  </Card>
+  <Card icon={<Cpu />} title="Examples" href="/examples">
+    Explore practical examples for dashboards, workflows, and interactive UIs.
+  </Card>
+</Cards>
+
+## Why teams use GenUI Protocol
+
+- Declarative output for AI-generated interfaces
+- One AST that reaches multiple frameworks
+- Safe and portable without runtime eval
+- Incremental updates and structured events
+
+## Installation
+
+```bash
+pnpm install
+pnpm build
+```
+
+## Next steps
+
+- Read the [Getting Started guide](/getting-started)
+- Review the [Protocol specification](/protocol)
+- Explore the [Architecture guide](/architecture)

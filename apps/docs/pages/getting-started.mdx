@@ -1,0 +1,57 @@
+---
+title: Getting Started
+description: Install GenUI Protocol and build your first AST-driven interface.
+---
+
+# Getting Started
+
+This guide walks you through installing the repository and exploring the runtime locally.
+
+## Requirements
+
+- Node.js 18+
+- pnpm 8+
+
+## Installation
+
+```bash
+pnpm install
+pnpm build
+```
+
+## Start the local stack
+
+```bash
+pnpm dev
+```
+
+## Run individual apps
+
+```bash
+pnpm --filter playground dev
+pnpm --filter playground-angular serve
+pnpm --filter mcp-server dev
+```
+
+## First example
+
+```ts
+import { buildRuntimeTree, reconcile } from '@ainative-ui/runtime-core';
+
+const ast = {
+  t: 'page',
+  p: { title: 'Dashboard' },
+  c: [{ t: 'card', p: { title: 'Metrics' } }]
+};
+
+const tree = buildRuntimeTree(ast);
+const patches = reconcile(previousTree, tree);
+```
+
+> This example shows how the runtime converts your AST into a reconciled tree and prepares patches for updates.
+
+## Next steps
+
+- Review the [Protocol reference](/protocol)
+- Explore the [Architecture guide](/architecture)
+- Visit the [Examples page](/examples)

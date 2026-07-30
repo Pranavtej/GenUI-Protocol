@@ -3,16 +3,28 @@
     "version": "0.1.0",
     "private": true,
     "scripts": {
-        "start": "docusaurus start",
-        "build": "docusaurus build",
-        "serve": "docusaurus serve"
+        "dev": "next dev",
+        "build": "next build",
+        "start": "next start",
+        "lint": "next lint"
     },
     "dependencies": {
-        "@docusaurus/core": "^2.2.0",
-        "@docusaurus/preset-classic": "^2.2.0",
-        "@docusaurus/theme-classic": "^2.2.0",
-        "@mdx-js/react": "^1.6.22",
-        "react": "^17.0.2",
-        "react-dom": "^17.0.2"
+        "lucide-react": "^0.468.0",
+        "mermaid": "^11.16.0",
+        "next": "14.2.15",
+        "nextra": "^2.13.0",
+        "nextra-theme-docs": "^2.13.0",
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1"
+    },
+    "devDependencies": {
+        "@types/react": "^18.3.12",
+        "@types/react-dom": "^18.3.1",
+        "autoprefixer": "^10.5.0",
+        "eslint": "^8.57.0",
+        "eslint-config-next": "^14.2.15",
+        "postcss": "^8.5.15",
+        "tailwindcss": "^3.4.19",
+        "typescript": "^5.5.4"
     }
 }

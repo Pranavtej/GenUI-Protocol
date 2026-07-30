@@ -33,6 +33,7 @@
         "build": "turbo run build",
         "dev": "node dev.js",
         "dev:all": "turbo run dev",
+        "docs": "pnpm --filter ai-native-ui-docs dev",
         "lint": "turbo run lint",
         "test": "turbo run test",
         "clean": "rimraf node_modules .turbo dist apps/*/dist packages/core/*/dist packages/runtime/*/dist packages/components/*/dist packages/renderers/*/dist packages/sdk/*/dist packages/tooling/*/dist"
