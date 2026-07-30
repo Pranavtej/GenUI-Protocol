@@ -678,5 +678,4 @@ if (process.argv.includes("--http") || process.env.GENUI_MCP_HTTP === "true") {
   }).catch((err) => {
     console.error("Failed to connect STDIO transport:", err);
   });
-  startExpressServer();
 }

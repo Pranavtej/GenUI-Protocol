@@ -5,12 +5,9 @@ import { RuntimeTree, buildRuntimeTree, reconcile, diffRuntimeTree, applyPatch }
 import { validateASTDocument } from "@ainative-ui/validation";
 import { ComponentRegistry } from "@ainative-ui/component-registry";
 import { eventRouter, UIEvent } from "@ainative-ui/event-engine";
-import { DynamicRendererComponent } from "@ainative-ui/renderer-angular";
+import { DynamicRendererComponent, GuipButton, GuipBadge, GuipScrollArea, GuipTabs } from "@ainative-ui/angular";
 import { defaultASTDocument, ASTDocument, UINode } from "@ainative-ui/ast";
 import { ASTPatch } from "@ainative-ui/protocol";
-import {
-  GuipButton, GuipBadge, GuipScrollArea, GuipTabs,
-} from "@ainative-ui/renderer-angular-ui";
 
 const registry = new ComponentRegistry();
 

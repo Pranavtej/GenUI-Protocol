@@ -1,5 +1,5 @@
 import { ApplicationConfig, provideExperimentalZonelessChangeDetection } from '@angular/core';
-import { provideGuipRenderer, provideGuipTheme } from '@ainative-ui/renderer-angular';
+import { provideGuipRenderer, provideGuipTheme } from '@ainative-ui/angular';
 
 export const appConfig: ApplicationConfig = {
   providers: [
