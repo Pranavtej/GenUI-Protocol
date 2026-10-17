@@ -1,0 +1,33 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>GenUI mascot options</title>
+<style>
+  body { font-family: system-ui, sans-serif; margin: 24px; background: #fff; color: #0f172a; }
+  h1 { margin-top: 0 }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 20px; }
+  .card { border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; }
+  .card header { padding: 10px 14px; font-weight: 600; }
+  .card p { margin: 0; padding: 0 14px 12px; color: #475569; font-size: 14px; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; }
+  .row div { display: grid; place-items: center; padding: 12px; }
+  .light { background: #fff } .dark { background: #0d1117 }
+  img { width: 100%; max-width: 256px; image-rendering: pixelated; }
+  .small { display: flex; gap: 12px; align-items: end; justify-content: center; padding: 8px 0 12px; }
+  .small img { width: 64px }
+</style>
+<h1>GenUI mascot options</h1>
+<p>Each animation loops; shown on light and dark backgrounds, plus favicon and avatar sizes.</p>
+<div class="grid">
+  <section class="card"><header>A · Curly</header><p>A smiley held in curly braces ({ ☻ }) that pops UI widgets out of its head.</p>
+    <div class="row"><div class="light"><img src="a-curly-256.gif"></div><div class="dark"><img src="a-curly-256.gif"></div></div>
+    <div class="small"><img src="a-curly-256.gif" style="width:32px"><img src="a-curly-256.gif" style="width:64px"><img src="a-curly-256.gif" style="width:128px"></div></section>
+  <section class="card"><header>B · Morph</header><p>A jelly blob that becomes whatever the document says: card, button, checkbox.</p>
+    <div class="row"><div class="light"><img src="b-morph-256.gif"></div><div class="dark"><img src="b-morph-256.gif"></div></div>
+    <div class="small"><img src="b-morph-256.gif" style="width:32px"><img src="b-morph-256.gif" style="width:64px"><img src="b-morph-256.gif" style="width:128px"></div></section>
+  <section class="card"><header>C · Builder</header><p>A robot that catches UI blocks and stacks them into a dashboard.</p>
+    <div class="row"><div class="light"><img src="c-builder-256.gif"></div><div class="dark"><img src="c-builder-256.gif"></div></div>
+    <div class="small"><img src="c-builder-256.gif" style="width:32px"><img src="c-builder-256.gif" style="width:64px"><img src="c-builder-256.gif" style="width:128px"></div></section>
+  <section class="card"><header>D · Sprout</header><p>A tree-spirit that is an AST: it grows nodes, and the leaves become widgets.</p>
+    <div class="row"><div class="light"><img src="d-sprout-256.gif"></div><div class="dark"><img src="d-sprout-256.gif"></div></div>
+    <div class="small"><img src="d-sprout-256.gif" style="width:32px"><img src="d-sprout-256.gif" style="width:64px"><img src="d-sprout-256.gif" style="width:128px"></div></section>
+</div>
