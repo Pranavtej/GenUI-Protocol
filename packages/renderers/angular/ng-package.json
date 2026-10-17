@@ -6,6 +6,8 @@
   },
   "allowedNonPeerDependencies": [
     "marked",
+    "class-variance-authority",
+    "clsx",
     "tslib",
     "@ainative-ui/event-engine",
     "@ainative-ui/runtime-core",

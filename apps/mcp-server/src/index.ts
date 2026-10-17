@@ -615,7 +615,7 @@ const startExpressServer = () => {
       return res.status(400).json({ error: "invalid_ast" });
     }
 
-    function walk(node: UINode, depth: number): any {
+    function walk(node: UINode, depth: number): { count: number; types: Record<string, number>; maxDepth: number; usedProps: string[] } {
       let count = 1;
       const types: Record<string, number> = { [node.t]: 1 };
       let maxDepth = depth;

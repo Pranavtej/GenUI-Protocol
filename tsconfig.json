@@ -23,7 +23,6 @@
         { "path": "packages/renderers/swiftui" },
         { "path": "packages/renderers/flutter" },
         { "path": "packages/renderers/angular" },
-        { "path": "packages/renderers/angular-ui" },
         { "path": "packages/sdk/js" },
         { "path": "packages/tooling/testing" },
         { "path": "packages/tooling/theme-engine" }

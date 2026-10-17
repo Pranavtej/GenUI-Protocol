@@ -19,7 +19,6 @@ const APPS = {
       "packages/runtime/stream-engine",
       "packages/runtime/validation",
       "packages/components/component-registry",
-      "packages/renderers/angular-ui",
       "packages/renderers/angular",
     ],
     cmd: "node node_modules/@angular/cli/bin/ng.js serve --open",
@@ -36,7 +35,6 @@ const APPS = {
       "packages/runtime/stream-engine",
       "packages/runtime/validation",
       "packages/components/component-registry",
-      "packages/renderers/angular-ui",
       "packages/renderers/angular",
     ],
     cmd: "node node_modules/@angular/cli/bin/ng.js serve --open",
@@ -48,10 +46,10 @@ const APPS = {
     cmd: "npx vite",
   },
   "docs": {
-    label: "Docs (Docusaurus)",
+    label: "Docs (Nextra)",
     dir: "apps/docs",
     deps: [],
-    cmd: "npx docusaurus start",
+    cmd: "npx next dev",
   },
   "registry-ui": {
     label: "Registry UI (Vite + React)",
@@ -151,17 +149,6 @@ async function main() {
     execSync("pnpm build", { cwd: ROOT, stdio: "inherit" });
     console.log("\n  \x1b[32mAll packages built.\x1b[0m\n");
     return;
-  }
-
-  // Ensure dist of angular-ui has theme CSS
-  const uiDistTheme = path.join(ROOT, "packages/renderers/angular-ui/dist/theme/default.css");
-  const fs = require("fs");
-  if (!fs.existsSync(uiDistTheme)) {
-    const uiSrcTheme = path.join(ROOT, "packages/renderers/angular-ui/src/theme/default.css");
-    if (fs.existsSync(uiSrcTheme)) {
-      fs.mkdirSync(path.dirname(uiDistTheme), { recursive: true });
-      fs.copyFileSync(uiSrcTheme, uiDistTheme);
-    }
   }
 
   buildPackages(app.deps);

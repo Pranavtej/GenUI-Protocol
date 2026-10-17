@@ -4,16 +4,8 @@
     "version": "0.1.0",
     "description": "AI-Native UI Runtime monorepo for universal AI-generated interfaces.",
     "license": "MIT",
-    "packageManager": "pnpm@8.14.0",
-    "workspaces": [
-        "apps/*",
-        "packages/core/*",
-        "packages/runtime/*",
-        "packages/components/*",
-        "packages/renderers/*",
-        "packages/sdk/*",
-        "packages/tooling/*"
-    ],
+    "engines": { "node": ">=18", "pnpm": ">=8" },
+    "packageManager": "pnpm@8.15.9",
     "devDependencies": {
         "@types/node": "^20.14.0",
         "@typescript-eslint/eslint-plugin": "^6.10.1",
@@ -23,6 +15,7 @@
         "postcss": "^8.5.15",
         "prettier": "^3.0.0",
         "tailwindcss": "^3.4.19",
+        "rimraf": "^5.0.5",
         "ts-node": "^10.9.1",
         "turbo": "^1.11.0",
         "typescript": "^5.5.4",
@@ -36,6 +29,7 @@
         "docs": "pnpm --filter ai-native-ui-docs dev",
         "lint": "turbo run lint",
         "test": "turbo run test",
+        "typecheck": "turbo run typecheck",
         "clean": "rimraf node_modules .turbo dist apps/*/dist packages/core/*/dist packages/runtime/*/dist packages/components/*/dist packages/renderers/*/dist packages/sdk/*/dist packages/tooling/*/dist"
     }
 }

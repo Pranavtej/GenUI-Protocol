@@ -6,24 +6,35 @@ on:
     pull_request:
         branches: [main]
 
-jobs:
-    build:
-        runs-on: macos-latest
-        steps:
-            - uses: actions/checkout@v4
-            - uses: pnpm/action-setup@v2
-              with:
-                  version: 8
-            - run: pnpm install
-            - run: pnpm build
+concurrency:
+    group: ci-${{ github.ref }}
+    cancel-in-progress: true
 
-    lint:
-        needs: build
-        runs-on: macos-latest
+jobs:
+    node:
+        runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
             - uses: pnpm/action-setup@v2
               with:
                   version: 8
-            - run: pnpm install
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+                  cache: pnpm
+            - run: pnpm install --frozen-lockfile
+            - run: pnpm build
             - run: pnpm lint
+            - run: pnpm test
+
+    python:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-python@v5
+              with:
+                  python-version: "3.11"
+            - working-directory: apps/python-test
+              run: |
+                  pip install -e ".[dev]"
+                  pytest

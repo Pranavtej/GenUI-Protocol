@@ -160,6 +160,7 @@ AI agent ──MCP tools──► discover components → get schema → generat
 Effort: S ≈ ≤1 day, M ≈ 2–4 days, L ≈ 1–2 weeks (single developer). Each phase ends with a demoable result.
 
 ### Phase 0 — Cleanup & foundations (≈ 1 week)
+_Status: 0.2–0.8 done except where noted; 0.1 (rename) and 0.6's SECURITY contact are pending decisions. 0.3 kept Nextra, removed Docusaurus and `angular-ui`. Added a CI Python job, Dependabot and templates._
 | # | Task | Size |
 |---|---|---|
 | 0.1 | Decide final name/scope (`@genui/*`?) and rename packages, Python module, docs titles consistently | M |
