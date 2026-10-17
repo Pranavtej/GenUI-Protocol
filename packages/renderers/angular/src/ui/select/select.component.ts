@@ -4,7 +4,7 @@ import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormsModule } from '@angular/f
 import { cn } from '../lib/utils';
 
 @Component({
-  selector: 'guip-select',
+  selector: 'genui-select',
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
@@ -50,12 +50,12 @@ import { cn } from '../lib/utils';
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => GuipSelect),
+      useExisting: forwardRef(() => GenUiSelect),
       multi: true,
     },
   ],
 })
-export class GuipSelect implements ControlValueAccessor, AfterContentInit {
+export class GenUiSelect implements ControlValueAccessor, AfterContentInit {
   id = input(`select-${Math.random().toString(36).substr(2, 9)}`);
   placeholder = input('');
   label = input('');
@@ -111,12 +111,12 @@ export class GuipSelect implements ControlValueAccessor, AfterContentInit {
 }
 
 @Component({
-  selector: 'guip-select-option',
+  selector: 'genui-select-option',
   standalone: true,
   imports: [CommonModule],
   template: `<option [value]="value()"><ng-content></ng-content></option>`,
   encapsulation: ViewEncapsulation.None,
 })
-export class GuipSelectOption {
+export class GenUiSelectOption {
   value = input('');
 }

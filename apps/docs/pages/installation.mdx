@@ -1,41 +1,48 @@
----
-title: Installation
-description: Install the GenUI Protocol monorepo and its supporting toolchain.
----
-
 # Installation
 
-Use the repository root to install dependencies and build the workspace.
+## Requirements
 
-## Install dependencies
+- Node.js 18 or newer, pnpm 8 or newer
+- Python 3.10+ for the Python SDK and the sample agent
 
-```bash
-pnpm install
-```
-
-## Build packages
+## From the repository (current)
 
 ```bash
-pnpm build
+git clone https://github.com/Pranavtej/GenUI-Protocol.git
+cd GenUI-Protocol && pnpm install && pnpm build
+pnpm test            # runs every package's tests
 ```
 
-## Development workflow
+## Packages
+
+Release automation is set up (changesets, npm provenance), but **nothing has been published yet**. Names below are what will be published.
+
+| Package | Purpose |
+|---|---|
+| `@genui-protocol/protocol`, `ast` | Types, actions, stream frames, shared constants |
+| `@genui-protocol/runtime-core` | Tree, id-keyed diff, RFC 6902 patches, data store, actions, `RuntimeSession` |
+| `@genui-protocol/validation` | Document validator with limits, URL checks, allow-lists |
+| `@genui-protocol/stream-engine` | Ordered stream consumer with resync, SSE client |
+| `@genui-protocol/component-registry` | Component metadata and props schemas |
+| `@genui-protocol/renderer-react` | React renderer |
+| `@genui-protocol/angular` | Angular renderer (reference implementation) |
+| `@genui-protocol/theme-engine` | Design tokens → CSS variables |
+| `@genui-protocol/sdk-js` | Typed builders, MCP client |
+| `@genui-protocol/prompt-kit` | System prompt and tool definitions for LLMs |
+| `@genui-protocol/cli` | The `genui` command |
+| `@genui-protocol/eval` | `genui-eval`, a validity benchmark for models |
+| `genui_protocol_sdk` (PyPI) | Python SDK |
+
+## Python SDK
 
 ```bash
-pnpm dev
+pip install -e packages/sdk/python      # from the repository
 ```
 
-## Workspace layout
-
-- apps: demos and tooling
-- packages: runtime, schemas, renderers, SDKs
-- tools: repository automation
-
-## Troubleshooting
-
-If `pnpm` is unavailable, install it with:
+## MCP server
 
 ```bash
-corepack enable
-pnpm --version
+node apps/mcp-server/dist/index.js --http    # REST + SSE on 127.0.0.1:4000
 ```
+
+See [MCP server](/mcp-server) for configuration and Docker.

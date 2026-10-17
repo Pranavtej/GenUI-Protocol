@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://genui-protocol.dev/schemas/v1/document.json",
+  "title": "GenUI Document",
+  "type": "object",
+  "properties": {
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+"
+    },
+    "root": {
+      "$ref": "node.json"
+    },
+    "data": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "version",
+    "root"
+  ],
+  "additionalProperties": false
+}

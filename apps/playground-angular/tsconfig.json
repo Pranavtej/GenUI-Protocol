@@ -23,7 +23,9 @@
         "node_modules/tslib",
         "../../node_modules/tslib"
       ],
-      "@ainative-ui/*": [
+      "@genui-protocol/sdk-js": ["../../packages/sdk/js/src"],
+      "@genui-protocol/examples": ["../../examples/documents/src"],
+      "@genui-protocol/*": [
         "../../packages/core/*/src",
         "../../packages/runtime/*/src",
         "../../packages/components/*/src",

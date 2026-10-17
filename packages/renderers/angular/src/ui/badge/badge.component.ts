@@ -23,13 +23,13 @@ const badgeVariants = cva(
 );
 
 @Component({
-  selector: 'guip-badge',
+  selector: 'genui-badge',
   standalone: true,
   imports: [CommonModule],
   template: `<span [class]="computedClass()"><ng-content></ng-content></span>`,
   encapsulation: ViewEncapsulation.None,
 })
-export class GuipBadge {
+export class GenUiBadge {
   variant = input<string>('default');
   class = input('');
 

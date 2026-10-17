@@ -1,0 +1,46 @@
+# Using with LLMs
+
+Models are good at this when they are told the rules, shown the real component catalogue, and given the validator's errors when they slip. GenUI ships all three.
+
+## 1. Give the model the rules
+
+`@genui-protocol/prompt-kit` builds a system prompt from the **registry**, so it always lists exactly the components and props the validator accepts, plus the binding syntax, every action kind, and worked examples (which are validated in CI).
+
+```ts
+import { buildSystemPrompt, toAnthropicTools, toOpenAITools } from "@genui-protocol/prompt-kit";
+
+const system = buildSystemPrompt({ registry });   // includes your custom components
+const tools = toAnthropicTools();                 // render_ui, validate_ui, patch_ui
+```
+
+Over MCP or REST the same text is available as the `get_protocol_guide` tool / `GET /api/protocol_guide`. From a shell: `genui prompt`.
+
+## 2. Validate and repair
+
+Never show an unvalidated document. Check it, and on failure send the exact errors back:
+
+```python
+from genui_protocol_sdk import validate_document
+
+result = validate_document(doc)
+if not result.valid:
+    messages.append({"role": "user", "content": "Fix these and reply with the corrected document only:\n" + "\n".join(f"- {e}" for e in result.errors)})
+```
+
+The sample agent in `apps/python-test` does exactly this (up to two repairs) and keeps conversation history, so a UI event (`[ui-event] The user triggered 'signup' …`) arrives as a normal turn the model can answer with a patch.
+
+## 3. Close the loop
+
+The UI sends `emit`/`submit` events to your host; the host forwards them to the agent as a message; the agent replies with a new document or patches. See [tutorial 2](/tutorials#2-a-form-that-talks-to-an-agent).
+
+## 4. Measure
+
+`genui-eval` runs 10 tasks against a model and reports first-try validity, validity after repairs, feature coverage (did it use the right components, bindings and actions?) and output tokens.
+
+```bash
+genui-eval --mock                                                  # offline plumbing check
+ANTHROPIC_API_KEY=… genui-eval --provider anthropic --model <id>   # real run
+OPENAI_API_KEY=…    genui-eval --provider openai    --model <id>
+```
+
+> No model results are published yet. The harness is tested with fake models; it has not been run against a real one.

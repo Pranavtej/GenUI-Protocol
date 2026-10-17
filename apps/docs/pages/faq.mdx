@@ -1,18 +1,17 @@
----
-title: FAQ
-description: Common questions about the protocol, runtime, and docs workflow.
----
-
 # FAQ
 
-## What is GenUI Protocol?
+**Is this a UI framework?** No. It is a protocol plus a runtime and thin renderers. Your components, your design system.
 
-It is a compact AST-based protocol for representing AI-generated interfaces in a framework-agnostic way.
+**Why not let the model write React/HTML?** It is larger, framework-specific, hard to validate, and executing generated code is a security problem. A document can be checked mechanically and rendered by code you control.
 
-## Can I render the same AST in multiple frameworks?
+**Can a document run code?** No. There are no expressions, only lookups; actions are a fixed vocabulary; props render as text; URLs are scheme-checked.
 
-Yes. The runtime and renderer adapters make it possible to render the same AST in multiple environments.
+**How does the UI talk back to the agent?** `emit` and `submit` actions produce events delivered to your `onEmit` handler (or `(agentEvent)` in Angular). You forward them to the agent, which can reply with patches.
 
-## Is the protocol safe?
+**How do I add my own component?** Register it with a namespaced id (`registry.registerCustom({ id: "acme:gauge", … })`), give your renderer an implementation, and documents may use `acme:gauge`. See the [spec](/protocol#7-registry--components).
 
-Yes. It avoids arbitrary code generation and encourages declarative component metadata.
+**Which models work?** Any that can follow the prompt. The [prompt kit](/agents) works with Anthropic, OpenAI and MCP tool formats. How *reliably* each does is what `genui-eval` is for; we have not published numbers yet.
+
+**Is it production ready?** It is 0.x. The protocol is a draft, nothing is published to npm yet, and several planned features are missing ([Status](/features)).
+
+**Does it work with Vue/Svelte/Flutter?** Not yet. React and Angular are implemented. A new renderer implements the [contract](/protocol#13-renderer-contract) and passes `conformance/`.

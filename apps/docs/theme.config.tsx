@@ -9,7 +9,7 @@ const config: DocsThemeConfig = {
     chat: {
         link: 'https://github.com/Pranavtej/GenUI-Protocol/discussions'
     },
-    docsRepositoryBase: 'https://github.com/Pranavtej/GenUI-Protocol/tree/demo/apps/docs',
+    docsRepositoryBase: 'https://github.com/Pranavtej/GenUI-Protocol/tree/main/apps/docs',
     footer: {
         text: '© 2026 GenUI Protocol'
     },

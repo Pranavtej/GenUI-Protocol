@@ -1,57 +1,68 @@
----
-title: Getting Started
-description: Install GenUI Protocol and build your first AST-driven interface.
----
+# Getting started
 
-# Getting Started
+This takes about five minutes and ends with a document rendered, edited and validated.
 
-This guide walks you through installing the repository and exploring the runtime locally.
+## 1. Get the code
 
-## Requirements
-
-- Node.js 18+
-- pnpm 8+
-
-## Installation
+The packages are not on npm yet, so work from the repository:
 
 ```bash
+git clone https://github.com/Pranavtej/GenUI-Protocol.git
+cd GenUI-Protocol
 pnpm install
 pnpm build
 ```
 
-## Start the local stack
+Requires Node 18+ and pnpm 8+.
+
+## 2. See it run
 
 ```bash
-pnpm dev
+pnpm --filter genui-protocol-example-react dev   # http://localhost:4175
 ```
 
-## Run individual apps
+Pick **Access request workflow**, fill the form and press *Request access*. The submit action sends an event to a scripted agent, which answers with data patches; the workflow advances. Open **Agent run monitor** and press *Play stream* to watch sequenced frames arrive.
 
-```bash
-pnpm --filter playground dev
-pnpm --filter playground-angular serve
-pnpm --filter mcp-server dev
-```
+The playground (`pnpm --filter genui-protocol-playground dev`) lets you edit a document and see validation errors as you type.
 
-## First example
+## 3. Render your own document
 
-```ts
-import { buildRuntimeTree, reconcile } from '@ainative-ui/runtime-core';
+```tsx
+import { GenUiRenderer, createSession } from "@genui-protocol/renderer-react";
 
-const ast = {
-  t: 'page',
-  p: { title: 'Dashboard' },
-  c: [{ t: 'card', p: { title: 'Metrics' } }]
+const document = {
+  version: "1.0.0",
+  data: { count: 3 },
+  root: {
+    t: "card",
+    p: { title: "Cart" },
+    c: [
+      { t: "text", p: { content: { $tpl: "Items in cart: {{count}}" } } },
+      { t: "button", p: { label: "Set to 4", onClick: { do: "setData", path: "count", value: 4 } } },
+    ],
+  },
 };
 
-const tree = buildRuntimeTree(ast);
-const patches = reconcile(previousTree, tree);
+const session = createSession({ document, onEmit: (event) => console.log("to agent:", event) });
+
+export const App = () => <GenUiRenderer session={session} theme="light" />;
 ```
 
-> This example shows how the runtime converts your AST into a reconciled tree and prepares patches for updates.
+The *session* owns the tree and the data. Renderers subscribe to it; actions and streamed frames go through it.
 
-## Next steps
+## 4. Validate before you render
 
-- Review the [Protocol reference](/protocol)
-- Explore the [Architecture guide](/architecture)
-- Visit the [Examples page](/examples)
+```ts
+import { validateDocument } from "@genui-protocol/validation";
+
+const result = validateDocument(document);
+if (!result.valid) console.error(result.errors);
+```
+
+Or from a shell: `genui validate doc.json` (exit code 1 and a readable list when invalid).
+
+## 5. Next
+
+- Build documents in code with the [typed builders](/tutorials#1-build-a-dashboard-in-code).
+- Wire an agent: [Using with LLMs](/agents).
+- Stream updates: [tutorial 3](/tutorials#3-stream-live-updates).

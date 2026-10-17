@@ -1,22 +1,41 @@
----
-title: Concepts
-description: Core mental models behind ASTs, runtime trees, and renderer adapters.
----
-
 # Concepts
 
-## The AST contract
+## Document and nodes
 
-The AST is the primary contract between AI generation and UI rendering. It describes components, props, children, and events in a compact form.
+A **document** is `{ version, data?, root }`. The `root` is a tree of **nodes**: `{ t, id?, p?, c? }` — component *type*, optional stable *id*, *props*, *children*. No other keys are allowed. Give nodes that may later move or change (list rows, steps) an explicit `id`; otherwise the runtime derives one from position, which shifts when siblings are inserted.
 
-## Runtime tree
+## Components and the registry
 
-The runtime tree is the normalized representation created from the AST and used for reconciliation and patching.
+`t` names a component in the **registry**: the single source of truth for what exists, its props (as JSON Schema), events and renderer support. Agents discover components through the [MCP server](/mcp-server) and validators check props against the same schemas. See the [component reference](/components). Custom components are namespaced (`acme:gauge`) so they can never shadow a built-in.
 
-## Renderer adapters
+## Data and bindings
 
-Renderers stay thin by consuming runtime nodes and adapting them to host UI primitives.
+`data` is the model. A prop value can be `{ "$bind": "metrics.users" }` or `{ "$tpl": "Hello {{user.name}}" }`. These are *lookups only* — no expressions or functions — which is what keeps documents safe. An input whose `value` is a pure `$bind` is **two-way**: typing writes the data.
 
-## Event flow
+Putting values in `data` rather than in props keeps documents small when values repeat, and lets an agent update a number without resending the UI.
 
-Events are serialized and routed through the runtime so that interactions can be handled by agents or backend workflows.
+## Actions
+
+Interactivity is declared, never coded. Event props (`onClick`, `onChange`, `onTabChange`, `onClose`) hold one action or a list:
+
+| Action | Effect |
+|---|---|
+| `setData` | Set a data path (value may be a `$bind`; `$event` holds event details) |
+| `toggle` | Negate a boolean |
+| `navigate` | Ask the host to navigate (URL is scheme-checked) |
+| `emit` | Send a named event with a payload to the agent |
+| `submit` | `emit` with the data at a path — form submission |
+
+`emit` and `submit` are how a document talks back. The host decides what to do with them.
+
+## Session
+
+A `RuntimeSession` owns the runtime tree and the data store. It resolves bindings, runs actions, applies stream frames and notifies subscribers. Renderers are thin: subscribe, draw, forward input. Every renderer drives the same session.
+
+## Patches and streaming
+
+Updates are RFC 6902 patches: node patches (`/c/0/p/label`) and data patches (`/metrics/users`). A **stream frame** carries a `sequence`; the consumer applies frames in order, drops duplicates, and asks for a new snapshot if it falls behind. A failed patch leaves state unchanged (patches are atomic).
+
+## Safety model
+
+No `eval`, no raw HTML props. Props render as text. URL props are scheme-checked. Depth, node count and string length are limited (and enforced iteratively, so hostile nesting cannot overflow the stack). Hosts can restrict components and action kinds per session. The details are in the [specification](/protocol#8-security-considerations).

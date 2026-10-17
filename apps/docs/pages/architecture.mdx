@@ -1,25 +1,25 @@
----
-title: Architecture
-description: Overview of the runtime layers and the AST-based architecture behind GenUI Protocol.
----
-
-import { Mermaid } from '../components/Mermaid';
-
 # Architecture
 
-GenUI Protocol decouples AI-generated UI from renderer-specific implementation details. The runtime creates a normalized tree from the AST, reconciles updates, and routes events back to the host system.
+```
+ Agent / LLM ──► MCP server ──► document ──► validation ──► RuntimeSession ──► renderer ──► UI
+      ▲            (guide,         │            (limits,        (tree, data,     (React,       │
+      │         catalogue,         │          props, URLs)    actions, frames)   Angular)      │
+      │          validate)         ▼                                                           │
+      └──────────── emit / submit events ◄────────────────────────────────────────────────────┘
+                     stream frames (snapshot, patch, data) flow agent → UI over SSE
+```
 
-<Mermaid chart={`graph TD\nA[Universal AST] --> B[Runtime Tree]\nB --> C[Reconciliation]\nC --> D[Renderer Adapters]\nD --> E[React / Angular / Vue / Svelte / Native]`} />
+## Layers
 
-## Core layers
+1. **Protocol** (`protocol`, `ast`, `schemas`, `spec/`) — the contract: node model, expressions, actions, frames, JSON Schemas, conformance fixtures. Language-neutral; the Python SDK implements it independently and passes the same fixtures.
+2. **Runtime** (`runtime-core`, `validation`, `stream-engine`) — framework-free logic: diff/patch, data store, action runner, `RuntimeSession`, validator, ordered stream consumer.
+3. **Components** (`component-registry`) — metadata and props schemas; the catalogue the agent sees.
+4. **Renderers** (`renderer-react`, `angular`) — thin adapters that draw the session's tree. They share a [contract](/protocol#13-renderer-contract) and the render conformance fixtures.
+5. **Agent tooling** (`mcp-server`, `prompt-kit`, `sdk-js`, Python SDK, `cli`, `eval`) — everything that helps a model produce valid documents and a host consume them.
 
-1. AI layer – generate AST payloads from component metadata and MCP discovery.
-2. Runtime layer – normalize, reconcile, patch, and route events.
-3. Renderer layer – adapt the runtime tree to the target framework.
+## Design rules
 
-## Design goals
-
-- Keep the interface declarative
-- Preserve portability across frameworks
-- Avoid unsafe arbitrary code execution
-- Support incremental updates and streaming events
+- The AST is the only contract between AI and rendering.
+- Renderers contain no business logic; the session does.
+- The registry is generated into prompts, docs, and the Python bundle, so they cannot drift.
+- Every implementation answers to `conformance/`.

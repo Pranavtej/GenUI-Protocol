@@ -1,0 +1,55 @@
+{
+  "name": "@genui-protocol/eval",
+  "version": "0.1.0",
+  "private": false,
+  "description": "Measures how reliably an LLM emits valid GenUI documents: first-try validity, repair rate, feature coverage and size vs rendered HTML",
+  "type": "module",
+  "bin": {
+    "genui-eval": "dist/src/bin.js"
+  },
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "lint": "echo 'No lint configured'",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@genui-protocol/ast": "workspace:^",
+    "@genui-protocol/prompt-kit": "workspace:^",
+    "@genui-protocol/renderer-react": "workspace:^",
+    "@genui-protocol/sdk-js": "workspace:^",
+    "@genui-protocol/validation": "workspace:^",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "typescript": "^5.5.4"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "files": [
+    "dist",
+    "src",
+    "!**/*.tsbuildinfo",
+    "README.md",
+    "LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pranavtej/GenUI-Protocol.git",
+    "directory": "packages/tooling/eval"
+  },
+  "bugs": {
+    "url": "https://github.com/Pranavtej/GenUI-Protocol/issues"
+  },
+  "homepage": "https://github.com/Pranavtej/GenUI-Protocol#readme"
+}

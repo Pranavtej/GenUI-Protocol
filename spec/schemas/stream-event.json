@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://genui-protocol.dev/schemas/v1/stream-event.json",
+  "title": "GenUI Stream Event",
+  "type": "object",
+  "properties": {
+    "transport": {
+      "type": "string"
+    },
+    "sequence": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "patches": {
+      "type": "array",
+      "items": {
+        "$ref": "patch.json"
+      }
+    }
+  },
+  "required": [
+    "sequence",
+    "timestamp",
+    "patches"
+  ]
+}

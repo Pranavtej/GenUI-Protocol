@@ -6,3 +6,4 @@ packages:
   - "packages/renderers/*"
   - "packages/sdk/*"
   - "packages/tooling/*"
+  - "examples/*"

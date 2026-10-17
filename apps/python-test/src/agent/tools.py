@@ -2,6 +2,7 @@
 
 from typing import Any
 from langchain_core.tools import tool
+from src.agent.ui_loop import check
 from src.client.mcp_client import MCPClient
 
 
@@ -78,17 +79,22 @@ def create_tools(client: MCPClient) -> list[dict[str, Any]]:
         return f"```json\n{json.dumps(doc, indent=2)}\n```"
 
     @tool
-    def validate_ast(root_json: str) -> str:
-        """Validate an AST against GenUI Protocol schemas. Provide the root UINode as a JSON string."""
+    def get_protocol_guide() -> str:
+        """Get the rules for writing a GenUI document (data binding with $bind/$tpl, declarative actions, forms) and the component catalogue. Read this before generating UI."""
+        return client.guide()["systemPrompt"]
+
+    @tool
+    def validate_ast(document_json: str) -> str:
+        """Validate a GenUI document (preferred: the full {version, data?, root} JSON) or a bare root node. Fix every reported error before answering."""
         import json
         try:
-            root = json.loads(root_json) if isinstance(root_json, str) else root_json
+            value = json.loads(document_json) if isinstance(document_json, str) else document_json
         except json.JSONDecodeError as e:
             return f"Invalid JSON: {e}"
-        result = client.validate_ast(root)
+        result = check(value)
         if result.valid:
-            return "✅ AST is valid!"
-        errors = "\n".join(f"- {e}" for e in (result.errors or []))
+            return "✅ Valid!"
+        errors = "\n".join(f"- {e}" for e in result.errors)
         return f"❌ Validation failed:\n{errors}"
 
     @tool
@@ -115,6 +121,7 @@ def create_tools(client: MCPClient) -> list[dict[str, Any]]:
         return "Supported renderers:\n" + "\n".join(f"- {r}" for r in renderers)
 
     return [
+        get_protocol_guide,
         discover_components,
         get_component,
         search_components,

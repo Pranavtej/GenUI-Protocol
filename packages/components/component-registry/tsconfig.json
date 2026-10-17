@@ -11,6 +11,9 @@
   "references": [
     {
       "path": "../../core/schemas"
+    },
+    {
+      "path": "../../core/protocol"
     }
   ]
 }

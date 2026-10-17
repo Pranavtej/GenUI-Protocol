@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://genui-protocol.dev/schemas/v1/patch.json",
+  "title": "GenUI Patch Operation (RFC 6902)",
+  "type": "object",
+  "properties": {
+    "op": {
+      "enum": [
+        "add",
+        "remove",
+        "replace",
+        "move",
+        "copy",
+        "test"
+      ]
+    },
+    "path": {
+      "type": "string"
+    },
+    "from": {
+      "type": "string"
+    },
+    "value": {}
+  },
+  "required": [
+    "op",
+    "path"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "op": {
+            "enum": [
+              "move",
+              "copy"
+            ]
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "from"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "op": {
+            "enum": [
+              "add",
+              "replace",
+              "test"
+            ]
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "value"
+        ]
+      }
+    }
+  ],
+  "additionalProperties": false
+}

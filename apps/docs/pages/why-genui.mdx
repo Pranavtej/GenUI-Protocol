@@ -1,0 +1,19 @@
+# Why not just generate HTML?
+
+The obvious way to get an interface out of a model is to ask for HTML, or React. It works in demos. In a product it runs into four problems.
+
+**1. You have to execute it.** Model output becomes code that runs in your users' browsers. Sanitising it is a permanent arms race, and one miss is an XSS bug. A GenUI document is data: props render as text, URLs are scheme-checked, interactivity is five declarative actions, and there is no code path from document to execution.
+
+**2. You cannot check it.** HTML has no schema for "a KPI card". A document is validated mechanically against the registry's props schemas, with limits on size and depth, and a failure produces a precise error list you can hand back to the model to repair. That loop is what makes models reliable at this, and it only works because the contract is checkable.
+
+**3. It is tied to a framework and a design system.** Generated markup carries someone's idea of styling. A document says *what* (a KPI, a chart, a form); your renderer decides *how*, with your components and your theme. The same document renders in React and Angular today.
+
+**4. It is large.** Across our ten benchmark tasks the rendered HTML is a median of roughly 8× the size of the document ([details and caveats](/benchmark)). That is an upper bound — our renderer's HTML is verbose — but output tokens are what you pay for and wait on.
+
+## What it costs you
+
+You adopt a vocabulary. If your UI needs something the registry lacks, you add a namespaced component and implement it in your renderer. And you take on an early-stage project: see [Status & features](/features) for what is and is not built, including that no model has yet been run through the eval harness.
+
+## What it does not try to be
+
+Not a replacement for your frontend framework, and not a design tool. The goal is a common language between agents and interfaces, so that an agent can show a dashboard or a form the way it can already return JSON.

@@ -2,7 +2,6 @@
 module.exports = {
   content: [
     "./src/**/*.{html,ts}",
-    "../../packages/renderers/angular-ui/src/**/*.{html,ts}",
     "../../packages/renderers/angular/src/**/*.{html,ts}",
   ],
   theme: {

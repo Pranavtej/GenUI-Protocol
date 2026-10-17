@@ -4,7 +4,8 @@
         "jsx": "react-jsx",
         "module": "ESNext",
         "outDir": "dist",
-        "rootDir": "src"
+        "rootDir": "src",
+        "composite": true
     },
     "include": [
         "src/**/*.tsx",
@@ -13,6 +14,18 @@
     "references": [
         {
             "path": "../../packages/core/ast"
+        },
+        {
+            "path": "../../packages/core/protocol"
+        },
+        {
+            "path": "../../packages/runtime/runtime-core"
+        },
+        {
+            "path": "../../packages/runtime/validation"
+        },
+        {
+            "path": "../../packages/renderers/react"
         }
     ]
 }

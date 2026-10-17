@@ -1,17 +1,22 @@
 {
-    "name": "ai-native-ui-playground",
+    "name": "genui-protocol-playground",
     "version": "0.1.0",
     "private": true,
     "type": "module",
     "scripts": {
         "dev": "vite",
         "build": "tsc -b && vite build",
-        "preview": "vite preview"
+        "preview": "vite preview",
+        "test": "vitest run"
     },
     "dependencies": {
         "react": "^18.3.1",
         "react-dom": "^18.3.1",
-        "@ainative-ui/ast": "workspace:0.1.0"
+        "@genui-protocol/ast": "workspace:^",
+        "@genui-protocol/renderer-react": "workspace:^",
+        "@genui-protocol/runtime-core": "workspace:^",
+        "@genui-protocol/validation": "workspace:^",
+        "@genui-protocol/protocol": "workspace:^"
     },
     "devDependencies": {
         "@types/react": "^18.3.3",

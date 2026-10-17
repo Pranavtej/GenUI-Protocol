@@ -1,0 +1,54 @@
+{
+  "name": "@genui-protocol/prompt-kit",
+  "version": "0.1.0",
+  "private": false,
+  "description": "System prompt, few-shot examples and tool definitions that teach LLMs to emit valid GenUI documents",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "lint": "echo 'No lint configured'",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@genui-protocol/ast": "workspace:^",
+    "@genui-protocol/component-registry": "workspace:^",
+    "@genui-protocol/protocol": "workspace:^",
+    "@genui-protocol/schemas": "workspace:^"
+  },
+  "devDependencies": {
+    "@genui-protocol/validation": "workspace:^",
+    "typescript": "^5.5.4"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "files": [
+    "dist",
+    "src",
+    "!**/*.tsbuildinfo",
+    "README.md",
+    "LICENSE"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/src/index.js",
+      "types": "./dist/src/index.d.ts"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pranavtej/GenUI-Protocol.git",
+    "directory": "packages/tooling/prompt-kit"
+  },
+  "bugs": {
+    "url": "https://github.com/Pranavtej/GenUI-Protocol/issues"
+  },
+  "homepage": "https://github.com/Pranavtej/GenUI-Protocol#readme"
+}

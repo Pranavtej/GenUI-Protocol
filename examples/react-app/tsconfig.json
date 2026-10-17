@@ -1,0 +1,13 @@
+{
+    "extends": "../../tsconfig.base.json",
+    "compilerOptions": { "jsx": "react-jsx", "module": "ESNext", "outDir": "dist", "rootDir": "src", "composite": true },
+    "include": ["src/**/*.tsx", "src/**/*.ts"],
+    "references": [
+        { "path": "../documents" },
+        { "path": "../../packages/core/ast" },
+        { "path": "../../packages/core/protocol" },
+        { "path": "../../packages/runtime/runtime-core" },
+        { "path": "../../packages/runtime/stream-engine" },
+        { "path": "../../packages/renderers/react" }
+    ]
+}

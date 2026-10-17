@@ -1,0 +1,14 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": { "outDir": "dist", "declaration": true, "declarationMap": true, "types": ["node"] },
+  "include": ["src/**/*.ts"],
+  "references": [
+    { "path": "../../core/ast" },
+    { "path": "../../core/protocol" },
+    { "path": "../../core/schemas" },
+    { "path": "../../components/component-registry" },
+    { "path": "../../runtime/runtime-core" },
+    { "path": "../../runtime/validation" },
+    { "path": "../prompt-kit" }
+  ]
+}

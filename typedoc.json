@@ -1,0 +1,23 @@
+{
+  "entryPoints": [
+    "packages/core/protocol/src/index.ts",
+    "packages/core/ast/src/index.ts",
+    "packages/runtime/runtime-core/src/index.ts",
+    "packages/runtime/validation/src/index.ts",
+    "packages/runtime/stream-engine/src/index.ts",
+    "packages/renderers/react/src/index.ts",
+    "packages/sdk/js/src/index.ts",
+    "packages/tooling/theme-engine/src/index.ts",
+    "packages/tooling/prompt-kit/src/index.ts"
+  ],
+  "entryPointStrategy": "expand",
+  "out": "apps/docs/public/api",
+  "name": "GenUI Protocol API",
+  "tsconfig": "tsconfig.typedoc.json",
+  "skipErrorChecking": true,
+  "excludeInternal": true,
+  "excludePrivate": true,
+  "readme": "none",
+  "validation": { "notExported": false, "invalidLink": false },
+  "logLevel": "Warn"
+}

@@ -13,6 +13,9 @@
       "path": "../../core/ast"
     },
     {
+      "path": "../../core/protocol"
+    },
+    {
       "path": "../../core/schemas"
     },
     {

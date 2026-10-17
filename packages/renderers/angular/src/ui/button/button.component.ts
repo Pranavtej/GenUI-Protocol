@@ -31,7 +31,7 @@ const buttonVariants = cva(
 );
 
 @Component({
-  selector: 'guip-button',
+  selector: 'genui-button',
   standalone: true,
   imports: [CommonModule],
   template: `
@@ -54,7 +54,7 @@ const buttonVariants = cva(
   `,
   encapsulation: ViewEncapsulation.None,
 })
-export class GuipButton {
+export class GenUiButton {
   variant = input<string>('default');
   size = input<string>('default');
   type = input<string>('button');

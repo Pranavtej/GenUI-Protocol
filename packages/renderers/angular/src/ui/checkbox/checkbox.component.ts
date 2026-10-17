@@ -4,7 +4,7 @@ import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormsModule } from '@angular/f
 import { cn } from '../lib/utils';
 
 @Component({
-  selector: 'guip-checkbox',
+  selector: 'genui-checkbox',
   standalone: true,
   imports: [CommonModule],
   template: `
@@ -38,12 +38,12 @@ import { cn } from '../lib/utils';
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => GuipCheckbox),
+      useExisting: forwardRef(() => GenUiCheckbox),
       multi: true,
     },
   ],
 })
-export class GuipCheckbox implements ControlValueAccessor {
+export class GenUiCheckbox implements ControlValueAccessor {
   id = input(`checkbox-${Math.random().toString(36).substr(2, 9)}`);
   label = input('');
   required = input(false);

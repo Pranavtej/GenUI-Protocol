@@ -1,0 +1,20 @@
+# CLI
+
+```
+genui validate <file|->            Validate a document (exit 1 if invalid)  [--renderer <name>] [--json]
+genui diff <before> <after>        RFC 6902 patches turning one document into the other
+genui patch <document> <patches>   Apply node patches and print the result
+genui scaffold [name]              Print a starter document (dashboard, form, workflow, blank)
+genui components [name]            List components, or show one with its props schema  [--json]
+genui schema [name]                Print a published JSON Schema
+genui prompt                       Print the LLM system prompt (component catalogue included)
+```
+
+Files are JSON; use `-` for stdin. Exit codes: `0` success, `1` a negative result (invalid document, failed patch), `2` usage error.
+
+```bash
+genui scaffold form | genui validate -
+cat agent-reply.json | genui validate - --json
+```
+
+`genui-eval` is a separate binary — see [Using with LLMs](/agents#4-measure).

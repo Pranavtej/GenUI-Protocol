@@ -1,41 +1,46 @@
 {
-    "name": "ai-native-ui",
+    "name": "genui-protocol",
     "private": true,
     "version": "0.1.0",
-    "description": "AI-Native UI Runtime monorepo for universal AI-generated interfaces.",
+    "description": "GenUI Protocol monorepo for universal AI-generated interfaces.",
     "license": "MIT",
-    "packageManager": "pnpm@8.14.0",
-    "workspaces": [
-        "apps/*",
-        "packages/core/*",
-        "packages/runtime/*",
-        "packages/components/*",
-        "packages/renderers/*",
-        "packages/sdk/*",
-        "packages/tooling/*"
-    ],
+    "engines": {
+        "node": ">=18",
+        "pnpm": ">=8"
+    },
+    "packageManager": "pnpm@8.15.9",
     "devDependencies": {
+        "@changesets/changelog-github": "^0.5",
+        "@changesets/cli": "^2.27",
         "@types/node": "^20.14.0",
         "@typescript-eslint/eslint-plugin": "^6.10.1",
         "@typescript-eslint/parser": "^6.10.1",
         "autoprefixer": "^10.5.0",
         "eslint": "^8.57.0",
+        "fast-check": "^3",
         "postcss": "^8.5.15",
         "prettier": "^3.0.0",
+        "rimraf": "^5.0.5",
         "tailwindcss": "^3.4.19",
         "ts-node": "^10.9.1",
         "turbo": "^1.11.0",
+        "typedoc": "^0.26",
         "typescript": "^5.5.4",
-        "typescript-json-schema": "^0.67.4"
+        "typescript-json-schema": "^0.67.4",
+        "vitest": "^2"
     },
     "scripts": {
         "bootstrap": "pnpm install",
         "build": "turbo run build",
         "dev": "node dev.js",
         "dev:all": "turbo run dev",
-        "docs": "pnpm --filter ai-native-ui-docs dev",
+        "docs": "pnpm --filter genui-protocol-docs dev",
         "lint": "turbo run lint",
         "test": "turbo run test",
-        "clean": "rimraf node_modules .turbo dist apps/*/dist packages/core/*/dist packages/runtime/*/dist packages/components/*/dist packages/renderers/*/dist packages/sdk/*/dist packages/tooling/*/dist"
+        "typecheck": "turbo run typecheck",
+        "clean": "rimraf node_modules .turbo dist apps/*/dist packages/core/*/dist packages/runtime/*/dist packages/components/*/dist packages/renderers/*/dist packages/sdk/*/dist packages/tooling/*/dist",
+        "emit:registry": "node scripts/emit-registry.mjs",
+        "release:check": "pnpm build && node scripts/release-check.mjs",
+        "meta:sync": "node scripts/sync-package-meta.mjs"
     }
 }

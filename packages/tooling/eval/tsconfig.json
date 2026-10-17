@@ -1,0 +1,12 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": { "outDir": "dist", "declaration": true, "declarationMap": true, "types": ["node"], "jsx": "react-jsx" },
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "references": [
+    { "path": "../../core/ast" },
+    { "path": "../../runtime/validation" },
+    { "path": "../prompt-kit" },
+    { "path": "../../renderers/react" },
+    { "path": "../../sdk/js" }
+  ]
+}

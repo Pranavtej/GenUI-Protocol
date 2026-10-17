@@ -1,0 +1,53 @@
+{
+  "name": "@genui-protocol/cli",
+  "version": "0.1.0",
+  "private": false,
+  "description": "genui: validate, diff, patch and scaffold GenUI documents from the command line",
+  "type": "module",
+  "bin": {
+    "genui": "dist/src/bin.js"
+  },
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "lint": "echo 'No lint configured'",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@genui-protocol/ast": "workspace:^",
+    "@genui-protocol/component-registry": "workspace:^",
+    "@genui-protocol/prompt-kit": "workspace:^",
+    "@genui-protocol/protocol": "workspace:^",
+    "@genui-protocol/runtime-core": "workspace:^",
+    "@genui-protocol/schemas": "workspace:^",
+    "@genui-protocol/validation": "workspace:^"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.4"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "files": [
+    "dist",
+    "src",
+    "!**/*.tsbuildinfo",
+    "README.md",
+    "LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pranavtej/GenUI-Protocol.git",
+    "directory": "packages/tooling/cli"
+  },
+  "bugs": {
+    "url": "https://github.com/Pranavtej/GenUI-Protocol/issues"
+  },
+  "homepage": "https://github.com/Pranavtej/GenUI-Protocol#readme"
+}

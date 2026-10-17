@@ -1,53 +1,53 @@
 // Button
-export { GuipButton } from './button/button.component';
+export { GenUiButton } from './button/button.component';
 
 // Card
-export { GuipCard, GuipCardHeader, GuipCardTitle, GuipCardDescription, GuipCardContent, GuipCardFooter } from './card/card.component';
+export { GenUiCard, GenUiCardHeader, GenUiCardTitle, GenUiCardDescription, GenUiCardContent, GenUiCardFooter } from './card/card.component';
 
 // Input & Label
-export { GuipInput, GuipLabel } from './input/input.component';
+export { GenUiInput, GenUiLabel } from './input/input.component';
 
 // Textarea
-export { GuipTextarea } from './textarea/textarea.component';
+export { GenUiTextarea } from './textarea/textarea.component';
 
 // Select
-export { GuipSelect, GuipSelectOption } from './select/select.component';
+export { GenUiSelect, GenUiSelectOption } from './select/select.component';
 
 // Checkbox
-export { GuipCheckbox } from './checkbox/checkbox.component';
+export { GenUiCheckbox } from './checkbox/checkbox.component';
 
 // Switch
-export { GuipSwitch } from './switch/switch.component';
+export { GenUiSwitch } from './switch/switch.component';
 
 // Text & Heading
-export { GuipText, GuipHeading } from './text/text.component';
+export { GenUiText, GenUiHeading } from './text/text.component';
 
 // Layout
-export { GuipFlex, GuipStack, GuipGrid } from './layout/layout.component';
+export { GenUiFlex, GenUiStack, GenUiGrid } from './layout/layout.component';
 
 // Dialog
-export { GuipDialog } from './dialog/dialog.component';
+export { GenUiDialog } from './dialog/dialog.component';
 
 // Table
-export { GuipTable, GuipThead, GuipTbody, GuipTr, GuipTh, GuipTd } from './table/table.component';
+export { GenUiTable, GenUiThead, GenUiTbody, GenUiTr, GenUiTh, GenUiTd } from './table/table.component';
 
 // Badge
-export { GuipBadge } from './badge/badge.component';
+export { GenUiBadge } from './badge/badge.component';
 
 // Separator
-export { GuipSeparator } from './separator/separator.component';
+export { GenUiSeparator } from './separator/separator.component';
 
 // ScrollArea
-export { GuipScrollArea } from './scroll-area/scroll-area.component';
+export { GenUiScrollArea } from './scroll-area/scroll-area.component';
 
 // Tabs
-export { GuipTabs, GuipTabPanel } from './tabs/tabs.component';
+export { GenUiTabs, GenUiTabPanel } from './tabs/tabs.component';
 
 // Chart
-export { GuipChart } from './chart/chart.component';
+export { GenUiChart } from './chart/chart.component';
 
 // KPI
-export { GuipKpi } from './kpi/kpi-card.component';
+export { GenUiKpi } from './kpi/kpi-card.component';
 
 // Utils
 export { cn } from './lib/utils';

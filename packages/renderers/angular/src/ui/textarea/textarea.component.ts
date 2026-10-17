@@ -4,7 +4,7 @@ import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormsModule } from '@angular/f
 import { cn } from '../lib/utils';
 
 @Component({
-  selector: 'guip-textarea',
+  selector: 'genui-textarea',
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
@@ -37,12 +37,12 @@ import { cn } from '../lib/utils';
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => GuipTextarea),
+      useExisting: forwardRef(() => GenUiTextarea),
       multi: true,
     },
   ],
 })
-export class GuipTextarea implements ControlValueAccessor {
+export class GenUiTextarea implements ControlValueAccessor {
   id = input(`textarea-${Math.random().toString(36).substr(2, 9)}`);
   placeholder = input('');
   label = input('');

@@ -1,15 +1,34 @@
 import { Component, OnInit, signal, computed, effect } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
-import { RuntimeTree, buildRuntimeTree, reconcile, diffRuntimeTree, applyPatch } from "@ainative-ui/runtime-core";
-import { validateASTDocument } from "@ainative-ui/validation";
-import { ComponentRegistry } from "@ainative-ui/component-registry";
-import { eventRouter, UIEvent } from "@ainative-ui/event-engine";
-import { DynamicRendererComponent, GuipButton, GuipBadge, GuipScrollArea, GuipTabs } from "@ainative-ui/angular";
-import { defaultASTDocument, ASTDocument, UINode } from "@ainative-ui/ast";
-import { ASTPatch } from "@ainative-ui/protocol";
+import { RuntimeTree, buildRuntimeTree, reconcile, diffRuntimeTree, applyPatch, createSession } from "@genui-protocol/runtime-core";
+import { validateASTDocument } from "@genui-protocol/validation";
+import { ComponentRegistry } from "@genui-protocol/component-registry";
+import { eventRouter, UIEvent } from "@genui-protocol/event-engine";
+import { DynamicRendererComponent, GenUiButton, GenUiBadge, GenUiScrollArea, GenUiTabs, provideGenUiSession } from "@genui-protocol/angular";
+import { defaultASTDocument, ASTDocument, UINode } from "@genui-protocol/ast";
+import { ASTPatch } from "@genui-protocol/protocol";
+import { EXAMPLES, Example } from "@genui-protocol/examples";
 
 const registry = new ComponentRegistry();
+
+// One session drives data binding and actions for everything rendered in the canvas.
+let agentEventSink: (event: UIEvent) => void = () => {};
+let activeExample: Example | null = null;
+const session = createSession({
+  onEmit: (e) => {
+    agentEventSink({ type: `agent:${e.name}`, target: e.nodeId ?? "", timestamp: e.timestamp, payload: e.payload });
+    // Examples ship a scripted agent, so the UI -> agent -> UI loop works without an LLM.
+    const frames = activeExample?.reply?.(e) ?? [];
+    frames.forEach((frame, i) => setTimeout(() => session.applyFrame(frame), 400 * (i + 1)));
+  },
+});
+
+const EXAMPLE_PRESETS = {
+  analytics: EXAMPLES["analytics-dashboard"],
+  access: EXAMPLES["access-request"],
+  monitor: EXAMPLES["agent-monitoring"],
+} as const;
 
 const DEMO_PRESETS = {
   dashboard: {
@@ -19,7 +38,7 @@ const DEMO_PRESETS = {
       p: { title: "Operations Dashboard", subtitle: "Live Agent Telemetry" },
       c: [
         {
-          t: "grid", p: { columns: 3, gap: "var(--guip-spacing-md)" },
+          t: "grid", p: { columns: 3, gap: "var(--genui-spacing-md)" },
           c: [
             { id: "k1", t: "kpi", p: { label: "Revenue", value: "$45,230", subtext: "vs last month", trend: "up", trendValue: "+12%" } },
             { id: "k2", t: "kpi", p: { label: "Reasoning Steps", value: "348", subtext: "agent execution", trend: "up", trendValue: "+42" } },
@@ -29,7 +48,7 @@ const DEMO_PRESETS = {
         {
           t: "card", p: { title: "Ingestion Controls" },
           c: [
-            { t: "flex", p: { gap: "var(--guip-spacing-md)", justifyContent: "space-between", alignItems: "center" },
+            { t: "flex", p: { gap: "var(--genui-spacing-md)", justifyContent: "space-between", alignItems: "center" },
               c: [
                 { id: "input1", t: "input", p: { label: "Filter", placeholder: "e.g. error" } },
                 { id: "btn1", t: "button", p: { label: "Execute", variant: "default" } },
@@ -57,6 +76,21 @@ const DEMO_PRESETS = {
       ]
     }
   },
+  interactive: {
+    version: "1.0.0",
+    data: { form: { name: "", plan: "pro", agree: false } },
+    root: {
+      id: "i1", t: "card",
+      p: { title: "Interactive form (data binding + actions)" },
+      c: [
+        { id: "i2", t: "input", p: { label: "Name", value: { $bind: "form.name" } } },
+        { id: "i3", t: "select", p: { label: "Plan", value: { $bind: "form.plan" }, options: [{ label: "Free", value: "free" }, { label: "Pro", value: "pro" }] } },
+        { id: "i4", t: "checkbox", p: { label: "I agree", checked: { $bind: "form.agree" } } },
+        { id: "i5", t: "text", p: { content: { $tpl: "Hello {{form.name}} — plan: {{form.plan}}" } } },
+        { id: "i6", t: "button", p: { label: "Submit", onClick: { do: "submit", name: "register", from: "form" } } },
+      ]
+    }
+  },
   form: {
     version: "1.0.0",
     root: {
@@ -78,20 +112,28 @@ const DEMO_PRESETS = {
   standalone: true,
   imports: [
     CommonModule, FormsModule, DynamicRendererComponent,
-    GuipButton, GuipBadge, GuipScrollArea, GuipTabs,
+    GenUiButton, GenUiBadge, GenUiScrollArea, GenUiTabs,
   ],
+  providers: [provideGenUiSession(session)],
   template: `
     <div class="h-screen w-screen flex flex-col bg-background text-foreground">
       <!-- TOP NAV -->
       <header class="flex items-center justify-between px-6 h-14 border-b bg-card">
         <div class="flex items-center gap-3">
           <span class="w-2.5 h-2.5 rounded-full bg-violet-500 shadow-[0_0_8px_rgba(139,92,246,0.7)]"></span>
-          <h1 class="text-lg font-bold">GUIP Playground</h1>
-          <guip-badge variant="secondary">Angular</guip-badge>
+          <h1 class="text-lg font-bold">GenUI Playground</h1>
+          <genui-badge variant="secondary">Angular</genui-badge>
         </div>
         <div class="flex items-center gap-2">
-          <guip-button variant="ghost" size="sm" (onClick)="loadPreset('dashboard')">Dashboard</guip-button>
-          <guip-button variant="ghost" size="sm" (onClick)="loadPreset('form')">Form</guip-button>
+          <genui-button variant="ghost" size="sm" (onClick)="loadPreset('dashboard')">Dashboard</genui-button>
+          <genui-button variant="ghost" size="sm" (onClick)="loadPreset('form')">Form</genui-button>
+          <genui-button variant="ghost" size="sm" (onClick)="loadPreset('interactive')">Interactive</genui-button>
+          <genui-button variant="ghost" size="sm" (onClick)="loadPreset('analytics')">Analytics</genui-button>
+          <genui-button variant="ghost" size="sm" (onClick)="loadPreset('access')">Access request</genui-button>
+          <genui-button variant="ghost" size="sm" (onClick)="loadPreset('monitor')">Agent run</genui-button>
+          @if (hasLive()) {
+            <genui-button variant="default" size="sm" (onClick)="playStream()">▶ Stream</genui-button>
+          }
           <button class="inline-flex items-center justify-center rounded-md text-sm font-medium h-9 px-4 border bg-transparent hover:bg-accent transition-colors"
                   (click)="toggleTheme()">
             {{ isDark() ? 'Light' : 'Dark' }}
@@ -104,7 +146,7 @@ const DEMO_PRESETS = {
         <!-- LEFT: Editor -->
         <aside class="flex flex-col border-r bg-card">
           <div class="flex items-center gap-1 px-4 h-10 border-b">
-            <guip-tabs [tabs]="leftTabs" [active]="leftTab()" (onTabChange)="setLeftTab($event)"></guip-tabs>
+            <genui-tabs [tabs]="leftTabs" [active]="leftTab()" (onTabChange)="setLeftTab($event)"></genui-tabs>
           </div>
           <div class="flex-1 overflow-auto p-4">
             @if (leftTab() === 'editor') {
@@ -128,7 +170,7 @@ const DEMO_PRESETS = {
                   <div class="p-3 rounded-md border bg-background">
                     <div class="flex items-center justify-between mb-1">
                       <span class="font-medium text-sm">{{ comp.name }}</span>
-                      <guip-badge variant="outline" class="text-[10px]">{{ comp.category }}</guip-badge>
+                      <genui-badge variant="outline" class="text-[10px]">{{ comp.category }}</genui-badge>
                     </div>
                     <p class="text-xs text-muted-foreground">{{ comp.description }}</p>
                   </div>
@@ -153,7 +195,7 @@ const DEMO_PRESETS = {
         <!-- CENTER: Canvas -->
         <main class="overflow-auto p-6">
           @if (runtimeTree() && validation().valid) {
-            <guip-dynamic-renderer [node]="runtimeTree()!.root"></guip-dynamic-renderer>
+            <genui-dynamic-renderer [node]="runtimeTree()!.root"></genui-dynamic-renderer>
           } @else {
             <div class="h-full flex flex-col items-center justify-center text-muted-foreground gap-4">
               <svg class="w-12 h-12 opacity-20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -167,19 +209,19 @@ const DEMO_PRESETS = {
         <!-- RIGHT: DevTools -->
         <aside class="flex flex-col border-l bg-card">
           <div class="flex items-center gap-1 px-4 h-10 border-b">
-            <guip-tabs [tabs]="rightTabs" [active]="rightTab()" (onTabChange)="setRightTab($event)"></guip-tabs>
+            <genui-tabs [tabs]="rightTabs" [active]="rightTab()" (onTabChange)="setRightTab($event)"></genui-tabs>
           </div>
-          <guip-scroll-area class="flex-1" maxHeight="100%">
+          <genui-scroll-area class="flex-1" maxHeight="100%">
             <div class="p-3 space-y-2">
               @if (rightTab() === 'events') {
                 <div class="flex items-center justify-between mb-2">
                   <span class="text-xs text-muted-foreground">Event Stream</span>
-                  <guip-button variant="ghost" size="sm" (onClick)="clearEvents()">Clear</guip-button>
+                  <genui-button variant="ghost" size="sm" (onClick)="clearEvents()">Clear</genui-button>
                 </div>
                 @for (ev of events(); track $index) {
                   <div class="p-2 rounded-md border text-xs font-mono bg-background">
                     <div class="flex justify-between mb-1">
-                      <guip-badge variant="secondary" class="text-[10px] px-1 py-0">{{ ev.type }}</guip-badge>
+                      <genui-badge variant="secondary" class="text-[10px] px-1 py-0">{{ ev.type }}</genui-badge>
                       <span class="text-muted-foreground">{{ ev.timestamp | date:'HH:mm:ss.SSS' }}</span>
                     </div>
                     <div class="text-muted-foreground">target: {{ ev.target }}</div>
@@ -194,7 +236,7 @@ const DEMO_PRESETS = {
                     [class.border-l-emerald-500]="p.op === 'add'"
                     [class.border-l-destructive]="p.op === 'remove'"
                     [class.border-l-amber-500]="p.op === 'replace'">
-                    <guip-badge variant="outline" class="text-[10px] px-1 py-0">{{ p.op }}</guip-badge>
+                    <genui-badge variant="outline" class="text-[10px] px-1 py-0">{{ p.op }}</genui-badge>
                     <span class="ml-2 text-muted-foreground">{{ p.path }}</span>
                   </div>
                 } @empty {
@@ -212,7 +254,7 @@ const DEMO_PRESETS = {
                 </div>
               }
             </div>
-          </guip-scroll-area>
+          </genui-scroll-area>
         </aside>
       </div>
     </div>
@@ -251,9 +293,9 @@ export class AppComponent implements OnInit {
       }
     });
 
-    eventRouter.subscribeGlobal((ev: UIEvent) => {
-      this.events.update((list) => [ev, ...list]);
-    });
+    const record = (ev: UIEvent) => this.events.update((list) => [ev, ...list]);
+    eventRouter.subscribeGlobal(record);
+    agentEventSink = record;
   }
 
   ngOnInit(): void {
@@ -263,10 +305,20 @@ export class AppComponent implements OnInit {
   setLeftTab(tab: string) { this.leftTab.set(tab); }
   setRightTab(tab: string) { this.rightTab.set(tab); }
 
-  loadPreset(type: "dashboard" | "form") {
-    const preset = DEMO_PRESETS[type];
+  hasLive = signal(false);
+
+  loadPreset(type: "dashboard" | "form" | "interactive" | "analytics" | "access" | "monitor") {
+    const example = type in EXAMPLE_PRESETS ? EXAMPLE_PRESETS[type as keyof typeof EXAMPLE_PRESETS] : null;
+    activeExample = example;
+    this.hasLive.set(!!example?.live?.length);
+    const preset = example ? example.document : DEMO_PRESETS[type as keyof typeof DEMO_PRESETS];
     this.rawAST = JSON.stringify(preset, null, 2);
     this.parseAndRender(preset as unknown as ASTDocument);
+  }
+
+  /** Replays the example's live frames, one per second. */
+  playStream() {
+    activeExample?.live?.forEach((frame, i) => setTimeout(() => session.applyFrame(frame), 1000 * (i + 1)));
   }
 
   onASTChange() {
@@ -305,6 +357,7 @@ export class AppComponent implements OnInit {
   });
 
   private parseAndRender(doc: ASTDocument) {
+    session.data.replace(doc.data ?? {});
     const nextTree = buildRuntimeTree(doc);
     const currentTree = this.runtimeTree();
     if (currentTree) {

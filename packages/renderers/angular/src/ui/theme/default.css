@@ -1,4 +1,4 @@
-/* GUIP Shadcn-like Design System - CSS Variables */
+/* GenUI Shadcn-like Design System - CSS Variables */
 :root {
   --background: 0 0% 100%;
   --foreground: 240 10% 3.9%;
@@ -45,39 +45,39 @@
   --ring: 240 4.9% 83.9%;
 }
 
-/* Legacy GUIP variables mapped to CSS variables */
+/* Legacy GenUI variables mapped to CSS variables */
 :root {
-  --guip-bg: hsl(var(--background));
-  --guip-text-primary: hsl(var(--foreground));
-  --guip-text-secondary: hsl(var(--muted-foreground));
-  --guip-text-muted: hsl(var(--muted-foreground));
-  --guip-card: hsl(var(--card));
-  --guip-card-header: hsl(var(--card));
-  --guip-border: hsl(var(--border));
-  --guip-input-bg: transparent;
-  --guip-primary: hsl(var(--primary));
-  --guip-border-radius: 0.5rem;
-  --guip-border-radius-sm: calc(0.5rem - 2px);
-  --guip-spacing-xs: 4px;
-  --guip-spacing-sm: 8px;
-  --guip-spacing-md: 16px;
-  --guip-spacing-lg: 24px;
-  --guip-spacing-xl: 32px;
-  --guip-font-size-xs: 12px;
-  --guip-font-size-sm: 14px;
-  --guip-font-size-base: 16px;
-  --guip-font-size-md: 18px;
-  --guip-font-size-lg: 20px;
-  --guip-font-size-xl: 24px;
-  --guip-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  --guip-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --guip-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  --guip-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  --guip-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-  --guip-z-dropdown: 1000;
-  --guip-z-modal: 1050;
-  --guip-z-popover: 1060;
-  --guip-z-tooltip: 1070;
+  --genui-bg: hsl(var(--background));
+  --genui-text-primary: hsl(var(--foreground));
+  --genui-text-secondary: hsl(var(--muted-foreground));
+  --genui-text-muted: hsl(var(--muted-foreground));
+  --genui-card: hsl(var(--card));
+  --genui-card-header: hsl(var(--card));
+  --genui-border: hsl(var(--border));
+  --genui-input-bg: transparent;
+  --genui-primary: hsl(var(--primary));
+  --genui-border-radius: 0.5rem;
+  --genui-border-radius-sm: calc(0.5rem - 2px);
+  --genui-spacing-xs: 4px;
+  --genui-spacing-sm: 8px;
+  --genui-spacing-md: 16px;
+  --genui-spacing-lg: 24px;
+  --genui-spacing-xl: 32px;
+  --genui-font-size-xs: 12px;
+  --genui-font-size-sm: 14px;
+  --genui-font-size-base: 16px;
+  --genui-font-size-md: 18px;
+  --genui-font-size-lg: 20px;
+  --genui-font-size-xl: 24px;
+  --genui-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --genui-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --genui-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --genui-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --genui-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  --genui-z-dropdown: 1000;
+  --genui-z-modal: 1050;
+  --genui-z-popover: 1060;
+  --genui-z-tooltip: 1070;
 }
 
 /* Base utility classes */
@@ -116,9 +116,9 @@
 
 .border { border: 1px solid hsl(var(--border)); }
 
-.shadow-sm { box-shadow: var(--guip-shadow-sm); }
-.shadow-md { box-shadow: var(--guip-shadow-md); }
-.shadow-lg { box-shadow: var(--guip-shadow-lg); }
+.shadow-sm { box-shadow: var(--genui-shadow-sm); }
+.shadow-md { box-shadow: var(--genui-shadow-md); }
+.shadow-lg { box-shadow: var(--genui-shadow-lg); }
 
 .rounded-md { border-radius: var(--radius); }
 .rounded-lg { border-radius: var(--radius); }
@@ -130,8 +130,8 @@ body {
   padding: 0;
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
-  font-family: var(--guip-font-family);
-  font-size: var(--guip-font-size-base);
+  font-family: var(--genui-font-family);
+  font-size: var(--genui-font-size-base);
   line-height: 1.5;
 }
 

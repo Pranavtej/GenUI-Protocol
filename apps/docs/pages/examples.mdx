@@ -1,41 +1,31 @@
----
-title: Examples
-description: Practical example documents for dashboards, workflows, and protocol usage.
----
-
 # Examples
 
-The repository includes examples in the playground apps, the protocol docs, and the Python test harness.
+Three documents that cover the protocol end to end. They are typed builders in [`examples/documents`](https://github.com/Pranavtej/GenUI-Protocol/tree/main/examples) with a scripted agent, so the full UI → agent → UI loop runs without an API key. CI checks that every one validates, renders in React, applies its live frames in order, and (for the workflow) round-trips a form submission.
 
-## Dashboard example
+![Analytics dashboard](/assets/analytics-light.png)
 
-```ts
-const ast = {
-  t: 'page',
-  p: { title: 'Revenue Overview' },
-  c: [
-    { t: 'kpi', p: { label: 'Revenue', value: '$124K' } },
-    { t: 'kpi', p: { label: 'Users', value: '12,847' } }
-  ]
-};
+| Example | Shows |
+|---|---|
+| **Analytics dashboard** | Data binding, tabs, charts, a table, a `select` that drives the title, a dialog that emits an event |
+| **Access request workflow** | A bound form that submits to an agent; the agent replies with data patches that advance a workflow |
+| **Agent run monitor** | Execution graph, timeline and counters updated by sequenced stream frames |
+
+![Agent run monitor after the stream finished](/assets/agent-monitor.png)
+
+## Run them
+
+```bash
+pnpm install && pnpm build
+
+pnpm --filter genui-protocol-example-react dev      # React, http://localhost:4175
+pnpm --filter playground-angular serve              # Angular: presets Analytics / Access request / Agent run
+
+node apps/mcp-server/dist/index.js --http &         # stream one to a running MCP server
+node examples/node/stream-demo.mjs
+
+pip install -e packages/sdk/python && python examples/python/build_dashboard.py
 ```
 
-## Workflow example
+The same document renders in both frameworks; dark mode is a theme, not a different document:
 
-```json
-{
-  "t": "workflow",
-  "p": {
-    "steps": [
-      { "id": "1", "name": "Collect", "status": "done" },
-      { "id": "2", "name": "Review", "status": "pending" }
-    ]
-  }
-}
-```
-
-## Related content
-
-- [Protocol reference](/protocol)
-- [Architecture guide](/architecture)
-- [Quick Start](/quick-start)
+![Analytics dashboard, dark theme](/assets/analytics-dark.png)

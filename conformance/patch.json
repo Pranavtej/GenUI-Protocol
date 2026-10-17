@@ -1,0 +1,286 @@
+{
+  "description": "Applying patches to a node (RFC 6902 over the node JSON). Cases with 'error' MUST fail and leave the input unchanged.",
+  "cases": [
+    {
+      "name": "add-prop",
+      "input": {
+        "t": "page",
+        "p": {
+          "title": "A"
+        }
+      },
+      "patches": [
+        {
+          "op": "add",
+          "path": "/p/subtitle",
+          "value": "S"
+        }
+      ],
+      "expected": {
+        "t": "page",
+        "p": {
+          "title": "A",
+          "subtitle": "S"
+        }
+      }
+    },
+    {
+      "name": "replace-nested-prop",
+      "input": {
+        "t": "page",
+        "c": [
+          {
+            "t": "kpi",
+            "p": {
+              "value": "1"
+            }
+          }
+        ]
+      },
+      "patches": [
+        {
+          "op": "replace",
+          "path": "/c/0/p/value",
+          "value": "2"
+        }
+      ],
+      "expected": {
+        "t": "page",
+        "c": [
+          {
+            "t": "kpi",
+            "p": {
+              "value": "2"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "insert-child-front",
+      "input": {
+        "t": "stack",
+        "c": [
+          {
+            "t": "text",
+            "id": "a"
+          }
+        ]
+      },
+      "patches": [
+        {
+          "op": "add",
+          "path": "/c/0",
+          "value": {
+            "t": "text",
+            "id": "z"
+          }
+        }
+      ],
+      "expected": {
+        "t": "stack",
+        "c": [
+          {
+            "t": "text",
+            "id": "z"
+          },
+          {
+            "t": "text",
+            "id": "a"
+          }
+        ]
+      }
+    },
+    {
+      "name": "append-child-creates-c",
+      "input": {
+        "t": "stack"
+      },
+      "patches": [
+        {
+          "op": "add",
+          "path": "/c/-",
+          "value": {
+            "t": "text"
+          }
+        }
+      ],
+      "expected": {
+        "t": "stack",
+        "c": [
+          {
+            "t": "text"
+          }
+        ]
+      }
+    },
+    {
+      "name": "move-child",
+      "input": {
+        "t": "stack",
+        "c": [
+          {
+            "t": "a"
+          },
+          {
+            "t": "b"
+          },
+          {
+            "t": "c"
+          }
+        ]
+      },
+      "patches": [
+        {
+          "op": "move",
+          "from": "/c/2",
+          "path": "/c/0"
+        }
+      ],
+      "expected": {
+        "t": "stack",
+        "c": [
+          {
+            "t": "c"
+          },
+          {
+            "t": "a"
+          },
+          {
+            "t": "b"
+          }
+        ]
+      }
+    },
+    {
+      "name": "copy-child",
+      "input": {
+        "t": "stack",
+        "c": [
+          {
+            "t": "a"
+          }
+        ]
+      },
+      "patches": [
+        {
+          "op": "copy",
+          "from": "/c/0",
+          "path": "/c/1"
+        }
+      ],
+      "expected": {
+        "t": "stack",
+        "c": [
+          {
+            "t": "a"
+          },
+          {
+            "t": "a"
+          }
+        ]
+      }
+    },
+    {
+      "name": "pointer-escaping",
+      "input": {
+        "t": "x",
+        "p": {}
+      },
+      "patches": [
+        {
+          "op": "add",
+          "path": "/p/a~1b~0c",
+          "value": 1
+        }
+      ],
+      "expected": {
+        "t": "x",
+        "p": {
+          "a/b~c": 1
+        }
+      }
+    },
+    {
+      "name": "replace-root",
+      "input": {
+        "t": "a"
+      },
+      "patches": [
+        {
+          "op": "replace",
+          "path": "",
+          "value": {
+            "t": "b"
+          }
+        }
+      ],
+      "expected": {
+        "t": "b"
+      }
+    },
+    {
+      "name": "failed-test-op-is-atomic",
+      "input": {
+        "t": "a",
+        "p": {
+          "x": 1
+        }
+      },
+      "patches": [
+        {
+          "op": "replace",
+          "path": "/p/x",
+          "value": 2
+        },
+        {
+          "op": "test",
+          "path": "/p/x",
+          "value": 99
+        }
+      ],
+      "error": true
+    },
+    {
+      "name": "remove-out-of-bounds",
+      "input": {
+        "t": "a"
+      },
+      "patches": [
+        {
+          "op": "remove",
+          "path": "/c/0"
+        }
+      ],
+      "error": true
+    },
+    {
+      "name": "remove-root-forbidden",
+      "input": {
+        "t": "a"
+      },
+      "patches": [
+        {
+          "op": "remove",
+          "path": ""
+        }
+      ],
+      "error": true
+    },
+    {
+      "name": "proto-pollution-rejected",
+      "input": {
+        "t": "a",
+        "p": {}
+      },
+      "patches": [
+        {
+          "op": "add",
+          "path": "/p/__proto__/x",
+          "value": 1
+        }
+      ],
+      "error": true
+    }
+  ]
+}

@@ -1,18 +1,22 @@
 import { Component, Type, inject, computed, input } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { RuntimeNode } from "@ainative-ui/runtime-core";
-import { GUIP_COMPONENT_MAPPINGS, GuipComponentMapping } from "./provider";
+import { RuntimeNode } from "@genui-protocol/runtime-core";
+import { GENUI_COMPONENT_MAPPINGS } from "./provider";
+import { GENUI_SESSION, sessionVersion, withResolvedProps } from "./session";
 
 @Component({
-    selector: "guip-dynamic-renderer",
+    selector: "genui-dynamic-renderer",
     standalone: true,
     imports: [CommonModule],
     template: `
         @if (resolvedComponent()) {
             <ng-container *ngComponentOutlet="resolvedComponent()!; inputs: componentInputs()"></ng-container>
         } @else {
-            <div class="p-4 border border-dashed border-red-500 rounded bg-red-50/10 text-red-500 text-sm">
+            <div class="p-4 border border-dashed border-red-500 rounded bg-red-50/10 text-red-500 text-sm" [attr.data-genui-unknown]="node().t">
                 Unknown component type: <strong>{{ node().t }}</strong>
+                @for (child of node().children; track child.id) {
+                    <genui-dynamic-renderer [node]="child"></genui-dynamic-renderer>
+                }
             </div>
         }
     `
@@ -20,7 +24,9 @@ import { GUIP_COMPONENT_MAPPINGS, GuipComponentMapping } from "./provider";
 export class DynamicRendererComponent {
     node = input.required<RuntimeNode>();
 
-    private mappings = inject(GUIP_COMPONENT_MAPPINGS, { optional: true }) || [];
+    private mappings = inject(GENUI_COMPONENT_MAPPINGS, { optional: true }) || [];
+    private session = inject(GENUI_SESSION, { optional: true });
+    private version = this.session ? sessionVersion(this.session) : null;
 
     protected resolvedComponent = computed<Type<any> | null>(() => {
         const activeNode = this.node();
@@ -29,7 +35,11 @@ export class DynamicRendererComponent {
         return match ? match.component : null;
     });
 
+    /** With a session, props are resolved (`$bind`/`$tpl`) against the current data before the component sees them. */
     protected componentInputs = computed(() => {
-        return { node: this.node() };
+        const node = this.node();
+        if (!this.session) return { node };
+        this.version?.(); // re-resolve whenever the data (or tree) changes
+        return { node: withResolvedProps(node, this.session.resolveProps(node)) };
     });
 }

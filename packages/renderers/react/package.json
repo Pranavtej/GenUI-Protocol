@@ -1,5 +1,5 @@
 {
-  "name": "@ainative-ui/renderer-react",
+  "name": "@genui-protocol/renderer-react",
   "version": "0.1.0",
   "private": false,
   "main": "dist/src/index.js",
@@ -7,13 +7,22 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "lint": "echo 'No lint configured'",
-    "test": "echo 'No tests yet'"
+    "test": "vitest run"
   },
   "dependencies": {
-    "@ainative-ui/runtime-core": "workspace:0.1.0"
+    "@genui-protocol/runtime-core": "workspace:^",
+    "@genui-protocol/protocol": "workspace:^",
+    "@genui-protocol/theme-engine": "workspace:^"
   },
   "devDependencies": {
-    "typescript": "^5.5.4"
+    "typescript": "^5.5.4",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "jsdom": "^25.0.1",
+    "@testing-library/react": "^16.0.1",
+    "@testing-library/dom": "^10.4.0"
   },
   "type": "module",
   "license": "MIT",
@@ -21,21 +30,26 @@
     "node": ">=18"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/org/genui-protocol.git"
+    "url": "git+https://github.com/Pranavtej/GenUI-Protocol.git",
+    "directory": "packages/renderers/react"
   },
   "bugs": {
-    "url": "https://github.com/org/genui-protocol/issues"
+    "url": "https://github.com/Pranavtej/GenUI-Protocol/issues"
   },
-  "homepage": "https://genui-protocol.dev",
+  "homepage": "https://github.com/Pranavtej/GenUI-Protocol#readme",
   "sideEffects": false,
-  "description": "GenUI Protocol \u2014 Renderer React",
+  "description": "React renderer for GenUI Protocol documents",
   "files": [
     "dist",
-    "src"
+    "src",
+    "!**/*.tsbuildinfo",
+    "README.md",
+    "LICENSE"
   ],
   "exports": {
     ".": {
@@ -48,5 +62,9 @@
     "ai-native",
     "ui",
     "renderer-react"
-  ]
+  ],
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
+  }
 }

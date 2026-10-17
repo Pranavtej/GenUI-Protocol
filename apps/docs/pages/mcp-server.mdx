@@ -1,0 +1,34 @@
+# MCP server
+
+Gives agents the protocol guide, the component catalogue, validation, templates and live streaming — over MCP (stdio) or a REST + SSE sidecar.
+
+```bash
+pnpm --filter genui-protocol-mcp-server build
+node apps/mcp-server/dist/index.js            # MCP over stdio (Claude Desktop, IDEs, …)
+node apps/mcp-server/dist/index.js --http     # REST + SSE on 127.0.0.1:4000
+docker build -f apps/mcp-server/Dockerfile -t genui-mcp . && docker run -p 4000:4000 -e GENUI_API_KEY=… genui-mcp
+```
+
+Start with the **`get_protocol_guide`** tool.
+
+## Tools
+
+`get_protocol_guide`, `discover_components`, `get_component`, `get_component_schema`, `get_examples`, `suggest_components`, `generate_ast`, `validate_ast` (pass `document`), `normalize_ast`, `generate_template`, `list_renderers`, `search_components`, `ast_metadata`.
+
+## REST endpoints
+
+`GET /api/health` · `GET /api/protocol_guide` · `GET /api/discover_components` · `GET /api/get_component?name=` · `GET /api/search_components?q=` · `POST /api/suggest_components` · `POST /api/validate_document` · `POST /api/validate_ast` · `POST /api/generate_ast` · `GET /api/generate_template?type=` · `POST /api/stream_ast` · `POST /api/stream_patch` · `POST /api/stream_data` · `GET /api/stream` (SSE).
+
+## Configuration
+
+| Variable | Default | Meaning |
+|---|---|---|
+| `HOST` / `PORT` | `127.0.0.1` / `4000` | Bind address; a warning is logged when binding a non-loopback host without a key |
+| `GENUI_API_KEY` | unset | Requires `Authorization: Bearer <key>` (or `X-API-Key`) on every `/api` route except health |
+| `GENUI_CORS_ORIGINS` | `*` | Comma-separated allow-list; empty disables CORS headers |
+| `GENUI_BODY_LIMIT` | `1mb` | Max request body |
+| `GENUI_RATE_MAX` / `GENUI_RATE_WINDOW_MS` | `120` / `60000` | Requests per window per key/IP (`0` disables); health is exempt |
+| `GENUI_MAX_SSE_CLIENTS` | `100` | Concurrent stream subscribers |
+| `GENUI_LOG_LEVEL` | `info` | JSON lines on stderr |
+
+Set `GENUI_API_KEY` and a CORS allow-list before exposing it beyond localhost.

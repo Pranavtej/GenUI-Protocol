@@ -12,12 +12,12 @@ const COLOR_SCHEMES: Record<string, { line: string; fill: string; bar: string }>
 };
 
 @Component({
-  selector: 'guip-chart',
+  selector: 'genui-chart',
   standalone: true,
   imports: [CommonModule],
   template: `<canvas #canvas [style.width]="'100%'" [style.height.px]="chartHeight"></canvas>`
 })
-export class GuipChart implements AfterViewInit {
+export class GenUiChart implements AfterViewInit {
   @Input() type: string = 'line';
   @Input() data: { label: string; value: number }[] = [];
   @Input() chartHeight: number = 260;
@@ -49,7 +49,7 @@ export class GuipChart implements AfterViewInit {
 
     if (!this.data || this.data.length === 0) return;
 
-    const colors = COLOR_SCHEMES[this.colorScheme] || COLOR_SCHEMES.default;
+    const colors = COLOR_SCHEMES[this.colorScheme] || COLOR_SCHEMES['default'];
     const padding = { top: 20, right: 20, bottom: 40, left: 50 };
     const chartW = w - padding.left - padding.right;
     const chartH = h - padding.top - padding.bottom;

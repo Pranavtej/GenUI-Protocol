@@ -3,14 +3,22 @@
   "compilerOptions": {
     "outDir": "dist",
     "declaration": true,
-    "declarationMap": true
+    "declarationMap": true,
+    "jsx": "react-jsx"
   },
   "include": [
-    "src/**/*.ts"
+    "src/**/*.ts",
+    "src/**/*.tsx"
   ],
   "references": [
     {
       "path": "../../runtime/runtime-core"
+    },
+    {
+      "path": "../../core/protocol"
+    },
+    {
+      "path": "../../tooling/theme-engine"
     }
   ]
 }

@@ -20,3 +20,15 @@ apps/*/dist
 .apps/**
 **/*.local
 *.tsbuildinfo
+
+# compiled output / generated files (sources are .ts)
+packages/**/src/**/*.js
+packages/**/src/**/*.js.map
+packages/**/src/**/*.d.ts
+packages/**/src/**/*.d.ts.map
+*.egg-info/
+__pycache__/
+.docusaurus/
+.next/
+.angular/
+next-env.d.ts

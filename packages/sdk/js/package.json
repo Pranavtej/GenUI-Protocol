@@ -1,5 +1,5 @@
 {
-  "name": "@ainative-ui/sdk-js",
+  "name": "@genui-protocol/sdk-js",
   "version": "0.1.0",
   "private": false,
   "main": "dist/src/index.js",
@@ -7,14 +7,18 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "lint": "echo 'No lint configured'",
-    "test": "echo 'No tests yet'"
+    "test": "vitest run"
   },
   "dependencies": {
-    "@ainative-ui/ast": "workspace:0.1.0",
-    "@ainative-ui/validation": "workspace:0.1.0"
+    "@genui-protocol/ast": "workspace:^",
+    "@genui-protocol/validation": "workspace:^",
+    "@genui-protocol/protocol": "workspace:^",
+    "@genui-protocol/runtime-core": "workspace:^",
+    "@genui-protocol/stream-engine": "workspace:^"
   },
   "devDependencies": {
-    "typescript": "^5.5.4"
+    "typescript": "^5.5.4",
+    "@genui-protocol/component-registry": "workspace:^"
   },
   "type": "module",
   "license": "MIT",
@@ -22,21 +26,26 @@
     "node": ">=18"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/org/genui-protocol.git"
+    "url": "git+https://github.com/Pranavtej/GenUI-Protocol.git",
+    "directory": "packages/sdk/js"
   },
   "bugs": {
-    "url": "https://github.com/org/genui-protocol/issues"
+    "url": "https://github.com/Pranavtej/GenUI-Protocol/issues"
   },
-  "homepage": "https://genui-protocol.dev",
+  "homepage": "https://github.com/Pranavtej/GenUI-Protocol#readme",
   "sideEffects": false,
-  "description": "GenUI Protocol \u2014 Sdk Js",
+  "description": "Typed builders and MCP client for GenUI Protocol",
   "files": [
     "dist",
-    "src"
+    "src",
+    "!**/*.tsbuildinfo",
+    "README.md",
+    "LICENSE"
   ],
   "exports": {
     ".": {

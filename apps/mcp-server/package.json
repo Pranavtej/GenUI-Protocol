@@ -1,32 +1,36 @@
 {
-    "name": "ai-native-ui-mcp-server",
+    "name": "genui-protocol-mcp-server",
     "version": "0.1.0",
     "private": true,
     "type": "module",
     "main": "dist/index.js",
     "scripts": {
-        "predev": "pnpm --filter @ainative-ui/ast build && pnpm --filter @ainative-ui/component-registry build && pnpm --filter @ainative-ui/protocol build && pnpm --filter @ainative-ui/validation build",
+        "predev": "pnpm --filter @genui-protocol/ast build && pnpm --filter @genui-protocol/component-registry build && pnpm --filter @genui-protocol/protocol build && pnpm --filter @genui-protocol/validation build && pnpm --filter @genui-protocol/prompt-kit build",
         "dev": "node --enable-source-maps dist/index.js",
         "build": "tsc -p tsconfig.json",
         "lint": "echo 'No lint configured'",
-        "test": "echo 'No tests yet'"
+        "test": "vitest run"
     },
     "dependencies": {
-        "@ainative-ui/ast": "workspace:0.1.0",
-        "@ainative-ui/component-registry": "workspace:0.1.0",
-        "@ainative-ui/validation": "workspace:0.1.0",
-        "@ainative-ui/protocol": "workspace:0.1.0",
+        "@genui-protocol/ast": "workspace:^",
+        "@genui-protocol/component-registry": "workspace:^",
+        "@genui-protocol/validation": "workspace:^",
+        "@genui-protocol/protocol": "workspace:^",
         "@modelcontextprotocol/sdk": "^1.29.0",
         "express": "^4.18.2",
         "cors": "^2.8.5",
-        "body-parser": "^1.20.2"
+        "@genui-protocol/prompt-kit": "workspace:^"
     },
     "devDependencies": {
         "typescript": "^5.5.4",
         "ts-node": "^10.9.1",
         "@types/express": "^4.17.20",
         "@types/cors": "^2.8.13",
-        "@types/body-parser": "^1.19.3",
-        "@types/node": "^20.14.0"
-    }
+        "@types/node": "^20.14.0",
+        "supertest": "^7.0.0",
+        "@types/supertest": "^6.0.2"
+    },
+    "files": [
+        "dist"
+    ]
 }

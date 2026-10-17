@@ -1,5 +1,5 @@
 {
-  "name": "@ainative-ui/validation",
+  "name": "@genui-protocol/validation",
   "version": "0.1.0",
   "private": false,
   "main": "dist/src/index.js",
@@ -7,14 +7,15 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "lint": "echo 'No lint configured'",
-    "test": "echo 'No tests yet'"
+    "test": "vitest run"
   },
   "dependencies": {
     "zod": "^3.23.0",
     "ajv": "^8.20.0",
-    "@ainative-ui/ast": "workspace:0.1.0",
-    "@ainative-ui/schemas": "workspace:0.1.0",
-    "@ainative-ui/component-registry": "workspace:0.1.0"
+    "@genui-protocol/ast": "workspace:^",
+    "@genui-protocol/schemas": "workspace:^",
+    "@genui-protocol/component-registry": "workspace:^",
+    "@genui-protocol/protocol": "workspace:^"
   },
   "devDependencies": {
     "typescript": "^5.5.4"
@@ -25,21 +26,26 @@
     "node": ">=18"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/org/genui-protocol.git"
+    "url": "git+https://github.com/Pranavtej/GenUI-Protocol.git",
+    "directory": "packages/runtime/validation"
   },
   "bugs": {
-    "url": "https://github.com/org/genui-protocol/issues"
+    "url": "https://github.com/Pranavtej/GenUI-Protocol/issues"
   },
-  "homepage": "https://genui-protocol.dev",
+  "homepage": "https://github.com/Pranavtej/GenUI-Protocol#readme",
   "sideEffects": false,
-  "description": "GenUI Protocol \u2014 Validation",
+  "description": "Validator for GenUI documents: limits, props, URL checks, actions and allow-lists",
   "files": [
     "dist",
-    "src"
+    "src",
+    "!**/*.tsbuildinfo",
+    "README.md",
+    "LICENSE"
   ],
   "exports": {
     ".": {

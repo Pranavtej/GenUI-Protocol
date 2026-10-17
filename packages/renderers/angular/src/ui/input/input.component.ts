@@ -4,7 +4,7 @@ import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormsModule } from '@angular/f
 import { cn } from '../lib/utils';
 
 @Component({
-  selector: 'guip-input',
+  selector: 'genui-input',
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
@@ -38,12 +38,12 @@ import { cn } from '../lib/utils';
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => GuipInput),
+      useExisting: forwardRef(() => GenUiInput),
       multi: true,
     },
   ],
 })
-export class GuipInput implements ControlValueAccessor {
+export class GenUiInput implements ControlValueAccessor {
   id = input(`input-${Math.random().toString(36).substr(2, 9)}`);
   type = input<string>('text');
   placeholder = input('');
@@ -98,13 +98,13 @@ export class GuipInput implements ControlValueAccessor {
 }
 
 @Component({
-  selector: 'guip-label',
+  selector: 'genui-label',
   standalone: true,
   imports: [CommonModule],
   template: `<label [for]="for()" [class]="computedClass()"><ng-content></ng-content></label>`,
   encapsulation: ViewEncapsulation.None,
 })
-export class GuipLabel {
+export class GenUiLabel {
   for = input('');
   class = input('');
 

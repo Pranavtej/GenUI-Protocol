@@ -1,0 +1,6 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": { "composite": false, "jsx": "react-jsx", "noEmit": true, "types": ["node"] },
+  "include": [],
+  "files": []
+}

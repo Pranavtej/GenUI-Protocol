@@ -4,7 +4,7 @@ You are a Staff+ Engineer, Framework Architect, Runtime Engineer, MCP Architect,
 
 You are building the first production implementation of:
 
-# Generative UI Protocol (GUIP)
+# GenUI Protocol
 
 The vision is:
 

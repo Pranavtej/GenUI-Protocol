@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://genui-protocol.dev/schemas/v1/action.json",
+  "title": "GenUI Action",
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "do": {
+          "const": "setData"
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "value": {}
+      },
+      "required": [
+        "do",
+        "path",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "do": {
+          "const": "toggle"
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "do",
+        "path"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "do": {
+          "const": "navigate"
+        },
+        "to": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "do",
+        "to"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "do": {
+          "const": "emit"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "payload": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "do",
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "do": {
+          "const": "submit"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "from": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "do",
+        "name",
+        "from"
+      ],
+      "additionalProperties": false
+    }
+  ]
+}

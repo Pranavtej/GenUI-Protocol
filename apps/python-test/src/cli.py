@@ -306,6 +306,28 @@ def serve(
 
         return StreamingResponse(generate(), media_type="text/event-stream")
 
+    class UIEventRequest(BaseModel):
+        """An `emit` / `submit` action coming back from the rendered UI."""
+        name: str
+        payload: dict = {}
+        nodeId: str | None = None
+        thread_id: str = "default"
+
+    @api.post("/chat/event")
+    def chat_event_endpoint(req: UIEventRequest):
+        from fastapi.responses import StreamingResponse
+
+        agent = get_agent(req.thread_id)
+        if not hasattr(agent, "handle_ui_event"):
+            raise HTTPException(status_code=400, detail="UI events are only supported in saas mode")
+
+        def generate():
+            for event in agent.handle_ui_event({"name": req.name, "payload": req.payload, "nodeId": req.nodeId}):
+                yield f"data: {json.dumps(event)}\n\n"
+            yield "data: {\"type\": \"done\"}\n\n"
+
+        return StreamingResponse(generate(), media_type="text/event-stream")
+
     @api.get("/history/{thread_id}")
     def get_history(thread_id: str = "default"):
         agent = get_agent(thread_id)

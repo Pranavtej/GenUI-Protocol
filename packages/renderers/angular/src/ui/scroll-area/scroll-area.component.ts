@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { cn } from '../lib/utils';
 
 @Component({
-  selector: 'guip-scroll-area',
+  selector: 'genui-scroll-area',
   standalone: true,
   imports: [CommonModule],
   template: `
@@ -18,7 +18,7 @@ import { cn } from '../lib/utils';
   `,
   encapsulation: ViewEncapsulation.None,
 })
-export class GuipScrollArea {
+export class GenUiScrollArea {
   maxHeight = input('');
   class = input('');
 
