@@ -4,6 +4,7 @@ export default {
   installation: 'Installation',
   'quick-start': 'Quick start',
   '-- learn': { type: 'separator', title: 'Learn' },
+  'why-genui': 'Why not just HTML?',
   concepts: 'Concepts',
   architecture: 'Architecture',
   tutorials: 'Tutorials',

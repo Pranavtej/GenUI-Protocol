@@ -1,0 +1,45 @@
+name: Release
+
+# On every push to main: if there are pending changesets, open/update a "Version Packages" PR;
+# when that PR is merged, build and publish the packages to npm with provenance.
+on:
+    push:
+        branches: [main]
+
+concurrency: release-${{ github.ref }}
+
+permissions:
+    contents: write
+    pull-requests: write
+    id-token: write # npm provenance
+
+jobs:
+    release:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+            - uses: pnpm/action-setup@v2
+              with:
+                  version: 8
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+                  cache: pnpm
+                  registry-url: https://registry.npmjs.org
+            - run: pnpm install --frozen-lockfile
+            - run: pnpm build
+            - run: pnpm test
+            - run: node scripts/release-check.mjs
+            - uses: changesets/action@v1
+              with:
+                  version: pnpm changeset version
+                  publish: pnpm changeset publish
+                  title: "Version Packages"
+                  commit: "chore: version packages"
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+                  NPM_CONFIG_PROVENANCE: "true"

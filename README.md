@@ -1,244 +1,105 @@
 # GenUI Protocol
 
-**A universal, framework-agnostic protocol for AI-generated interfaces.**
+**Let AI agents answer with interfaces, not just text — without letting them write frontend code.**
 
 [![CI](https://img.shields.io/github/actions/workflow/status/Pranavtej/GenUI-Protocol/ci.yml?branch=main&label=CI&logo=github)](https://github.com/Pranavtej/GenUI-Protocol/actions)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![pnpm](https://img.shields.io/badge/pm-pnpm-F69220?logo=pnpm)](https://pnpm.io)
-[![TypeScript](https://img.shields.io/badge/types-TypeScript-3178C6?logo=typescript)](https://www.typescriptlang.org)
+[![Status](https://img.shields.io/badge/status-0.x%20early-orange)](#status)
 
-GenUI Protocol makes AI-generated interface output framework-agnostic by using a compact AST payload instead of generated UI code. It enables a single AI response to render as native UI in React, Angular, Vue, Svelte, React Native, SwiftUI, and Flutter.
+An agent emits a small declarative JSON **document**. A runtime validates it; a renderer draws it with your own components. There is no HTML, CSS or JavaScript from the model, so there is nothing to execute — and the same document can be rendered by any framework that implements the [protocol](spec/SPEC.md).
 
-- No code generation
-- No runtime eval
-- One AST format across platforms
+![An access-request form submits to an agent; the agent answers with data patches; the workflow advances](docs/assets/demo.gif)
 
----
-
-## Overview
-
-AI agents often return text, but modern applications need interactive dashboards, workflows, and data-driven UIs.
-
-GenUI Protocol solves this by:
-
-- exposing component metadata through a Model Context Protocol (MCP) server
-- generating a compact AST document like `{ t, p?, c?, id? }`
-- validating and reconciling the AST in a runtime engine
-- rendering that AST with lightweight adapters for multiple frameworks
-
-This keeps the interface declarative, portable, and safe.
-
----
-
-## Key Features
-
-- **Compact AST format** optimized for LLM-driven UI generation
-- **Multi-framework rendering** with shared AST semantics
-- **MCP-driven component discovery** and schema validation
-- **Runtime validation** with Zod and AJV
-- **Incremental updates** via SSE and JSON Patch
-- **Reactive state management** and structured event routing
-- **Safe execution** without arbitrary code injection
-
----
-
-## Getting Started
-
-### Requirements
-
-- Node.js >= 18
-- pnpm >= 8
-
-### Install
-
-```bash
-pnpm install
-pnpm build
-```
-
-### Start development
-
-```bash
-pnpm dev
-```
-
-### Run individual apps
-
-```bash
-pnpm --filter playground dev
-pnpm --filter playground-angular serve
-pnpm --filter mcp-server dev
-```
-
----
-
-## Example
-
-### A document with data, bindings and actions
+*Above: a form bound to a data model. Submit sends an event to an agent, which replies with patches; the workflow advances. Then a live run monitor updated by sequenced stream frames. Both are [examples](examples) you can run.*
 
 ```json
 {
   "version": "1.0.0",
   "data": { "form": { "name": "" } },
   "root": {
-    "t": "card",
-    "p": { "title": "Sign up" },
+    "t": "card", "p": { "title": "Sign up" },
     "c": [
-      { "t": "input", "p": { "label": "Name", "value": { "$bind": "form.name" } } },
-      { "t": "text", "p": { "content": { "$tpl": "Hello {{form.name}}" } } },
+      { "t": "input",  "p": { "label": "Name", "value": { "$bind": "form.name" } } },
+      { "t": "text",   "p": { "content": { "$tpl": "Hello {{form.name}}" } } },
       { "t": "button", "p": { "label": "Send", "onClick": { "do": "submit", "name": "signup", "from": "form" } } }
     ]
   }
 }
 ```
 
-No code: `$bind`/`$tpl` are data lookups and `onClick` holds a declarative action (see [`spec/SPEC.md`](spec/SPEC.md) §10–11).
+## What you get
 
-### Render it in React
+- **A protocol** — document model, data binding, declarative actions, RFC 6902 patches, sequenced streaming. [Spec](spec/SPEC.md), [JSON Schemas](spec/schemas), and language-neutral [conformance fixtures](conformance) that both the TypeScript and Python implementations pass.
+- **A hardened runtime** — validator with size/depth limits, URL checks and allow-lists; id-keyed diff; atomic patches; an ordered stream consumer that resyncs when it falls behind.
+- **Renderers** — React and Angular, all 23 built-in components, theming via CSS variables, custom components.
+- **Agent tooling** — an MCP server, a prompt kit generated from the component registry, a validate-and-repair loop, JS and Python SDKs, a CLI, and `genui-eval` to measure how reliably a model produces valid documents.
+
+## Try it
+
+```bash
+git clone https://github.com/Pranavtej/GenUI-Protocol.git && cd GenUI-Protocol
+pnpm install && pnpm build
+
+pnpm --filter genui-protocol-example-react dev      # examples: http://localhost:4175
+pnpm --filter genui-protocol-docs dev               # the docs site
+```
+
+Render a document in React:
 
 ```tsx
 import { GenUiRenderer, createSession } from "@genui-protocol/renderer-react";
 
-const session = createSession({
-  document,
-  onEmit: (event) => agent.send(event), // submit/emit actions come back to your agent here
-});
-
-<GenUiRenderer session={session} theme="light" />;
+const session = createSession({ document, onEmit: (event) => agent.send(event) });
+<GenUiRenderer session={session} />;
 ```
 
-Stream updates into the same session:
+Build one in code (TypeScript or Python), then validate it:
 
 ```ts
-import { StreamConsumer, connectSSE } from "@genui-protocol/stream-engine";
+import { ui, bind, actions, document, assertValid } from "@genui-protocol/sdk-js";
 
-const consumer = new StreamConsumer({
-  apply: (frame) => session.applyFrame(frame),
-  onResync: () => reconnectAndRequestSnapshot(),
-});
-connectSSE("/api/stream", (frame) => consumer.push(frame));
+assertValid(document(
+  ui.card({ title: "Sign up" },
+    ui.input({ label: "Name", value: bind("form.name") }),
+    ui.button({ label: "Send", onClick: actions.submit("signup", "form") })),
+  { form: { name: "" } },
+));
 ```
-
-### Validate
-
-```ts
-import { validateDocument, createValidator } from "@genui-protocol/validation";
-
-const result = validateDocument(document); // { valid, errors? }
-
-// untrusted producers: restrict components and tighten limits
-const strict = createValidator({ allowedComponents: ["page", "card", "text", "kpi"], limits: { maxNodes: 500 } });
-```
-
-### Diff and patch
-
-```ts
-import { buildRuntimeTree, diffRuntimeTree, applyTreePatches } from "@genui-protocol/runtime-core";
-
-const patches = diffRuntimeTree(buildRuntimeTree(before), buildRuntimeTree(after)); // RFC 6902
-const next = applyTreePatches(buildRuntimeTree(before), patches);
-```
-
-### Python
-
-```python
-from genui_protocol_sdk import ui, bind, actions, document, assert_valid
-
-doc = document(ui.card(ui.input(label="Name", value=bind("form.name")),
-                       ui.button(label="Send", on_click=actions.submit("signup", "form")), title="Sign up"),
-               data={"form": {"name": ""}})
-assert_valid(doc)
-```
-
-### CLI, MCP server and evals
 
 ```bash
-genui validate doc.json        # exit 1 + readable errors when invalid
-genui diff before.json after.json
-genui scaffold form > form.json
-genui prompt                   # the LLM system prompt, generated from the registry
-genui-eval --mock              # how reliably does a model emit valid documents? (--provider anthropic|openai for real runs)
+genui validate doc.json      # exit 1 + readable errors when invalid
+genui prompt                 # the LLM system prompt, generated from the registry
 ```
 
-The MCP server (`apps/mcp-server`, see its README) serves the same protocol guide to agents via `get_protocol_guide`.
+Full documentation lives in [`apps/docs`](apps/docs) (generated spec, component reference, tutorials, LLM guide).
 
----
+## Status
 
-## Project Structure
+Early (0.x). Implemented and tested: the protocol, runtime, React and Angular renderers, MCP server, SDKs, CLI, prompt kit and eval harness.
+
+| | |
+|---|---|
+| **Not published yet** | Release automation (changesets, npm provenance, PyPI trusted publishing) is in place and tested end to end on packed tarballs, but no packages have been released. |
+| **Never run against a real model** | `genui-eval` is built and tested with fake models; no first-try-validity numbers exist yet. |
+| **Other renderers** | Vue, Svelte, React Native, SwiftUI and Flutter are *not* implemented. |
+| **Missing protocol features** | Remote data sources, form validation rules, partial-document streaming, WebSocket transport. |
+
+See the docs' [Status & features](apps/docs/pages/features.mdx) and [Roadmap](apps/docs/pages/roadmap.mdx).
+
+## Repository map
 
 ```
-/ (root)
-├── apps/
-│   ├── docs/
-│   ├── mcp-server/
-│   ├── playground/
-│   ├── playground-angular/
-│   ├── registry-ui/
-│   └── test-app/
-├── packages/
-│   ├── components/
-│   ├── core/
-│   ├── renderers/
-│   ├── runtime/
-│   ├── sdk/
-│   └── tooling/
-├── package.json
-├── pnpm-workspace.yaml
-├── turbo.json
-└── tsconfig.base.json
+spec/            protocol specification and published JSON Schemas
+conformance/     language-neutral test vectors (patches, validation, bindings, actions, rendering)
+packages/        core, runtime, components, renderers (react, angular), sdk (js, python), tooling (cli, eval, prompt-kit, theme-engine)
+apps/            docs, mcp-server, playgrounds (react, angular), registry-ui, test-app + python agent
+examples/        three runnable documents with a scripted agent, a React app, node and python scripts
 ```
-
----
-
-## Core Packages
-
-- `@genui-protocol/ast` — AST node types and helper utilities
-- `@genui-protocol/protocol` — protocol contracts and versioning
-- `@genui-protocol/schemas` — JSON schema definitions
-- `@genui-protocol/runtime-core` — runtime tree, id-keyed diff, RFC 6902 patches, data store, actions, `RuntimeSession`
-- `@genui-protocol/state-engine` — signal-based reactivity
-- `@genui-protocol/event-engine` — event routing for AST interactions
-- `@genui-protocol/stream-engine` — ordered stream consumer (resync), SSE client
-- `@genui-protocol/validation` — AST validation pipeline
-- `@genui-protocol/component-registry` — discoverable component metadata
-- `@genui-protocol/renderer-react` — React renderer (all built-in components, bindings, actions, themes)
-- `@genui-protocol/angular` — Angular renderer (reference implementation)
-- `@genui-protocol/theme-engine` — design tokens → CSS variables
-- `@genui-protocol/sdk-js` — JavaScript/TypeScript SDK
-- `genui_protocol_sdk` — Python SDK (minimal)
-
----
-
-## Architecture
-
-1. **AI Layer** — discover components and generate a validated AST
-2. **Runtime Layer** — normalize, diff, reconcile, and patch AST trees
-3. **Renderer Layer** — render native UI in the target framework
-
-The AST is the core contract, while renderers remain small adapters.
-
----
-
-## Why Use GenUI Protocol?
-
-- Keeps AI UI output declarative and framework-independent
-- Supports web and native UI platforms from a single AST
-- Enables incremental updates and interactive workflows
-- Avoids unsafe code generation and runtime execution
-
----
 
 ## Contributing
 
-Contributions are welcome.
-
-- Read [`CONTRIBUTING.md`](CONTRIBUTING.md)
-- Follow [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md)
-- Open issues for bugs or feature requests
-- Keep pull requests focused and tested
-
----
+Read [CONTRIBUTING.md](CONTRIBUTING.md) and the [Code of Conduct](CODE_OF_CONDUCT.md). Protocol changes update the spec, schemas, conformance fixtures and both implementations together. Security issues: see [SECURITY.md](SECURITY.md).
 
 ## License
 
-MIT — see `LICENSE` for details.
+MIT — see [LICENSE](LICENSE).

@@ -219,6 +219,7 @@ _Status: 4.1–4.7 done. MCP server (config/auth/rate limit/CORS/logging/Dockerf
 | 4.7 | LLM prompt kit + eval harness (validity %, repair rate, tokens vs HTML) across 2–3 models | L |
 
 ### Phase 5 — Docs, examples, release (≈ 2 weeks)
+_Status: 5.1–5.4 done as far as is possible without publishing credentials. Docs site rewritten with generated spec/components/schemas/benchmark and a TypeDoc API reference (all internal links verified); three runnable examples (React app, Angular presets, node and python scripts) tested in CI; changesets + npm provenance workflow and PyPI trusted-publishing workflow added; `scripts/release-check.mjs` packs the 16 public packages and smoke-tests them from a clean `npm install`; demo GIF, screenshots, README overhaul, a benchmark page and a "why not HTML" essay. NOT done: actually publishing (needs `NPM_TOKEN`, PyPI trusted-publisher setup and a `main` branch), tagging v0.2.0, a hosted docs deployment, and the benchmark has no model results because the eval has never been run against a real model._
 | # | Task | Size |
 |---|---|---|
 | 5.1 | Docs site: concepts, spec, getting-started, tutorials, FAQ, generated API reference, changelog | L |
