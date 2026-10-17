@@ -15,7 +15,7 @@
         "mermaid": "^11.16.0",
         "next": "14.2.15",
         "nextra": "^2.13.0",
-        "nextra-theme-docs": "^2.13.0",
+        "nextra-theme-docs": "^4.6.1",
         "react": "^18.3.1",
         "react-dom": "^18.3.1"
     },
