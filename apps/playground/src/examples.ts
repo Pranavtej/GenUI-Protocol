@@ -38,7 +38,7 @@ export const EXAMPLES: Record<string, ASTDocument> = {
             p: { title: "Agent run #482" },
             c: [
                 { t: "workflow", p: { steps: [{ id: "1", name: "Fetch data", status: "completed", duration: "1.2s" }, { id: "2", name: "Transform", status: "active" }, { id: "3", name: "Render UI", status: "pending" }] } },
-                { t: "executionGraph", p: { nodes: [{ id: "n1", label: "Query", status: "success" }, { id: "n2", label: "Reasoning", status: "running" }, { id: "n3", label: "UI", status: "idle" }], edges: [{ from: "n1", to: "n2" }, { from: "n2", to: "n3" }] } },
+                { t: "executionGraph", p: { nodes: [{ id: "n1", label: "Query", type: "input", status: "success" }, { id: "n2", label: "Reasoning", type: "process", status: "running" }, { id: "n3", label: "UI", type: "output", status: "idle" }], edges: [{ source: "n1", target: "n2" }, { source: "n2", target: "n3" }] } },
                 { t: "timeline", p: { items: [{ title: "Started", date: "10:00", status: "completed" }, { title: "Tool call", date: "10:02", description: "discover_components", status: "current" }] } },
             ],
         },

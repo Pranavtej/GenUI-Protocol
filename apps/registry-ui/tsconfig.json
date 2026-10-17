@@ -4,10 +4,22 @@
         "jsx": "react-jsx",
         "module": "ESNext",
         "outDir": "dist",
-        "rootDir": "src"
+        "rootDir": "src",
+        "composite": true
     },
     "include": [
         "src/**/*.tsx",
         "src/**/*.ts"
+    ],
+    "references": [
+        {
+            "path": "../../packages/core/ast"
+        },
+        {
+            "path": "../../packages/components/component-registry"
+        },
+        {
+            "path": "../../packages/renderers/react"
+        }
     ]
 }

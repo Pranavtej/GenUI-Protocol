@@ -74,7 +74,7 @@ export const ui = {
 
     workflow: (props: Common & { steps: Bindable<Array<{ id: string; name: string; status: "completed" | "active" | "pending" | "failed"; duration?: string }>> }) => withId("workflow", props),
     timeline: (props: Common & { items: Bindable<Array<{ title: string; date: string; description?: string; status?: "completed" | "current" | "upcoming" }>> }) => withId("timeline", props),
-    executionGraph: (props: Common & { nodes: Bindable<Array<{ id: string; label: string; type?: string; status?: string }>>; edges: Bindable<Array<{ from: string; to: string }>> }) => withId("executionGraph", props),
+    executionGraph: (props: Common & { nodes: Bindable<Array<{ id: string; label: string; type: "input" | "process" | "output"; status: "idle" | "running" | "success" | "error" }>>; edges: Bindable<Array<{ source: string; target: string; animated?: boolean }>> }) => withId("executionGraph", props),
 };
 
 /** Builds a document. `data` is the initial data model referenced by `bind`/`tpl`. */

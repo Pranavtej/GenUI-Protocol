@@ -207,6 +207,7 @@ _Status: 3.1 (spec §13), 3.2 (Angular: bindings/actions + stack, tabs, dialog, 
 | 3.6 | Component extension API (namespaced custom components + per-session allow-list) | M |
 
 ### Phase 4 — Agent & developer experience (≈ 2–3 weeks)
+_Status: 4.1–4.7 done. MCP server (config/auth/rate limit/CORS/logging/Dockerfile/integration tests; the Docker image itself was not built here, but the `pnpm deploy` bundle it uses was run), prompt-kit, JS and Python SDKs (Python passes the shared conformance fixtures), CLI (`genui`), registry UI, agent aligned with SDK + validate/repair loop + UI-event round trip, and an eval harness (`genui-eval`). Not done: the eval has never been run against a real model (no API key here; `--mock` verifies the plumbing), npm/PyPI publishing, an OAuth/multi-key auth story, WebSocket transport._
 | # | Task | Size |
 |---|---|---|
 | 4.1 | MCP server: auth, rate limits, env config, structured logging, Dockerfile, integration tests for every tool and REST route | L |

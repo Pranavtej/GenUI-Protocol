@@ -1,0 +1,29 @@
+{
+  "name": "@genui-protocol/cli",
+  "version": "0.1.0",
+  "private": false,
+  "description": "genui: validate, diff, patch and scaffold GenUI documents from the command line",
+  "type": "module",
+  "bin": { "genui": "dist/src/bin.js" },
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "lint": "echo 'No lint configured'",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@genui-protocol/ast": "workspace:0.1.0",
+    "@genui-protocol/component-registry": "workspace:0.1.0",
+    "@genui-protocol/prompt-kit": "workspace:0.1.0",
+    "@genui-protocol/protocol": "workspace:0.1.0",
+    "@genui-protocol/runtime-core": "workspace:0.1.0",
+    "@genui-protocol/schemas": "workspace:0.1.0",
+    "@genui-protocol/validation": "workspace:0.1.0"
+  },
+  "devDependencies": { "typescript": "^5.5.4" },
+  "license": "MIT",
+  "engines": { "node": ">=18" },
+  "publishConfig": { "access": "public" },
+  "files": ["dist"]
+}

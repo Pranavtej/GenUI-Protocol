@@ -141,7 +141,26 @@ const next = applyTreePatches(buildRuntimeTree(before), patches);
 
 ### Python
 
-The Python SDK (`packages/sdk/python`) currently only builds a minimal dashboard AST (`create_dashboard_ast(title, value)`). A fuller SDK is planned; see `PROJECT_REPORT.md`.
+```python
+from genui_protocol_sdk import ui, bind, actions, document, assert_valid
+
+doc = document(ui.card(ui.input(label="Name", value=bind("form.name")),
+                       ui.button(label="Send", on_click=actions.submit("signup", "form")), title="Sign up"),
+               data={"form": {"name": ""}})
+assert_valid(doc)
+```
+
+### CLI, MCP server and evals
+
+```bash
+genui validate doc.json        # exit 1 + readable errors when invalid
+genui diff before.json after.json
+genui scaffold form > form.json
+genui prompt                   # the LLM system prompt, generated from the registry
+genui-eval --mock              # how reliably does a model emit valid documents? (--provider anthropic|openai for real runs)
+```
+
+The MCP server (`apps/mcp-server`, see its README) serves the same protocol guide to agents via `get_protocol_guide`.
 
 ---
 
