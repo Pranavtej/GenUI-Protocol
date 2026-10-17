@@ -7,14 +7,18 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "lint": "echo 'No lint configured'",
-    "test": "echo 'No tests yet'"
+    "test": "vitest run"
   },
   "dependencies": {
     "@genui-protocol/ast": "workspace:0.1.0",
-    "@genui-protocol/validation": "workspace:0.1.0"
+    "@genui-protocol/validation": "workspace:0.1.0",
+    "@genui-protocol/protocol": "workspace:0.1.0",
+    "@genui-protocol/runtime-core": "workspace:0.1.0",
+    "@genui-protocol/stream-engine": "workspace:0.1.0"
   },
   "devDependencies": {
-    "typescript": "^5.5.4"
+    "typescript": "^5.5.4",
+    "@genui-protocol/component-registry": "workspace:0.1.0"
   },
   "type": "module",
   "license": "MIT",

@@ -1,0 +1,29 @@
+{
+  "name": "@genui-protocol/prompt-kit",
+  "version": "0.1.0",
+  "private": false,
+  "description": "System prompt, few-shot examples and tool definitions that teach LLMs to emit valid GenUI documents",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "lint": "echo 'No lint configured'",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@genui-protocol/ast": "workspace:0.1.0",
+    "@genui-protocol/component-registry": "workspace:0.1.0",
+    "@genui-protocol/protocol": "workspace:0.1.0",
+    "@genui-protocol/schemas": "workspace:0.1.0"
+  },
+  "devDependencies": {
+    "@genui-protocol/validation": "workspace:0.1.0",
+    "typescript": "^5.5.4"
+  },
+  "license": "MIT",
+  "engines": { "node": ">=18" },
+  "publishConfig": { "access": "public" },
+  "files": ["dist", "src"],
+  "exports": { ".": { "import": "./dist/src/index.js", "types": "./dist/src/index.d.ts" } }
+}
