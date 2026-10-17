@@ -11,7 +11,7 @@
     "emit": "node scripts/emit.mjs"
   },
   "dependencies": {
-    "@genui-protocol/ast": "workspace:0.1.0"
+    "@genui-protocol/ast": "workspace:^"
   },
   "devDependencies": {
     "typescript": "^5.5.4",
@@ -23,21 +23,26 @@
     "node": ">=18"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Pranavtej/GenUI-Protocol.git"
+    "url": "git+https://github.com/Pranavtej/GenUI-Protocol.git",
+    "directory": "packages/core/schemas"
   },
   "bugs": {
     "url": "https://github.com/Pranavtej/GenUI-Protocol/issues"
   },
-  "homepage": "https://genui-protocol.dev",
+  "homepage": "https://github.com/Pranavtej/GenUI-Protocol#readme",
   "sideEffects": false,
-  "description": "GenUI Protocol \u2014 Schemas",
+  "description": "Published JSON Schemas for GenUI documents, patches, actions and stream frames",
   "files": [
     "dist",
-    "src"
+    "src",
+    "!**/*.tsbuildinfo",
+    "README.md",
+    "LICENSE"
   ],
   "exports": {
     ".": {

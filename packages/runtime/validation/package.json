@@ -12,10 +12,10 @@
   "dependencies": {
     "zod": "^3.23.0",
     "ajv": "^8.20.0",
-    "@genui-protocol/ast": "workspace:0.1.0",
-    "@genui-protocol/schemas": "workspace:0.1.0",
-    "@genui-protocol/component-registry": "workspace:0.1.0",
-    "@genui-protocol/protocol": "workspace:0.1.0"
+    "@genui-protocol/ast": "workspace:^",
+    "@genui-protocol/schemas": "workspace:^",
+    "@genui-protocol/component-registry": "workspace:^",
+    "@genui-protocol/protocol": "workspace:^"
   },
   "devDependencies": {
     "typescript": "^5.5.4"
@@ -26,21 +26,26 @@
     "node": ">=18"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Pranavtej/GenUI-Protocol.git"
+    "url": "git+https://github.com/Pranavtej/GenUI-Protocol.git",
+    "directory": "packages/runtime/validation"
   },
   "bugs": {
     "url": "https://github.com/Pranavtej/GenUI-Protocol/issues"
   },
-  "homepage": "https://genui-protocol.dev",
+  "homepage": "https://github.com/Pranavtej/GenUI-Protocol#readme",
   "sideEffects": false,
-  "description": "GenUI Protocol \u2014 Validation",
+  "description": "Validator for GenUI documents: limits, props, URL checks, actions and allow-lists",
   "files": [
     "dist",
-    "src"
+    "src",
+    "!**/*.tsbuildinfo",
+    "README.md",
+    "LICENSE"
   ],
   "exports": {
     ".": {

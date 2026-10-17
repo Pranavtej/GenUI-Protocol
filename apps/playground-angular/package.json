@@ -11,14 +11,14 @@
   },
   "private": true,
   "dependencies": {
-    "@genui-protocol/ast": "workspace:0.1.0",
-    "@genui-protocol/component-registry": "workspace:0.1.0",
-    "@genui-protocol/event-engine": "workspace:0.1.0",
-    "@genui-protocol/angular": "workspace:0.1.3",
-    "@genui-protocol/runtime-core": "workspace:0.1.0",
-    "@genui-protocol/state-engine": "workspace:0.1.0",
-    "@genui-protocol/stream-engine": "workspace:0.1.0",
-    "@genui-protocol/validation": "workspace:0.1.0",
+    "@genui-protocol/ast": "workspace:^",
+    "@genui-protocol/component-registry": "workspace:^",
+    "@genui-protocol/event-engine": "workspace:^",
+    "@genui-protocol/angular": "workspace:^",
+    "@genui-protocol/runtime-core": "workspace:^",
+    "@genui-protocol/state-engine": "workspace:^",
+    "@genui-protocol/stream-engine": "workspace:^",
+    "@genui-protocol/validation": "workspace:^",
     "@angular/cdk": "^19.2.0",
     "@angular/common": "^19.2.0",
     "@angular/compiler": "^19.2.0",
@@ -30,7 +30,7 @@
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0",
-    "@genui-protocol/examples": "workspace:0.1.0"
+    "@genui-protocol/examples": "workspace:^"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^19.2.26",

@@ -18,21 +18,26 @@
     "node": ">=18"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Pranavtej/GenUI-Protocol.git"
+    "url": "git+https://github.com/Pranavtej/GenUI-Protocol.git",
+    "directory": "packages/runtime/event-engine"
   },
   "bugs": {
     "url": "https://github.com/Pranavtej/GenUI-Protocol/issues"
   },
-  "homepage": "https://genui-protocol.dev",
+  "homepage": "https://github.com/Pranavtej/GenUI-Protocol#readme",
   "sideEffects": false,
-  "description": "GenUI Protocol \u2014 Event Engine",
+  "description": "Event routing for GenUI interactions",
   "files": [
     "dist",
-    "src"
+    "src",
+    "!**/*.tsbuildinfo",
+    "README.md",
+    "LICENSE"
   ],
   "exports": {
     ".": {

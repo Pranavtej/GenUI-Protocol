@@ -11,12 +11,12 @@
         "test": "echo 'No tests (the examples package tests these documents)'"
     },
     "dependencies": {
-        "@genui-protocol/ast": "workspace:0.1.0",
-        "@genui-protocol/examples": "workspace:0.1.0",
-        "@genui-protocol/protocol": "workspace:0.1.0",
-        "@genui-protocol/renderer-react": "workspace:0.1.0",
-        "@genui-protocol/runtime-core": "workspace:0.1.0",
-        "@genui-protocol/stream-engine": "workspace:0.1.0",
+        "@genui-protocol/ast": "workspace:^",
+        "@genui-protocol/examples": "workspace:^",
+        "@genui-protocol/protocol": "workspace:^",
+        "@genui-protocol/renderer-react": "workspace:^",
+        "@genui-protocol/runtime-core": "workspace:^",
+        "@genui-protocol/stream-engine": "workspace:^",
         "react": "^18.3.1",
         "react-dom": "^18.3.1"
     },

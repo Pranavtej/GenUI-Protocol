@@ -1,7 +1,7 @@
 {
   "name": "@genui-protocol/renderer-flutter",
   "version": "0.1.0",
-  "private": false,
+  "private": true,
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
   "scripts": {
@@ -10,7 +10,7 @@
     "test": "echo 'No tests yet'"
   },
   "dependencies": {
-    "@genui-protocol/runtime-core": "workspace:0.1.0"
+    "@genui-protocol/runtime-core": "workspace:^"
   },
   "devDependencies": {
     "typescript": "^5.5.4"
@@ -19,9 +19,6 @@
   "license": "MIT",
   "engines": {
     "node": ">=18"
-  },
-  "publishConfig": {
-    "access": "public"
   },
   "repository": {
     "type": "git",
@@ -32,7 +29,7 @@
   },
   "homepage": "https://genui-protocol.dev",
   "sideEffects": false,
-  "description": "GenUI Protocol \u2014 Renderer Flutter",
+  "description": "GenUI Protocol — Renderer Flutter",
   "files": [
     "dist",
     "src"

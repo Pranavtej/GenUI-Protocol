@@ -13,5 +13,9 @@
     "@genui-protocol/runtime-core",
     "@genui-protocol/state-engine",
     "@genui-protocol/ast"
+  ],
+  "assets": [
+    "README.md",
+    "LICENSE"
   ]
 }

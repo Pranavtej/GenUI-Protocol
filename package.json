@@ -10,6 +10,8 @@
     },
     "packageManager": "pnpm@8.15.9",
     "devDependencies": {
+        "@changesets/changelog-github": "^0.5",
+        "@changesets/cli": "^2.27",
         "@types/node": "^20.14.0",
         "@typescript-eslint/eslint-plugin": "^6.10.1",
         "@typescript-eslint/parser": "^6.10.1",
@@ -37,6 +39,8 @@
         "test": "turbo run test",
         "typecheck": "turbo run typecheck",
         "clean": "rimraf node_modules .turbo dist apps/*/dist packages/core/*/dist packages/runtime/*/dist packages/components/*/dist packages/renderers/*/dist packages/sdk/*/dist packages/tooling/*/dist",
-        "emit:registry": "node scripts/emit-registry.mjs"
+        "emit:registry": "node scripts/emit-registry.mjs",
+        "release:check": "pnpm build && node scripts/release-check.mjs",
+        "meta:sync": "node scripts/sync-package-meta.mjs"
     }
 }
