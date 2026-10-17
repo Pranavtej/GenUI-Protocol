@@ -1,20 +1,104 @@
----
-title: Tutorials
-description: Guided walkthroughs and contributor-oriented learning paths.
----
-
 # Tutorials
 
-## Build a simple dashboard
+## 1. Build a dashboard in code
 
-1. Create an AST with a page and KPI cards.
-2. Normalize it with the runtime helper.
-3. Reconcile it against the previous tree for incremental updates.
+Use the typed builders instead of hand-writing JSON. `bind` and `tpl` reference the data model, so the document stays small and numbers can change without resending the UI.
 
-## Extend the protocol
+```ts
+import { ui, bind, tpl, document, assertValid } from "@genui-protocol/sdk-js";
 
-Use the schemas and component-registry packages to add new primitives and renderer metadata.
+const doc = document(
+  ui.page({ title: tpl("Analytics — {{range}}") },
+    ui.grid({ cols: 3 },
+      ui.kpi({ id: "views", label: "Page views", value: bind("kpis.views") }),
+      ui.kpi({ id: "conv", label: "Conversions", value: bind("kpis.conversions"), trend: "up", trendValue: "+24%" }),
+    ),
+    ui.chart({ type: "line", title: "Traffic", data: bind("traffic") }),
+  ),
+  {
+    range: "7d",
+    kpis: { views: "84,203", conversions: "2,847" },
+    traffic: [{ label: "Mon", value: 100 }, { label: "Tue", value: 140 }],
+  },
+);
 
-## Contribute to docs
+assertValid(doc);
+```
 
-Keep docs concise, link to source material, and preserve technical meaning while improving clarity.
+Render it with `<GenUiRenderer session={createSession({ document: doc })} />`.
+
+## 2. A form that talks to an agent
+
+Bind the fields, then submit the form's data to the agent with a `submit` action. The agent answers with data patches.
+
+```ts
+const doc = document(
+  ui.card({ title: "Request access" },
+    ui.input({ label: "Name", value: bind("form.name") }),
+    ui.checkbox({ label: "I completed training", checked: bind("form.ack") }),
+    ui.button({ label: "Request", onClick: actions.submit("request_access", "form") }),
+    ui.text({ content: tpl("Status: {{status}}") }),
+  ),
+  { form: { name: "", ack: false }, status: "draft" },
+);
+
+const session = createSession({
+  document: doc,
+  onEmit: async (event) => {
+    // event = { name: "request_access", payload: { data: { name, ack } }, nodeId, timestamp }
+    const frames = await askAgent(event);             // your transport
+    frames.forEach((frame) => session.applyFrame(frame));
+  },
+});
+```
+
+A reply that moves the status along is just a data frame:
+
+```json
+{ "type": "data", "patches": [{ "op": "replace", "path": "/status", "value": "approved" }] }
+```
+
+The `access-request` [example](/examples) implements this with a scripted agent, and a test drives the whole round trip.
+
+## 3. Stream live updates
+
+Frames carry a `sequence`. A `StreamConsumer` applies them in order and asks for a new snapshot if it falls behind.
+
+```ts
+import { StreamConsumer, connectSSE } from "@genui-protocol/stream-engine";
+
+const consumer = new StreamConsumer({
+  apply: (frame) => session.applyFrame(frame),
+  onResync: (reason) => {
+    // gap, apply-failed, joined-mid-stream or timeout: reconnect to get a fresh snapshot
+    reconnect();
+  },
+});
+
+connectSSE("http://localhost:4000/api/stream", (frame) => consumer.push(frame));
+```
+
+On the producing side (a script, a server, an agent), publish through the MCP server's REST sidecar:
+
+```ts
+const client = new McpClient({ baseUrl: "http://localhost:4000" });
+await client.streamDocument(doc);                                   // snapshot, sequence 1
+await client.streamData([{ op: "replace", path: "/kpis/views", value: "84,611" }]);
+```
+
+Late subscribers receive the latest snapshot plus the frames since, so they start consistent.
+
+## 4. Add your own component
+
+```ts
+registry.registerCustom({
+  id: "acme:gauge",
+  category: "data",
+  renderers: ["react"],
+  schema: { type: "object", properties: { value: { type: "number" } }, required: ["value"] },
+});
+
+<GenUiRenderer session={session} components={{ "acme:gauge": ({ props }) => <Gauge value={props.value as number} /> }} />;
+```
+
+Validate with `createValidator({ registry })`. Your prompt picks it up too: `buildSystemPrompt({ registry })` lists it with its props.

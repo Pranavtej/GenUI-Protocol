@@ -1,40 +1,56 @@
----
-title: Quick Start
-description: Build and validate a small AST from the runtime package.
----
+# Quick start
 
-# Quick Start
-
-This page gives you a minimal path from installation to a valid AST document.
-
-## Build an AST
+## Build a document in code
 
 ```ts
-import { buildRuntimeTree } from '@genui-protocol/runtime-core';
+import { ui, bind, tpl, actions, document, assertValid } from "@genui-protocol/sdk-js";
 
-const ast = {
-  t: 'page',
-  p: { title: 'Revenue Overview' },
-  c: [{ t: 'kpi', p: { label: 'Revenue', value: '$124K' } }]
-};
+const doc = document(
+  ui.page({ title: tpl("Hello {{user}}") },
+    ui.kpi({ label: "Revenue", value: bind("metrics.revenue"), trend: "up", trendValue: "+8%" }),
+    ui.button({ label: "Refresh", onClick: actions.emit("refresh") }),
+  ),
+  { user: "Ada", metrics: { revenue: "$94,201" } },
+);
 
-const tree = buildRuntimeTree(ast);
-console.log(tree);
+assertValid(doc); // throws listing every problem
 ```
 
-## Validate an AST
+```python
+from genui_protocol_sdk import ui, bind, actions, document, assert_valid
+
+doc = document(
+    ui.page(ui.kpi(label="Revenue", value=bind("metrics.revenue")),
+            ui.button(label="Refresh", on_click=actions.emit("refresh")), title="Overview"),
+    data={"metrics": {"revenue": "$94,201"}},
+)
+assert_valid(doc)
+```
+
+## Render in React
+
+```tsx
+const session = createSession({ document: doc, onEmit: (e) => agent.send(e) });
+<GenUiRenderer session={session} />;
+```
+
+## Render in Angular
 
 ```ts
-import { validateASTDocument } from '@genui-protocol/validation';
-
-const result = validateASTDocument(ast);
-if (result.valid) {
-  console.log('AST is valid');
-} else {
-  console.error(result.errors);
-}
+// app.config.ts
+providers: [provideGenUiRenderer(), provideGenUiTheme()]
 ```
 
-## Next step
+```html
+<!-- renders a document with its own session; emit/submit actions come out as events -->
+<genui-session-host [document]="doc" (agentEvent)="onAgentEvent($event)" />
+```
 
-Move on to the [Architecture guide](/architecture) for a deeper explanation of the runtime pipeline.
+## From the command line
+
+```bash
+genui scaffold form > form.json
+genui validate form.json
+genui diff before.json after.json > patches.json
+genui prompt                         # system prompt for your LLM
+```

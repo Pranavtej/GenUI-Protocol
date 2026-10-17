@@ -8,14 +8,27 @@ import { eventRouter, UIEvent } from "@genui-protocol/event-engine";
 import { DynamicRendererComponent, GenUiButton, GenUiBadge, GenUiScrollArea, GenUiTabs, provideGenUiSession } from "@genui-protocol/angular";
 import { defaultASTDocument, ASTDocument, UINode } from "@genui-protocol/ast";
 import { ASTPatch } from "@genui-protocol/protocol";
+import { EXAMPLES, Example } from "@genui-protocol/examples";
 
 const registry = new ComponentRegistry();
 
 // One session drives data binding and actions for everything rendered in the canvas.
 let agentEventSink: (event: UIEvent) => void = () => {};
+let activeExample: Example | null = null;
 const session = createSession({
-  onEmit: (e) => agentEventSink({ type: `agent:${e.name}`, target: e.nodeId ?? "", timestamp: e.timestamp, payload: e.payload }),
+  onEmit: (e) => {
+    agentEventSink({ type: `agent:${e.name}`, target: e.nodeId ?? "", timestamp: e.timestamp, payload: e.payload });
+    // Examples ship a scripted agent, so the UI -> agent -> UI loop works without an LLM.
+    const frames = activeExample?.reply?.(e) ?? [];
+    frames.forEach((frame, i) => setTimeout(() => session.applyFrame(frame), 400 * (i + 1)));
+  },
 });
+
+const EXAMPLE_PRESETS = {
+  analytics: EXAMPLES["analytics-dashboard"],
+  access: EXAMPLES["access-request"],
+  monitor: EXAMPLES["agent-monitoring"],
+} as const;
 
 const DEMO_PRESETS = {
   dashboard: {
@@ -115,6 +128,12 @@ const DEMO_PRESETS = {
           <genui-button variant="ghost" size="sm" (onClick)="loadPreset('dashboard')">Dashboard</genui-button>
           <genui-button variant="ghost" size="sm" (onClick)="loadPreset('form')">Form</genui-button>
           <genui-button variant="ghost" size="sm" (onClick)="loadPreset('interactive')">Interactive</genui-button>
+          <genui-button variant="ghost" size="sm" (onClick)="loadPreset('analytics')">Analytics</genui-button>
+          <genui-button variant="ghost" size="sm" (onClick)="loadPreset('access')">Access request</genui-button>
+          <genui-button variant="ghost" size="sm" (onClick)="loadPreset('monitor')">Agent run</genui-button>
+          @if (hasLive()) {
+            <genui-button variant="default" size="sm" (onClick)="playStream()">▶ Stream</genui-button>
+          }
           <button class="inline-flex items-center justify-center rounded-md text-sm font-medium h-9 px-4 border bg-transparent hover:bg-accent transition-colors"
                   (click)="toggleTheme()">
             {{ isDark() ? 'Light' : 'Dark' }}
@@ -286,10 +305,20 @@ export class AppComponent implements OnInit {
   setLeftTab(tab: string) { this.leftTab.set(tab); }
   setRightTab(tab: string) { this.rightTab.set(tab); }
 
-  loadPreset(type: "dashboard" | "form" | "interactive") {
-    const preset = DEMO_PRESETS[type];
+  hasLive = signal(false);
+
+  loadPreset(type: "dashboard" | "form" | "interactive" | "analytics" | "access" | "monitor") {
+    const example = type in EXAMPLE_PRESETS ? EXAMPLE_PRESETS[type as keyof typeof EXAMPLE_PRESETS] : null;
+    activeExample = example;
+    this.hasLive.set(!!example?.live?.length);
+    const preset = example ? example.document : DEMO_PRESETS[type as keyof typeof DEMO_PRESETS];
     this.rawAST = JSON.stringify(preset, null, 2);
     this.parseAndRender(preset as unknown as ASTDocument);
+  }
+
+  /** Replays the example's live frames, one per second. */
+  playStream() {
+    activeExample?.live?.forEach((frame, i) => setTimeout(() => session.applyFrame(frame), 1000 * (i + 1)));
   }
 
   onASTChange() {

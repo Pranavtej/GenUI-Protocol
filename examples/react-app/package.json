@@ -1,0 +1,30 @@
+{
+    "name": "genui-protocol-example-react",
+    "version": "0.1.0",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build": "tsc -b && vite build",
+        "preview": "vite preview",
+        "lint": "echo 'No lint configured'",
+        "test": "echo 'No tests (the examples package tests these documents)'"
+    },
+    "dependencies": {
+        "@genui-protocol/ast": "workspace:0.1.0",
+        "@genui-protocol/examples": "workspace:0.1.0",
+        "@genui-protocol/protocol": "workspace:0.1.0",
+        "@genui-protocol/renderer-react": "workspace:0.1.0",
+        "@genui-protocol/runtime-core": "workspace:0.1.0",
+        "@genui-protocol/stream-engine": "workspace:0.1.0",
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1"
+    },
+    "devDependencies": {
+        "@types/react": "^18.3.3",
+        "@types/react-dom": "^18.3.0",
+        "@vitejs/plugin-react": "^4.3.1",
+        "typescript": "^5.5.4",
+        "vite": "^5.4.1"
+    }
+}

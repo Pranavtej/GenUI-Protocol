@@ -7,6 +7,8 @@ import { GENUI_SESSION, runActions, writeField } from "../session";
 const asStr = (x: unknown, fallback = ""): string => (x === undefined || x === null ? fallback : typeof x === "object" ? JSON.stringify(x) : String(x));
 const asArr = <T = Record<string, unknown>>(x: unknown): T[] => (Array.isArray(x) ? (x as T[]) : []);
 
+const GRAPH_COLOR: Record<string, string> = { success: "#16a34a", completed: "#16a34a", running: "#2563eb", active: "#2563eb", error: "#dc2626", failed: "#dc2626" };
+
 const STATUS_CLASS: Record<string, string> = {
   completed: "bg-green-500", success: "bg-green-500", active: "bg-primary", running: "bg-primary", current: "bg-primary",
   pending: "bg-muted-foreground", idle: "bg-muted-foreground", upcoming: "bg-muted-foreground", failed: "bg-red-500", error: "bg-red-500",
@@ -202,7 +204,7 @@ export class TimelineRenderer {
         }
         @for (n of laidOut(); track $index) {
           <g [attr.data-status]="n.status">
-            <rect [attr.x]="n.x" y="20" width="160" height="56" rx="8" fill="none" stroke="currentColor" stroke-width="2"></rect>
+            <rect [attr.x]="n.x" y="20" width="160" height="56" rx="8" fill="none" [attr.stroke]="n.color" stroke-width="2"></rect>
             <text [attr.x]="n.x + 80" y="52" text-anchor="middle" font-size="13" fill="currentColor">{{ n.label }}</text>
           </g>
         }
@@ -212,7 +214,7 @@ export class TimelineRenderer {
 })
 export class ExecutionGraphRenderer {
   node = input.required<RuntimeNode>();
-  laidOut = computed(() => asArr(this.node().p?.["nodes"]).map((n, i) => ({ id: asStr(n["id"]), label: asStr(n["label"]), status: asStr(n["status"]), x: 10 + i * 220 })));
+  laidOut = computed(() => asArr(this.node().p?.["nodes"]).map((n, i) => ({ id: asStr(n["id"]), label: asStr(n["label"]), status: asStr(n["status"]), color: GRAPH_COLOR[asStr(n["status"])] ?? "currentColor", x: 10 + i * 220 })));
   width = computed(() => Math.max(200, 20 + this.laidOut().length * 220));
   edgeLines = computed(() => {
     const pos = new Map(this.laidOut().map((n) => [n.id, n.x]));

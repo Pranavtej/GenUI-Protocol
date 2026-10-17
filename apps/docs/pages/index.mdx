@@ -1,65 +1,40 @@
-import { Cards, Card } from 'nextra/components';
-import { ArrowRight, BookOpen, Cpu, LayoutGrid, Rocket } from 'lucide-react';
+# GenUI Protocol
 
-# GenUI Protocol Documentation
+**Let AI agents answer with interfaces, not just text — without letting them write frontend code.**
 
-Welcome to the documentation hub for GenUI Protocol, the universal AST-based protocol for AI-generated interfaces.
+An agent emits a small, declarative JSON *document*. A runtime validates it, and a renderer draws it with your own components. The model never produces HTML, CSS or JavaScript, so there is nothing to execute and nothing framework-specific to generate.
 
-<div className="not-prose mt-8 grid gap-6 lg:grid-cols-[1.3fr_0.7fr]">
-  <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-900 to-slate-700 p-8 text-white shadow-sm dark:border-slate-800">
-    <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-slate-300">Universal AI UI Protocol</p>
-    <h2 className="text-3xl font-semibold">Build once, render everywhere.</h2>
-    <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-300">
-      Generate a single compact AST from your AI workflow and render it in React, Angular, Vue, Svelte, React Native, SwiftUI, or Flutter without code generation.
-    </p>
-    <div className="mt-6 flex flex-wrap gap-3">
-      <a href="/getting-started" className="rounded-lg bg-white px-4 py-2 font-medium text-slate-900">Get Started</a>
-      <a href="https://github.com/Pranavtej/GenUI-Protocol" className="rounded-lg border border-white/20 px-4 py-2 font-medium text-white">GitHub</a>
-    </div>
-  </div>
-  <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-    <p className="text-sm font-semibold text-slate-500">Quick example</p>
-    <pre className="mt-4 overflow-x-auto rounded-lg bg-slate-950 p-4 text-sm text-slate-100">
-{`const ast = {
-  t: "page",
-  p: { title: "Dashboard" },
-  c: [{ t: "card", p: { title: "Metrics" } }]
-};`}
-    </pre>
-  </div>
-</div>
+![Access request: the form submits to an agent, the agent answers with data patches, the workflow advances](/assets/demo.gif)
 
-<Cards className="mt-10">
-  <Card icon={<Rocket />} title="Getting Started" href="/getting-started">
-    Install the runtime, understand the architecture, and start building your first AST.
-  </Card>
-  <Card icon={<BookOpen />} title="Protocol Reference" href="/protocol">
-    Learn the compact AST format, component catalog, and event contract.
-  </Card>
-  <Card icon={<LayoutGrid />} title="Architecture" href="/architecture">
-    Review the runtime layers, reconciliation model, and renderer boundaries.
-  </Card>
-  <Card icon={<Cpu />} title="Examples" href="/examples">
-    Explore practical examples for dashboards, workflows, and interactive UIs.
-  </Card>
-</Cards>
-
-## Why teams use GenUI Protocol
-
-- Declarative output for AI-generated interfaces
-- One AST that reaches multiple frameworks
-- Safe and portable without runtime eval
-- Incremental updates and structured events
-
-## Installation
-
-```bash
-pnpm install
-pnpm build
+```json
+{
+  "version": "1.0.0",
+  "data": { "form": { "name": "" } },
+  "root": {
+    "t": "card",
+    "p": { "title": "Sign up" },
+    "c": [
+      { "t": "input", "p": { "label": "Name", "value": { "$bind": "form.name" } } },
+      { "t": "text", "p": { "content": { "$tpl": "Hello {{form.name}}" } } },
+      { "t": "button", "p": { "label": "Send", "onClick": { "do": "submit", "name": "signup", "from": "form" } } }
+    ]
+  }
+}
 ```
 
-## Next steps
+## Why
 
-- Read the [Getting Started guide](/getting-started)
-- Review the [Protocol specification](/protocol)
-- Explore the [Architecture guide](/architecture)
+- **Safe by construction.** Documents are data. Props are rendered as text, URLs are scheme-checked, size limits are enforced, and interactivity is a fixed set of declarative [actions](/protocol#11-actions).
+- **Compact.** A document describes *what* to show. See the [benchmark](/benchmark).
+- **Interactive.** Data binding, two-way forms and `emit`/`submit` actions let the UI talk back to the agent.
+- **Live.** Sequenced stream frames and RFC 6902 patches update a UI in place, with resync when a consumer falls behind.
+- **Portable.** One document, any renderer. React and Angular ship today; the [protocol](/protocol) and [conformance fixtures](https://github.com/Pranavtej/GenUI-Protocol/tree/main/conformance) are what other renderers implement.
+
+## Where to start
+
+- **[Getting started](/getting-started)** — render your first document in five minutes.
+- **[Examples](/examples)** — a dashboard, an agent-driven workflow and a live monitor, runnable in React and Angular.
+- **[Using with LLMs](/agents)** — the prompt, tools and validate-and-repair loop that make models reliable at this.
+- **[Protocol specification](/protocol)** — the normative contract.
+
+> **Status:** early (0.x). The protocol and the React and Angular renderers are implemented and tested; other renderers are planned. See [Status & features](/features) for exactly what exists.

@@ -1,12 +1,13 @@
----
-title: Roadmap
-description: Planned milestones for the GenUI Protocol runtime and docs platform.
----
-
 # Roadmap
 
-- Phase 1: AST, runtime core, React renderer, MCP discovery
-- Phase 2: Angular, Vue, Svelte, richer component metadata
-- Phase 3: streaming updates, real-time dashboards, AI copilots
-- Phase 4: React Native, Flutter, SwiftUI support
-- Phase 5: open governance and protocol standardization
+Delivered so far: protocol and spec v1 draft, hardened runtime, interactivity (bindings, actions, streaming), React and Angular renderers, agent tooling (MCP server, SDKs, CLI, prompt kit, eval), docs and examples.
+
+## Next
+
+1. **Publish** the packages and tag `v0.2.0`.
+2. **Measure real models** with `genui-eval` and publish first-try validity and repair rates; tune the prompt from the failures.
+3. **Automated renderer tests** — Angular unit tests and Playwright end-to-end tests in CI.
+4. **Protocol additions** — remote data sources with loading/error states, form validation rules, partial-document streaming, capability negotiation.
+5. **More renderers** — Vue first, then Svelte and React Native, each gated on the conformance fixtures.
+6. **Interoperability** — adapters to and from other agent-UI formats.
+7. **Governance** — an RFC process and a versioned spec site once there is more than one implementation.

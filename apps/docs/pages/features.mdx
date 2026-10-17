@@ -1,30 +1,35 @@
----
-title: Features
-description: Overview of the protocol capabilities, runtime features, and platform support.
----
+# Status & features
 
-# Features
+Early (0.x). This page says what exists and what does not.
 
-GenUI Protocol is designed for AI-generated interfaces that need to remain portable, compact, and interactive.
+## Implemented and tested
 
-## Core capabilities
+| Area | Status |
+|---|---|
+| Document model, validation (limits, props, URLs, duplicate ids, actions, expressions) | ✅ |
+| RFC 6902 patches (all six ops, atomic, pointer escaping, prototype-pollution guard), id-keyed diff | ✅ |
+| Data binding (`$bind`, `$tpl`), two-way inputs | ✅ |
+| Actions (`setData`, `toggle`, `navigate`, `emit`, `submit`) and the UI → agent event path | ✅ |
+| Sequenced streaming with resync (SSE) | ✅ |
+| React renderer — all 23 built-in components | ✅ |
+| Angular renderer — all 23 built-in components | ✅ (verified in a browser; no automated Angular tests yet) |
+| Custom namespaced components | ✅ |
+| Theming via CSS variables (light, dark, custom) | ✅ |
+| MCP server (stdio and REST/SSE, auth, rate limits, Docker) | ✅ |
+| JS SDK, Python SDK, CLI, prompt kit | ✅ |
+| Shared conformance fixtures (TypeScript and Python) | ✅ |
+| Eval harness for models | ✅ built — **never run against a real model** |
 
-- Compact AST payloads optimized for LLM output
-- Multi-framework rendering without code generation
-- Validation and reconciliation in a runtime engine
-- Structured event routing and reactive state reduction
-- Incremental patch delivery for streaming UIs
+## Not implemented
 
-## Supported surfaces
+- Renderers for Vue, Svelte, React Native, SwiftUI, Flutter (the packages are placeholders and are not published).
+- Remote data sources with loading and error states; form validation rules; partial-document streaming; WebSocket transport; capability negotiation.
+- Published npm/PyPI packages (release pipeline is ready).
+- Automated Angular tests; end-to-end browser tests in CI.
+- Accessibility audit beyond labelled controls and dialog roles.
 
-- React
-- Angular
-- Vue
-- Svelte
-- React Native
-- SwiftUI
-- Flutter
+## Known limitations
 
-## Why it matters
-
-The protocol keeps the interface declarative while letting each renderer adapt the presentation layer for the target platform.
+- The MCP server's auth is a single shared key.
+- Stream history for late joiners is capped at 200 frames since the last snapshot.
+- The Angular renderer's charts are simple SVG, not a charting library.

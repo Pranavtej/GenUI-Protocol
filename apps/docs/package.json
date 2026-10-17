@@ -3,10 +3,12 @@
     "version": "0.1.0",
     "private": true,
     "scripts": {
-        "dev": "next dev",
-        "build": "next build",
+        "dev": "node scripts/generate.mjs && next dev",
+        "build": "node scripts/generate.mjs && typedoc --options ../../typedoc.json && next build",
         "start": "next start",
-        "lint": "next lint"
+        "lint": "next lint",
+        "generate": "node scripts/generate.mjs",
+        "api": "typedoc --options ../../typedoc.json"
     },
     "dependencies": {
         "lucide-react": "^0.468.0",
@@ -25,6 +27,9 @@
         "eslint-config-next": "^14.2.15",
         "postcss": "^8.5.15",
         "tailwindcss": "^3.4.19",
-        "typescript": "^5.5.4"
+        "typescript": "^5.5.4",
+        "@genui-protocol/component-registry": "workspace:0.1.0",
+        "@genui-protocol/schemas": "workspace:0.1.0",
+        "@genui-protocol/eval": "workspace:0.1.0"
     }
 }

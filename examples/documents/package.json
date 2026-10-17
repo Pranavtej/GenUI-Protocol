@@ -1,0 +1,32 @@
+{
+  "name": "@genui-protocol/examples",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Runnable example documents (and scripted agents) used by the docs, playgrounds and tests",
+  "type": "module",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "lint": "echo 'No lint configured'",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@genui-protocol/ast": "workspace:0.1.0",
+    "@genui-protocol/protocol": "workspace:0.1.0",
+    "@genui-protocol/sdk-js": "workspace:0.1.0"
+  },
+  "devDependencies": {
+    "@genui-protocol/renderer-react": "workspace:0.1.0",
+    "@genui-protocol/runtime-core": "workspace:0.1.0",
+    "@genui-protocol/validation": "workspace:0.1.0",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/react": "^16.0.1",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "jsdom": "^25.0.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "typescript": "^5.5.4"
+  }
+}

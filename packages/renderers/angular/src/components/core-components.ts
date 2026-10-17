@@ -359,6 +359,7 @@ export class KpiRenderer implements GenUiComponent {
   standalone: true,
   imports: [CommonModule, GenUiStack, forwardRef(() => DynamicRendererComponent)],
   template: `
+    @if (dashTitle) { <h2 class="mb-3 text-xl font-semibold">{{ dashTitle }}</h2> }
     <genui-stack gap="var(--genui-spacing-lg)">
       @for (child of node().children; track child.id) {
         <genui-dynamic-renderer [node]="child"></genui-dynamic-renderer>
@@ -368,6 +369,7 @@ export class KpiRenderer implements GenUiComponent {
 })
 export class DashboardRenderer implements GenUiComponent {
   node = input.required<RuntimeNode>();
+  get dashTitle(): string { return str(this.node().p, "title"); }
 }
 
 @Component({

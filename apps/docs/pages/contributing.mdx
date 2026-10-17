@@ -1,27 +1,19 @@
----
-title: Contributing
-description: Guidance for contributors working on the docs, runtime, and examples.
----
-
 # Contributing
-
-Contributions are welcome.
-
-## Documentation contributions
-
-- Keep docs concise and structured.
-- Reuse existing Markdown where possible.
-- Preserve technical meaning while improving readability.
-
-## Development workflow
 
 ```bash
 pnpm install
 pnpm build
+pnpm lint
+pnpm test
 ```
 
-## Pull request expectations
+Python parts (`packages/sdk/python`, `apps/python-test`) need Python 3.10+: `pip install -e ".[dev]" && pytest`.
 
-- Keep changes focused.
-- Include tests or validation where practical.
-- Update relevant docs when behavior changes.
+## Ground rules
+
+- **The spec and conformance fixtures are the contract.** A protocol change updates `spec/SPEC.md`, the schemas in `packages/core/schemas`, the fixtures in `conformance/`, and both the TypeScript and Python implementations.
+- **Generated files are not edited by hand:** `spec/schemas/*` (`pnpm --filter @genui-protocol/schemas emit`), the Python `registry.json` (`pnpm emit:registry`), and the generated docs pages. Tests fail if they drift.
+- **Add tests with your change.** Compiled output (`*.js`, `*.d.ts`, `dist/`) is never committed.
+- **Releases** use [changesets](https://github.com/changesets/changesets): run `pnpm changeset` and describe the change for each package you touched.
+
+See the repository's [CONTRIBUTING.md](https://github.com/Pranavtej/GenUI-Protocol/blob/main/CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](https://github.com/Pranavtej/GenUI-Protocol/blob/main/CODE_OF_CONDUCT.md).
