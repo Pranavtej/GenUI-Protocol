@@ -4,7 +4,10 @@
     "version": "0.1.0",
     "description": "GenUI Protocol monorepo for universal AI-generated interfaces.",
     "license": "MIT",
-    "engines": { "node": ">=18", "pnpm": ">=8" },
+    "engines": {
+        "node": ">=18",
+        "pnpm": ">=8"
+    },
     "packageManager": "pnpm@8.15.9",
     "devDependencies": {
         "@types/node": "^20.14.0",
@@ -12,14 +15,16 @@
         "@typescript-eslint/parser": "^6.10.1",
         "autoprefixer": "^10.5.0",
         "eslint": "^8.57.0",
+        "fast-check": "^3",
         "postcss": "^8.5.15",
         "prettier": "^3.0.0",
-        "tailwindcss": "^3.4.19",
         "rimraf": "^5.0.5",
+        "tailwindcss": "^3.4.19",
         "ts-node": "^10.9.1",
         "turbo": "^1.11.0",
         "typescript": "^5.5.4",
-        "typescript-json-schema": "^0.67.4"
+        "typescript-json-schema": "^0.67.4",
+        "vitest": "^2"
     },
     "scripts": {
         "bootstrap": "pnpm install",

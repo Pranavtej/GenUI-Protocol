@@ -160,7 +160,7 @@ AI agent ──MCP tools──► discover components → get schema → generat
 Effort: S ≈ ≤1 day, M ≈ 2–4 days, L ≈ 1–2 weeks (single developer). Each phase ends with a demoable result.
 
 ### Phase 0 — Cleanup & foundations (≈ 1 week)
-_Status: 0.1 done (name = GenUI Protocol, npm scope `@genui-protocol/*`, Angular prefix `genui-`/`GenUi*`); 0.6 SECURITY contact still pending. 0.3 kept Nextra, removed Docusaurus and `angular-ui`. Added a CI Python job, Dependabot and templates._
+_Status: Phase 1 started — done: 1.1 (draft `spec/SPEC.md`, §9 lists what is still unspecified), 1.2 (`spec/schemas`), 1.3 (id-keyed diff, full RFC 6902, atomic apply), 1.4 (property tests), 1.5 (validator limits, caches, injectable registry, URL checks), 1.6 (`validateDocument`/`validateNode`), 1.8 (TS runners; Python runner pending); 1.7 in progress (runtime-core + validation + schemas covered). Phase 0: 0.1 done (name = GenUI Protocol, npm scope `@genui-protocol/*`, Angular prefix `genui-`/`GenUi*`); 0.6 SECURITY contact still pending. 0.3 kept Nextra, removed Docusaurus and `angular-ui`. Added a CI Python job, Dependabot and templates._
 | # | Task | Size |
 |---|---|---|
 | 0.1 | Decide final name/scope (`@genui/*`?) and rename packages, Python module, docs titles consistently | M |

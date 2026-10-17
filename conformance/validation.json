@@ -1,0 +1,125 @@
+{
+  "description": "Document validation against the default registry. 'errorContains' is a substring that MUST appear in at least one error.",
+  "cases": [
+    {
+      "name": "minimal-valid",
+      "document": {
+        "version": "1.0.0",
+        "root": {
+          "t": "page",
+          "p": {
+            "title": "Hi"
+          }
+        }
+      },
+      "valid": true
+    },
+    {
+      "name": "missing-type",
+      "document": {
+        "version": "1.0.0",
+        "root": {
+          "p": {}
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "unknown-component",
+      "document": {
+        "version": "1.0.0",
+        "root": {
+          "t": "nope"
+        }
+      },
+      "valid": false,
+      "errorContains": "Unknown component"
+    },
+    {
+      "name": "bad-prop-type",
+      "document": {
+        "version": "1.0.0",
+        "root": {
+          "t": "text",
+          "p": {
+            "content": 5
+          }
+        }
+      },
+      "valid": false
+    },
+    {
+      "name": "unsupported-major",
+      "document": {
+        "version": "2.0.0",
+        "root": {
+          "t": "page",
+          "p": {
+            "title": "x"
+          }
+        }
+      },
+      "valid": false,
+      "errorContains": "Unsupported protocol version"
+    },
+    {
+      "name": "duplicate-ids",
+      "document": {
+        "version": "1.0.0",
+        "root": {
+          "t": "page",
+          "p": {
+            "title": "x"
+          },
+          "c": [
+            {
+              "t": "text",
+              "id": "a",
+              "p": {
+                "content": "1"
+              }
+            },
+            {
+              "t": "text",
+              "id": "a",
+              "p": {
+                "content": "2"
+              }
+            }
+          ]
+        }
+      },
+      "valid": false,
+      "errorContains": "duplicate node id"
+    },
+    {
+      "name": "javascript-url",
+      "document": {
+        "version": "1.0.0",
+        "root": {
+          "t": "button",
+          "p": {
+            "label": "x",
+            "href": "javascript:alert(1)"
+          }
+        }
+      },
+      "valid": false,
+      "errorContains": "URL scheme"
+    },
+    {
+      "name": "extra-node-key",
+      "document": {
+        "version": "1.0.0",
+        "root": {
+          "t": "page",
+          "p": {
+            "title": "x"
+          },
+          "onclick": "evil()"
+        }
+      },
+      "valid": false
+    }
+  ]
+}
