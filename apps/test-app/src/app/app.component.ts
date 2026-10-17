@@ -1,9 +1,9 @@
-import { Component, OnInit, OnDestroy, effect, signal, viewChild, ViewContainerRef } from "@angular/core";
+import { Component, OnInit, OnDestroy, effect, signal } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
-import { RuntimeTree, buildRuntimeTree } from "@genui-protocol/runtime-core";
+import { AgentEvent } from "@genui-protocol/runtime-core";
 import { eventRouter, UIEvent } from "@genui-protocol/event-engine";
-import { DynamicRendererComponent } from "@genui-protocol/angular";
+import { GenUiSessionHostComponent } from "@genui-protocol/angular";
 import { ASTDocument } from "@genui-protocol/ast";
 
 interface ChatMessage {
@@ -15,7 +15,7 @@ interface ChatMessage {
 @Component({
   selector: "app-root",
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, GenUiSessionHostComponent],
   template: `
     <div class="h-screen w-screen flex flex-col bg-background text-foreground">
       <header class="flex items-center justify-between px-6 h-14 bg-card border-b shrink-0">
@@ -131,15 +131,17 @@ interface ChatMessage {
           <div class="flex items-center justify-between px-4 h-10 border-b bg-card shrink-0">
             <span class="text-sm font-medium">UI Canvas</span>
             <div class="flex items-center gap-2 text-xs text-muted-foreground">
-              @if (runtimeTree()) {
+              @if (currentDoc()) {
                 <span>AST rendered</span>
                 <button class="hover:text-foreground transition-colors" (click)="clearAST()">Clear</button>
               }
             </div>
           </div>
           <div class="flex-1 overflow-auto p-6">
-            <ng-container #astContainer></ng-container>
-            @if (!runtimeTree()) {
+            @if (currentDoc(); as doc) {
+              <genui-session-host [document]="doc" (agentEvent)="onAgentEvent($event)"></genui-session-host>
+            }
+            @if (!currentDoc()) {
               <div class="h-full flex flex-col items-center justify-center text-muted-foreground gap-4">
                 <svg class="w-16 h-16 opacity-20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071a9 9 0 0112.162 0M12 4v1m0 4v2m0 4v1"></path>
@@ -194,7 +196,7 @@ interface ChatMessage {
 export class AppComponent implements OnInit, OnDestroy {
   isDark = signal(true);
   agentStatus = signal<"connected" | "disconnected" | "error" | "streaming">("disconnected");
-  runtimeTree = signal<RuntimeTree | null>(null);
+  currentDoc = signal<ASTDocument | null>(null);
   logs = signal<UIEvent[]>([]);
   messages = signal<ChatMessage[]>([]);
   userInput = "";
@@ -207,10 +209,8 @@ export class AppComponent implements OnInit, OnDestroy {
     "Top performing teams Q2",
   ]);
 
-  private astContainer = viewChild.required<string, ViewContainerRef>("astContainer", { read: ViewContainerRef });
   private agentBaseUrl = "http://localhost:8000";
   private abortController: AbortController | null = null;
-  private astComponentRef: any = null;
 
   constructor() {
     effect(() => {
@@ -251,8 +251,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   clearAST() {
-    this.runtimeTree.set(null);
-    this.astComponentRef = null;
+    this.currentDoc.set(null);
   }
 
   async sendMessage() {
@@ -261,6 +260,18 @@ export class AppComponent implements OnInit, OnDestroy {
     this.userInput = "";
 
     this.messages.update(m => [...m, { role: "user", content: text, timestamp: new Date() }]);
+    await this.runStream("/chat/stream", { message: text, thread_id: "default" });
+  }
+
+  /** An `emit` / `submit` action from the rendered UI: log it and hand it to the agent as a new turn. */
+  async onAgentEvent(event: AgentEvent) {
+    this.logs.update((l) => [{ type: `agent:${event.name}`, target: event.nodeId ?? "", payload: event.payload, timestamp: Date.now() } as any, ...l]);
+    if (this.isStreaming()) return;
+    this.messages.update(m => [...m, { role: "user", content: `↳ ${event.name}`, timestamp: new Date() }]);
+    await this.runStream("/chat/event", { name: event.name, payload: event.payload, nodeId: event.nodeId, thread_id: "default" });
+  }
+
+  private async runStream(path: string, body: unknown) {
     this.agentStatus.set("streaming");
     this.isStreaming.set(true);
 
@@ -268,10 +279,10 @@ export class AppComponent implements OnInit, OnDestroy {
     const accumulatedText = signal("");
 
     try {
-      const resp = await fetch(`${this.agentBaseUrl}/chat/stream`, {
+      const resp = await fetch(`${this.agentBaseUrl}${path}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: text, thread_id: "default" }),
+        body: JSON.stringify(body),
         signal: this.abortController.signal,
       });
 
@@ -315,13 +326,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
               case "ast":
                 if (event.content) {
-                  const astDoc: ASTDocument = {
-                    version: "1.0.0",
-                    root: event.content?.root || event.content,
-                  };
-                  const tree = buildRuntimeTree(astDoc);
-                  this.runtimeTree.set(tree);
-                  this.renderAST(tree);
+                  const c = event.content;
+                  this.currentDoc.set(c?.root ? { version: c.version ?? "1.0.0", ...(c.data ? { data: c.data } : {}), root: c.root } : { version: "1.0.0", root: c });
                 }
                 break;
 
@@ -358,18 +364,6 @@ export class AppComponent implements OnInit, OnDestroy {
       this.isStreaming.set(false);
       this.agentStatus.set("connected");
       this.abortController = null;
-    }
-  }
-
-  private renderAST(tree: RuntimeTree) {
-    try {
-      const container = this.astContainer();
-      container.clear();
-      const ref = container.createComponent(DynamicRendererComponent);
-      ref.setInput("node", tree.root);
-      this.astComponentRef = ref;
-    } catch (e) {
-      console.error("Failed to render AST:", e);
     }
   }
 

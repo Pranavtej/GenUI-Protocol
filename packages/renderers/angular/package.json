@@ -23,7 +23,8 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "marked": "^15.0.12",
-    "tslib": "^2.3.0"
+    "tslib": "^2.3.0",
+    "@genui-protocol/ast": "workspace:0.1.0"
   },
   "devDependencies": {
     "@angular/compiler": "^19.2.24",

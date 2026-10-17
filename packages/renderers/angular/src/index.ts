@@ -26,6 +26,7 @@ export * from "./renderer.component";
 export * from "./components/core-components";
 export * from "./components/extra-components";
 export * from "./session";
+export * from "./session-host.component";
 export { provideGenUiTheme, GENUI_DEFAULT_THEME_CSS, GENUI_THEME_TOKEN } from "./theme-provider";
 
 export * from "./ui";

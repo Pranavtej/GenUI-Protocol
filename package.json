@@ -35,6 +35,7 @@
         "lint": "turbo run lint",
         "test": "turbo run test",
         "typecheck": "turbo run typecheck",
-        "clean": "rimraf node_modules .turbo dist apps/*/dist packages/core/*/dist packages/runtime/*/dist packages/components/*/dist packages/renderers/*/dist packages/sdk/*/dist packages/tooling/*/dist"
+        "clean": "rimraf node_modules .turbo dist apps/*/dist packages/core/*/dist packages/runtime/*/dist packages/components/*/dist packages/renderers/*/dist packages/sdk/*/dist packages/tooling/*/dist",
+        "emit:registry": "node scripts/emit-registry.mjs"
     }
 }

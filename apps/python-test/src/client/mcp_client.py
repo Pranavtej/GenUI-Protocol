@@ -1,5 +1,6 @@
 """HTTP client for the GenUI Protocol MCP server."""
 
+import os
 from dataclasses import dataclass, field
 from typing import Any
 import httpx
@@ -30,9 +31,11 @@ class MCPClientError(Exception):
 class MCPClient:
     """Client for the GenUI Protocol MCP HTTP API."""
 
-    def __init__(self, base_url: str = "http://localhost:4000", timeout: float = 30.0) -> None:
+    def __init__(self, base_url: str = "http://localhost:4000", timeout: float = 30.0, api_key: str | None = None) -> None:
         self.base_url = base_url.rstrip("/")
-        self._client = httpx.Client(base_url=self.base_url, timeout=timeout)
+        api_key = api_key or os.getenv("GENUI_MCP_API_KEY") or None
+        headers = {"Authorization": f"Bearer {api_key}"} if api_key else {}
+        self._client = httpx.Client(base_url=self.base_url, timeout=timeout, headers=headers)
 
     def close(self) -> None:
         self._client.close()
@@ -85,6 +88,12 @@ class MCPClient:
         r.raise_for_status()
         return r.json()
 
+    def guide(self) -> dict[str, Any]:
+        """System prompt (rules, bindings, actions, component catalogue) and tool definitions from the server."""
+        r = self._client.get("/api/protocol_guide")
+        r.raise_for_status()
+        return r.json()
+
     # ---- AST Generation ----------------------------------------------------
 
     def generate_ast(self, root: dict[str, Any]) -> dict[str, Any]:
@@ -104,6 +113,12 @@ class MCPClient:
         if renderer:
             body["renderer"] = renderer
         r = self._client.post("/api/validate_ast", json=body)
+        r.raise_for_status()
+        data = r.json()
+        return ValidationResult(valid=data.get("valid", False), errors=data.get("errors"))
+
+    def validate_document(self, document: dict[str, Any], renderer: str | None = None) -> ValidationResult:
+        r = self._client.post("/api/validate_document", json={"document": document, "renderer": renderer})
         r.raise_for_status()
         data = r.json()
         return ValidationResult(valid=data.get("valid", False), errors=data.get("errors"))

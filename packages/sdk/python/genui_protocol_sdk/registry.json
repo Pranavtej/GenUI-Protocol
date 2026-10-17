@@ -1,0 +1,957 @@
+[
+  {
+    "id": "page",
+    "name": "page",
+    "version": "1.0.0",
+    "category": "layout",
+    "description": "Root or page-level container component.",
+    "renderers": [
+      "react",
+      "angular",
+      "vue",
+      "svelte",
+      "react-native",
+      "swiftui",
+      "flutter"
+    ],
+    "schema": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "subtitle": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "title"
+      ]
+    }
+  },
+  {
+    "id": "section",
+    "name": "section",
+    "version": "1.0.0",
+    "category": "layout",
+    "description": "Group related contents with optional title and borders.",
+    "renderers": [
+      "react",
+      "angular",
+      "vue",
+      "svelte"
+    ],
+    "schema": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "border": {
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  {
+    "id": "card",
+    "name": "card",
+    "version": "1.0.0",
+    "category": "general",
+    "description": "Standard card component for containing structured information.",
+    "renderers": [
+      "react",
+      "angular",
+      "vue",
+      "svelte"
+    ],
+    "schema": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "subtitle": {
+          "type": "string"
+        },
+        "bordered": {
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  {
+    "id": "text",
+    "name": "text",
+    "version": "1.0.0",
+    "category": "general",
+    "description": "Simple inline or block paragraph text with custom size and variance.",
+    "renderers": [
+      "react",
+      "angular",
+      "vue",
+      "svelte"
+    ],
+    "schema": {
+      "type": "object",
+      "properties": {
+        "content": {
+          "type": "string"
+        },
+        "size": {
+          "type": "string",
+          "enum": [
+            "xs",
+            "sm",
+            "base",
+            "lg",
+            "xl"
+          ]
+        },
+        "color": {
+          "type": "string",
+          "enum": [
+            "default",
+            "muted",
+            "primary",
+            "success",
+            "warning",
+            "danger"
+          ]
+        },
+        "bold": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "content"
+      ]
+    }
+  },
+  {
+    "id": "heading",
+    "name": "heading",
+    "version": "1.0.0",
+    "category": "general",
+    "description": "Semantic headings from H1 to H6.",
+    "renderers": [
+      "react",
+      "angular",
+      "vue",
+      "svelte"
+    ],
+    "schema": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string"
+        },
+        "level": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 6
+        }
+      },
+      "required": [
+        "text"
+      ]
+    }
+  },
+  {
+    "id": "button",
+    "name": "button",
+    "version": "1.0.0",
+    "category": "general",
+    "description": "Interactive button control triggering events.",
+    "renderers": [
+      "react",
+      "angular",
+      "vue",
+      "svelte",
+      "react-native",
+      "swiftui",
+      "flutter"
+    ],
+    "events": [
+      "click"
+    ],
+    "schema": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "variant": {
+          "type": "string",
+          "enum": [
+            "default",
+            "outline",
+            "secondary",
+            "ghost",
+            "destructive"
+          ]
+        },
+        "size": {
+          "type": "string",
+          "enum": [
+            "sm",
+            "default",
+            "lg"
+          ]
+        },
+        "disabled": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "label"
+      ]
+    }
+  },
+  {
+    "id": "input",
+    "name": "input",
+    "version": "1.0.0",
+    "category": "forms",
+    "description": "Text, email, or number input form control.",
+    "renderers": [
+      "react",
+      "angular",
+      "vue",
+      "svelte"
+    ],
+    "events": [
+      "change",
+      "input"
+    ],
+    "schema": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "placeholder": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "text",
+            "email",
+            "password",
+            "number"
+          ]
+        },
+        "disabled": {
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  {
+    "id": "textarea",
+    "name": "textarea",
+    "version": "1.0.0",
+    "category": "forms",
+    "description": "Multi-line text input field.",
+    "renderers": [
+      "react",
+      "angular",
+      "vue",
+      "svelte"
+    ],
+    "events": [
+      "change"
+    ],
+    "schema": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "placeholder": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "rows": {
+          "type": "integer"
+        },
+        "disabled": {
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  {
+    "id": "select",
+    "name": "select",
+    "version": "1.0.0",
+    "category": "forms",
+    "description": "Dropdown option selector.",
+    "renderers": [
+      "react",
+      "angular",
+      "vue",
+      "svelte"
+    ],
+    "events": [
+      "change"
+    ],
+    "schema": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "label",
+              "value"
+            ]
+          }
+        },
+        "value": {
+          "type": "string"
+        },
+        "disabled": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "options"
+      ]
+    }
+  },
+  {
+    "id": "checkbox",
+    "name": "checkbox",
+    "version": "1.0.0",
+    "category": "forms",
+    "description": "Binary selection checkbox.",
+    "renderers": [
+      "react",
+      "angular",
+      "vue",
+      "svelte"
+    ],
+    "events": [
+      "change"
+    ],
+    "schema": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "checked": {
+          "type": "boolean"
+        },
+        "disabled": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "label"
+      ]
+    }
+  },
+  {
+    "id": "table",
+    "name": "table",
+    "version": "1.0.0",
+    "category": "data",
+    "description": "Renders tabular data with column mapping.",
+    "renderers": [
+      "react",
+      "angular",
+      "vue",
+      "svelte"
+    ],
+    "schema": {
+      "type": "object",
+      "properties": {
+        "columns": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "header": {
+                "type": "string"
+              },
+              "accessor": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "header",
+              "accessor"
+            ]
+          }
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      },
+      "required": [
+        "columns",
+        "data"
+      ]
+    }
+  },
+  {
+    "id": "chart",
+    "name": "chart",
+    "version": "1.0.0",
+    "category": "data",
+    "description": "Visualizes datasets in line, bar, or pie configurations.",
+    "renderers": [
+      "react",
+      "angular",
+      "vue",
+      "svelte"
+    ],
+    "schema": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "line",
+            "bar",
+            "pie"
+          ]
+        },
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string"
+              },
+              "value": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "label",
+              "value"
+            ]
+          }
+        },
+        "height": {
+          "type": "integer"
+        },
+        "colorScheme": {
+          "type": "string",
+          "enum": [
+            "default",
+            "emerald",
+            "rose",
+            "amber"
+          ]
+        }
+      },
+      "required": [
+        "type",
+        "data"
+      ]
+    }
+  },
+  {
+    "id": "tabs",
+    "name": "tabs",
+    "version": "1.0.0",
+    "category": "general",
+    "description": "Tabbed container component.",
+    "renderers": [
+      "react",
+      "angular",
+      "vue",
+      "svelte"
+    ],
+    "events": [
+      "tabChange"
+    ],
+    "schema": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "label",
+              "value"
+            ]
+          }
+        },
+        "activeTab": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "items"
+      ]
+    }
+  },
+  {
+    "id": "dialog",
+    "name": "dialog",
+    "version": "1.0.0",
+    "category": "overlay",
+    "description": "Interactive modal dialog popup.",
+    "renderers": [
+      "react",
+      "angular",
+      "vue",
+      "svelte"
+    ],
+    "events": [
+      "close"
+    ],
+    "schema": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "open": {
+          "type": "boolean"
+        },
+        "description": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "title"
+      ]
+    }
+  },
+  {
+    "id": "drawer",
+    "name": "drawer",
+    "version": "1.0.0",
+    "category": "overlay",
+    "description": "Side drawer overlay coming from the edge.",
+    "renderers": [
+      "react",
+      "angular",
+      "vue",
+      "svelte"
+    ],
+    "events": [
+      "close"
+    ],
+    "schema": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "open": {
+          "type": "boolean"
+        },
+        "position": {
+          "type": "string",
+          "enum": [
+            "left",
+            "right"
+          ]
+        }
+      },
+      "required": [
+        "title"
+      ]
+    }
+  },
+  {
+    "id": "grid",
+    "name": "grid",
+    "version": "1.0.0",
+    "category": "layout",
+    "description": "CSS Grid container.",
+    "renderers": [
+      "react",
+      "angular",
+      "vue",
+      "svelte"
+    ],
+    "schema": {
+      "type": "object",
+      "properties": {
+        "cols": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 12
+        },
+        "gap": {
+          "type": "integer"
+        }
+      }
+    }
+  },
+  {
+    "id": "flex",
+    "name": "flex",
+    "version": "1.0.0",
+    "category": "layout",
+    "description": "CSS Flexbox container.",
+    "renderers": [
+      "react",
+      "angular",
+      "vue",
+      "svelte"
+    ],
+    "schema": {
+      "type": "object",
+      "properties": {
+        "direction": {
+          "type": "string",
+          "enum": [
+            "row",
+            "col"
+          ]
+        },
+        "align": {
+          "type": "string",
+          "enum": [
+            "start",
+            "center",
+            "end",
+            "stretch"
+          ]
+        },
+        "justify": {
+          "type": "string",
+          "enum": [
+            "start",
+            "center",
+            "between",
+            "end"
+          ]
+        },
+        "gap": {
+          "type": "integer"
+        }
+      }
+    }
+  },
+  {
+    "id": "stack",
+    "name": "stack",
+    "version": "1.0.0",
+    "category": "layout",
+    "description": "Simple horizontal or vertical layout stack.",
+    "renderers": [
+      "react",
+      "angular",
+      "vue",
+      "svelte"
+    ],
+    "schema": {
+      "type": "object",
+      "properties": {
+        "direction": {
+          "type": "string",
+          "enum": [
+            "vertical",
+            "horizontal"
+          ]
+        },
+        "gap": {
+          "type": "integer"
+        }
+      }
+    }
+  },
+  {
+    "id": "kpi",
+    "name": "kpi",
+    "version": "1.0.0",
+    "category": "data",
+    "description": "Displays a KPI value with label, trend indicators, and subtext.",
+    "renderers": [
+      "react",
+      "angular",
+      "vue",
+      "svelte"
+    ],
+    "schema": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "subtext": {
+          "type": "string"
+        },
+        "trend": {
+          "type": "string",
+          "enum": [
+            "up",
+            "down",
+            "flat"
+          ]
+        },
+        "trendValue": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "label",
+        "value"
+      ]
+    }
+  },
+  {
+    "id": "dashboard",
+    "name": "dashboard",
+    "version": "1.0.0",
+    "category": "layout",
+    "description": "Dashboard layout view containing sections and KPI widgets.",
+    "renderers": [
+      "react",
+      "angular",
+      "vue",
+      "svelte"
+    ],
+    "schema": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "layout": {
+          "type": "string",
+          "enum": [
+            "grid",
+            "flex"
+          ]
+        }
+      },
+      "required": [
+        "title"
+      ]
+    }
+  },
+  {
+    "id": "workflow",
+    "name": "workflow",
+    "version": "1.0.0",
+    "category": "workflows",
+    "description": "Visualization of progress steps in an operational workflow.",
+    "renderers": [
+      "react",
+      "angular",
+      "vue",
+      "svelte"
+    ],
+    "schema": {
+      "type": "object",
+      "properties": {
+        "steps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "pending",
+                  "active",
+                  "completed",
+                  "failed"
+                ]
+              },
+              "duration": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "name",
+              "status"
+            ]
+          }
+        }
+      },
+      "required": [
+        "steps"
+      ]
+    }
+  },
+  {
+    "id": "timeline",
+    "name": "timeline",
+    "version": "1.0.0",
+    "category": "data",
+    "description": "Chronological log event timeline.",
+    "renderers": [
+      "react",
+      "angular",
+      "vue",
+      "svelte"
+    ],
+    "schema": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string"
+              },
+              "date": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "icon": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "completed",
+                  "current",
+                  "upcoming"
+                ]
+              }
+            },
+            "required": [
+              "title",
+              "date"
+            ]
+          }
+        }
+      },
+      "required": [
+        "items"
+      ]
+    }
+  },
+  {
+    "id": "executionGraph",
+    "name": "executionGraph",
+    "version": "1.0.0",
+    "category": "workflows",
+    "description": "Graph visualization of nodes and visual edges (for AI flow execution tracing).",
+    "renderers": [
+      "react",
+      "angular",
+      "vue",
+      "svelte"
+    ],
+    "schema": {
+      "type": "object",
+      "properties": {
+        "nodes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "input",
+                  "process",
+                  "output"
+                ]
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "idle",
+                  "running",
+                  "success",
+                  "error"
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "label",
+              "type",
+              "status"
+            ]
+          }
+        },
+        "edges": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "source": {
+                "type": "string"
+              },
+              "target": {
+                "type": "string"
+              },
+              "animated": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "source",
+              "target"
+            ]
+          }
+        }
+      },
+      "required": [
+        "nodes",
+        "edges"
+      ]
+    }
+  }
+]

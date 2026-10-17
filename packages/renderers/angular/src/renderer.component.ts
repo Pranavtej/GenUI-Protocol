@@ -1,9 +1,10 @@
-import { Component, input, computed, inject } from "@angular/core";
+import { Component, input, output, computed, inject } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { marked } from "marked";
-import { buildRuntimeTree, RuntimeTree } from "@genui-protocol/runtime-core";
-import { DynamicRendererComponent } from "./dynamic-renderer.component";
+import { AgentEvent } from "@genui-protocol/runtime-core";
+import { ASTDocument } from "@genui-protocol/ast";
+import { GenUiSessionHostComponent } from "./session-host.component";
 
 interface MarkdownSegment {
   type: "markdown";
@@ -12,7 +13,7 @@ interface MarkdownSegment {
 
 interface AstSegment {
   type: "ast";
-  tree: RuntimeTree;
+  doc: ASTDocument;
 }
 
 type Segment = MarkdownSegment | AstSegment;
@@ -20,13 +21,13 @@ type Segment = MarkdownSegment | AstSegment;
 @Component({
   selector: "genui-renderer",
   standalone: true,
-  imports: [CommonModule, DynamicRendererComponent],
+  imports: [CommonModule, GenUiSessionHostComponent],
   template: `
     @for (segment of segments(); track $index) {
       @if (segment.type === "markdown") {
         <div class="genui-markdown" [innerHTML]="segment.html"></div>
       } @else {
-        <genui-dynamic-renderer [node]="segment.tree.root"></genui-dynamic-renderer>
+        <genui-session-host [document]="segment.doc" (agentEvent)="agentEvent.emit($event)"></genui-session-host>
       }
     }
   `,
@@ -58,6 +59,8 @@ type Segment = MarkdownSegment | AstSegment;
 })
 export class GenUiRendererComponent {
   text = input.required<string>();
+  /** `emit` / `submit` actions from rendered documents: send these back to your agent. */
+  agentEvent = output<AgentEvent>();
   private sanitizer = inject(DomSanitizer);
 
   protected segments = computed(() => {
@@ -79,9 +82,9 @@ export class GenUiRendererComponent {
       const astJson = match[1].trim();
       if (astJson) {
         try {
-          const doc = JSON.parse(astJson);
-          const tree = buildRuntimeTree(doc);
-          segments.push({ type: "ast", tree });
+          const doc = JSON.parse(astJson) as ASTDocument;
+          if (typeof doc !== "object" || doc === null || typeof doc.root?.t !== "string") throw new Error("not a document");
+          segments.push({ type: "ast", doc });
         } catch {
           const html = marked.parse("```\n" + astJson + "\n```", { async: false }) as string;
           segments.push({ type: "markdown", html: this.sanitizer.bypassSecurityTrustHtml(html) });

@@ -5,6 +5,7 @@ import os
 
 class Settings(BaseSettings):
     mcp_base_url: str = "http://localhost:4000"
+    mcp_api_key: str = ""
     llm_provider: Literal["openai", "anthropic"] = "openai"
     openai_api_key: str = ""
     openai_model: str = "gpt-4o"
