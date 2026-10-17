@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/assets/mascot/genui-mascot-256.gif" alt="Pixel-art courier bird delivering a UI card" width="200" />
+</p>
+
 # GenUI Protocol
 
 **Let AI agents answer with interfaces, not just text — without letting them write frontend code.**

@@ -1,6 +1,6 @@
 // Generates the docs pages that must never drift from the code: the protocol spec, the component reference,
 // the JSON Schemas and the benchmark. Run automatically before `dev` and `build`.
-import { copyFileSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
+import { cpSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { ComponentRegistry } from "../../../packages/components/component-registry/dist/src/index.js";
@@ -96,6 +96,6 @@ The numbers above are regenerated on every docs build from \`packages/tooling/ev
 const assets = join(root, "docs/assets");
 const out = join(root, "apps/docs/public/assets");
 mkdirSync(out, { recursive: true });
-for (const f of readdirSync(assets)) copyFileSync(join(assets, f), join(out, f));
+cpSync(assets, out, { recursive: true });
 
 console.log("docs: generated protocol, components, schemas, benchmark; copied assets");
