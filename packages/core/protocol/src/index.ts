@@ -23,6 +23,15 @@ export type ASTPatch = {
 };
 
 // ---------------------------------------------------------------------------
+// Component types
+// ---------------------------------------------------------------------------
+
+/** Built-in types are bare camelCase names (`kpi`); custom components are namespaced (`acme:gauge`). */
+export const COMPONENT_TYPE_PATTERN = /^[a-z][A-Za-z0-9]*(:[A-Za-z][A-Za-z0-9_-]*)?$/;
+export const isValidComponentType = (t: string): boolean => t.length <= 64 && COMPONENT_TYPE_PATTERN.test(t);
+export const isCustomComponentType = (t: string): boolean => t.includes(":");
+
+// ---------------------------------------------------------------------------
 // Data binding expressions
 // ---------------------------------------------------------------------------
 

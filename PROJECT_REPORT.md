@@ -160,7 +160,7 @@ AI agent ──MCP tools──► discover components → get schema → generat
 Effort: S ≈ ≤1 day, M ≈ 2–4 days, L ≈ 1–2 weeks (single developer). Each phase ends with a demoable result.
 
 ### Phase 0 — Cleanup & foundations (≈ 1 week)
-_Status: Phase 1 started — done: 1.1 (draft `spec/SPEC.md`, §9 lists what is still unspecified), 1.2 (`spec/schemas`), 1.3 (id-keyed diff, full RFC 6902, atomic apply), 1.4 (property tests), 1.5 (validator limits, caches, injectable registry, URL checks), 1.6 (`validateDocument`/`validateNode`), 1.8 (TS runners; Python runner pending); 1.7 in progress (runtime-core + validation + schemas covered). Phase 0: 0.1 done (name = GenUI Protocol, npm scope `@genui-protocol/*`, Angular prefix `genui-`/`GenUi*`); 0.6 SECURITY contact still pending. 0.3 kept Nextra, removed Docusaurus and `angular-ui`. Added a CI Python job, Dependabot and templates._
+_Status: done except 0.6 SECURITY contact (needs a real address). Name = GenUI Protocol, scope `@genui-protocol/*`; Docusaurus and `angular-ui` removed; CI/Python job/Dependabot/templates added._
 | # | Task | Size |
 |---|---|---|
 | 0.1 | Decide final name/scope (`@genui/*`?) and rename packages, Python module, docs titles consistently | M |
@@ -173,6 +173,7 @@ _Status: Phase 1 started — done: 1.1 (draft `spec/SPEC.md`, §9 lists what is 
 | 0.8 | Remove or label stub renderers/packages as "planned" | S |
 
 ### Phase 1 — Protocol v1 spec & core hardening (≈ 2–3 weeks)
+_Status: done except 1.7 (tests exist for schemas, runtime-core, validation, stream-engine, theme-engine, renderer-react; none yet for state-engine, event-engine, registry, mcp-server) and the Python runner for 1.8._
 | # | Task | Size |
 |---|---|---|
 | 1.1 | Write `SPEC.md`: node model, ids, unknown components, patches, versioning, extension | L |
@@ -185,6 +186,7 @@ _Status: Phase 1 started — done: 1.1 (draft `spec/SPEC.md`, §9 lists what is 
 | 1.8 | Conformance fixtures (`/conformance/*.json`) + runner in TS and Python | L |
 
 ### Phase 2 — Interactivity: data, state, actions (≈ 2–3 weeks)
+_Status: 2.1–2.5 done (spec §6, §10–12; `RuntimeSession`, `StreamConsumer`; sequenced MCP stream). Not done: remote data sources with loading/error states, form validation rules, partial-document streaming, a WebSocket transport, and a server-side resync request channel._
 | # | Task | Size |
 |---|---|---|
 | 2.1 | Design data binding (`$bind`, data sources, loading/error states) and add to spec + schema | L |
@@ -194,6 +196,7 @@ _Status: Phase 1 started — done: 1.1 (draft `spec/SPEC.md`, §9 lists what is 
 | 2.5 | Streaming spec: framing, sequence/resync/snapshot, partial AST and pending nodes; client-side consumer in stream-engine; SSE and WebSocket transports | L |
 
 ### Phase 3 — Renderers & components (≈ 3–4 weeks)
+_Status: 3.1 (spec §13), 3.2 (Angular: bindings/actions + stack, tabs, dialog, drawer, workflow, timeline, executionGraph; verified in a browser smoke test, no automated Angular tests), 3.3 (React renderer + live playground), 3.4 (theme-engine), 3.5 (shared `conformance/render.json`, run on React only), 3.6 (namespaced custom components) done. Open: Angular charts library choice/a11y/SSR/zoneless audit, Angular automated tests, Playwright e2e in CI._
 | # | Task | Size |
 |---|---|---|
 | 3.1 | Define the full `Renderer` contract (lifecycle, events, children, theming, error boundary, fallback) | M |

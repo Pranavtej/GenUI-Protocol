@@ -75,7 +75,7 @@ Producers send **frames** (`stream-frame.json`) over any ordered transport (SSE,
 
 ## 7. Registry & components
 
-The component registry is the source of truth for available components: name, version, category, props JSON Schema, events, examples and supported renderers. Agents discover components through the MCP server rather than hard-coding them. Custom components SHOULD use a namespaced type (`vendor:name`) **(planned)**.
+The component registry is the source of truth for available components: name, version, category, props JSON Schema, events, examples and supported renderers. Agents discover components through the MCP server rather than hard-coding them. Component types are camelCase (`kpi`, `executionGraph`); **custom components MUST be namespaced** (`vendor:name`, e.g. `acme:gauge`) so they cannot shadow built-ins. A validator MUST reject type strings that do not match `^[a-z][A-Za-z0-9]*(:[A-Za-z][A-Za-z0-9_-]*)?$` (max 64 chars). Hosts register custom components (with a props schema) in their registry and supply a matching implementation to their renderer; documents using a custom type are only valid against a registry that contains it.
 
 ## 8. Security considerations
 
@@ -86,7 +86,7 @@ The component registry is the source of truth for available components: name, ve
 
 ## 9. Not yet specified (planned)
 
-Remote data sources with loading/error states, form validation rules, theming tokens in the document, accessibility requirements per component, capability negotiation between agent and renderer, namespaced custom components (`vendor:name`).
+Remote data sources with loading/error states, form validation rules, theming tokens in the document, accessibility requirements per component, capability negotiation between agent and renderer.
 
 ## 10. Data binding
 
@@ -129,3 +129,30 @@ Interactivity is declared, never coded. Props named `on` + capital letter (`onCl
 ## 12. Runtime session (informative)
 
 Reference runtimes expose one framework-neutral object that renderers drive: it owns the tree and the data model, applies frames, resolves expressions, runs actions and notifies subscribers (`RuntimeSession` in `@genui-protocol/runtime-core`). Renderers subscribe, draw, and forward user input to it.
+
+## 13. Renderer contract
+
+A conforming renderer MUST:
+
+1. Draw a session's current tree and redraw when the tree **or the data model** changes.
+2. Draw props from their **resolved** values (§10). Action-valued props (§11) are never drawn.
+3. Treat every prop value as untrusted **text**: escape it, never interpret it as markup (§8).
+4. Mark each node's root element with `data-genui-type` and `data-genui-id` (web renderers), enabling the shared render fixtures.
+5. Forward user input through the session: two-way bound props write the data model (§10.2); events run the node's action props with the event details as `$event`:
+
+| Component | Action prop | `$event` fields |
+|---|---|---|
+| `button` | `onClick` | — |
+| `input` | `onInput` (every keystroke), `onChange` (on blur/commit) | `value` |
+| `textarea`, `select` | `onChange` | `value` |
+| `checkbox` | `onChange` | `checked`, `value` |
+| `tabs` | `onTabChange` | `value` |
+| `dialog`, `drawer` | `onClose` | — |
+
+6. Render an **unknown or unsupported type** as a visible fallback that still renders the children, report it to the host, and never crash (§3).
+7. Isolate failures: an error while rendering one node MUST NOT prevent its siblings from rendering.
+8. Look components up by own-property only (a type such as `constructor` is just an unknown type).
+9. Keep `dialog`/`drawer` hidden unless `open` is `true`.
+10. Accept host-supplied implementations for custom component types (§7) and apply themes via CSS custom properties named `--genui-<token>` (`color.primaryText` → `--genui-color-primary-text`).
+
+`conformance/render.json` holds the document → expected-output fixtures; the React renderer runs them in CI. Renderers in other frameworks SHOULD run the same fixtures against their own DOM output.

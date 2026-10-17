@@ -1,9 +1,10 @@
-import { Component, InputSignal, input, computed, forwardRef } from "@angular/core";
+import { Component, InputSignal, input, computed, forwardRef, inject } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { RuntimeNode } from "@genui-protocol/runtime-core";
 import { eventRouter } from "@genui-protocol/event-engine";
 import { DynamicRendererComponent } from "../dynamic-renderer.component";
+import { GENUI_SESSION, runActions, writeField } from "../session";
 import {
   GenUiCard, GenUiButton, GenUiText, GenUiHeading,
   GenUiTable, GenUiThead, GenUiTbody, GenUiTr, GenUiTh, GenUiTd,
@@ -131,8 +132,10 @@ export class ButtonRenderer implements GenUiComponent {
   get btnLabel(): string { return str(this.node().p, "label"); }
   get btnVariant(): string { return str(this.node().p, "variant", "default"); }
   get btnSize(): string { return str(this.node().p, "size", "default"); }
+  private session = inject(GENUI_SESSION, { optional: true });
   onClick() {
     eventRouter.dispatch({ type: "click", target: this.node().id, payload: { label: this.btnLabel } });
+    runActions(this.session, this.node(), "onClick");
   }
 }
 
@@ -159,13 +162,16 @@ export class InputRenderer implements GenUiComponent {
   get inputLabel(): string { return str(this.node().p, "label"); }
   get inputDisabled(): boolean { return bool(this.node().p, "disabled"); }
   get value(): string { return str(this.node().p, "value"); }
-  set value(val: string) {
-    const node = this.node();
-    if (!node.p) node.p = {};
-    node.p["value"] = val;
+  private session = inject(GENUI_SESSION, { optional: true });
+  set value(val: string) { writeField(this.session, this.node(), "value", val); }
+  onInput() {
+    eventRouter.dispatch({ type: "input", target: this.node().id, payload: { value: this.value } });
+    runActions(this.session, this.node(), "onInput", { value: this.value });
   }
-  onInput() { eventRouter.dispatch({ type: "input", target: this.node().id, payload: { value: this.value } }); }
-  onChange() { eventRouter.dispatch({ type: "change", target: this.node().id, payload: { value: this.value } }); }
+  onChange() {
+    eventRouter.dispatch({ type: "change", target: this.node().id, payload: { value: this.value } });
+    runActions(this.session, this.node(), "onChange", { value: this.value });
+  }
 }
 
 @Component({
@@ -191,12 +197,12 @@ export class TextareaRenderer implements GenUiComponent {
   get taDisabled(): boolean { return bool(this.node().p, "disabled"); }
   get taRows(): number { return num(this.node().p, "rows", 3); }
   get value(): string { return str(this.node().p, "value"); }
-  set value(val: string) {
-    const node = this.node();
-    if (!node.p) node.p = {};
-    node.p["value"] = val;
+  private session = inject(GENUI_SESSION, { optional: true });
+  set value(val: string) { writeField(this.session, this.node(), "value", val); }
+  onChange() {
+    eventRouter.dispatch({ type: "change", target: this.node().id, payload: { value: this.value } });
+    runActions(this.session, this.node(), "onChange", { value: this.value });
   }
-  onChange() { eventRouter.dispatch({ type: "change", target: this.node().id, payload: { value: this.value } }); }
 }
 
 @Component({
@@ -223,12 +229,12 @@ export class SelectRenderer implements GenUiComponent {
   get selDisabled(): boolean { return bool(this.node().p, "disabled"); }
   options = computed(() => (this.node().p?.["options"] as { label: string; value: string }[]) || []);
   get value(): string { return str(this.node().p, "value"); }
-  set value(val: string) {
-    const node = this.node();
-    if (!node.p) node.p = {};
-    node.p["value"] = val;
+  private session = inject(GENUI_SESSION, { optional: true });
+  set value(val: string) { writeField(this.session, this.node(), "value", val); }
+  onChange() {
+    eventRouter.dispatch({ type: "change", target: this.node().id, payload: { value: this.value } });
+    runActions(this.session, this.node(), "onChange", { value: this.value });
   }
-  onChange() { eventRouter.dispatch({ type: "change", target: this.node().id, payload: { value: this.value } }); }
 }
 
 @Component({
@@ -247,12 +253,12 @@ export class CheckboxRenderer implements GenUiComponent {
   node = input.required<RuntimeNode>();
   get cbLabel(): string { return str(this.node().p, "label"); }
   get checked(): boolean { return !!this.node().p?.["checked"]; }
-  set checked(val: boolean) {
-    const node = this.node();
-    if (!node.p) node.p = {};
-    node.p["checked"] = val;
+  private session = inject(GENUI_SESSION, { optional: true });
+  set checked(val: boolean) { writeField(this.session, this.node(), "checked", val); }
+  onChange() {
+    eventRouter.dispatch({ type: "change", target: this.node().id, payload: { checked: this.checked } });
+    runActions(this.session, this.node(), "onChange", { checked: this.checked, value: this.checked });
   }
-  onChange() { eventRouter.dispatch({ type: "change", target: this.node().id, payload: { checked: this.checked } }); }
 }
 
 @Component({

@@ -1,4 +1,5 @@
 import { ComponentSchema } from "@genui-protocol/schemas";
+import { isCustomComponentType, isValidComponentType } from "@genui-protocol/protocol";
 
 export type RegistryEntry = ComponentSchema & {
     id: string;
@@ -703,6 +704,20 @@ export class ComponentRegistry {
 
     register(entry: RegistryEntry): void {
         this.entries.set(entry.id, entry);
+    }
+
+    /**
+     * Registers a custom component. Its id MUST be namespaced (`vendor:name`) so it can never shadow a
+     * built-in, and `name` is forced to match `id`. Throws on an invalid or already-registered id.
+     */
+    registerCustom(entry: Omit<RegistryEntry, "name" | "version"> & { name?: string; version?: string }): RegistryEntry {
+        if (!isValidComponentType(entry.id) || !isCustomComponentType(entry.id)) {
+            throw new Error(`Custom component id "${entry.id}" must be namespaced like "vendor:name"`);
+        }
+        if (this.entries.has(entry.id)) throw new Error(`Component "${entry.id}" is already registered`);
+        const full: RegistryEntry = { ...entry, name: entry.id, version: entry.version ?? "1.0.0" };
+        this.entries.set(full.id, full);
+        return full;
     }
 }
 

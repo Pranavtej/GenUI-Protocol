@@ -74,54 +74,74 @@ pnpm --filter mcp-server dev
 
 ## Example
 
-### Build an AST
+### A document with data, bindings and actions
 
-```ts
-import { buildRuntimeTree, reconcile } from "@genui-protocol/runtime-core";
-
-const ast = {
-  t: "page",
-  p: { title: "Dashboard" },
-  children: [
-    {
-      t: "card",
-      p: { title: "Metrics" },
-      children: [
-        { t: "kpi", p: { label: "Users", value: "12,847" } },
-        { t: "kpi", p: { label: "Revenue", value: "$94,201" } },
-      ],
-    },
-  ],
-};
-
-const tree = buildRuntimeTree(ast);
-const patches = reconcile(previousTree, tree);
-```
-
-### Validate an AST
-
-```ts
-import { validateASTDocument } from "@genui-protocol/validation";
-
-const result = validateASTDocument(ast);
-if (result.valid) {
-  console.log("AST is valid");
-} else {
-  console.error("Validation errors:", result.errors);
+```json
+{
+  "version": "1.0.0",
+  "data": { "form": { "name": "" } },
+  "root": {
+    "t": "card",
+    "p": { "title": "Sign up" },
+    "c": [
+      { "t": "input", "p": { "label": "Name", "value": { "$bind": "form.name" } } },
+      { "t": "text", "p": { "content": { "$tpl": "Hello {{form.name}}" } } },
+      { "t": "button", "p": { "label": "Send", "onClick": { "do": "submit", "name": "signup", "from": "form" } } }
+    ]
+  }
 }
 ```
 
-### Python SDK example
+No code: `$bind`/`$tpl` are data lookups and `onClick` holds a declarative action (see [`spec/SPEC.md`](spec/SPEC.md) §10–11).
 
-```py
-from genui_protocol_sdk import create_dashboard_ast
+### Render it in React
 
-dashboard = create_dashboard_ast(
-    title="Revenue Overview",
-    kpis=[("Revenue", "$124K"), ("Users", "12,847")],
-    chart_type="line",
-)
+```tsx
+import { GenUiRenderer, createSession } from "@genui-protocol/renderer-react";
+
+const session = createSession({
+  document,
+  onEmit: (event) => agent.send(event), // submit/emit actions come back to your agent here
+});
+
+<GenUiRenderer session={session} theme="light" />;
 ```
+
+Stream updates into the same session:
+
+```ts
+import { StreamConsumer, connectSSE } from "@genui-protocol/stream-engine";
+
+const consumer = new StreamConsumer({
+  apply: (frame) => session.applyFrame(frame),
+  onResync: () => reconnectAndRequestSnapshot(),
+});
+connectSSE("/api/stream", (frame) => consumer.push(frame));
+```
+
+### Validate
+
+```ts
+import { validateDocument, createValidator } from "@genui-protocol/validation";
+
+const result = validateDocument(document); // { valid, errors? }
+
+// untrusted producers: restrict components and tighten limits
+const strict = createValidator({ allowedComponents: ["page", "card", "text", "kpi"], limits: { maxNodes: 500 } });
+```
+
+### Diff and patch
+
+```ts
+import { buildRuntimeTree, diffRuntimeTree, applyTreePatches } from "@genui-protocol/runtime-core";
+
+const patches = diffRuntimeTree(buildRuntimeTree(before), buildRuntimeTree(after)); // RFC 6902
+const next = applyTreePatches(buildRuntimeTree(before), patches);
+```
+
+### Python
+
+The Python SDK (`packages/sdk/python`) currently only builds a minimal dashboard AST (`create_dashboard_ast(title, value)`). A fuller SDK is planned; see `PROJECT_REPORT.md`.
 
 ---
 
@@ -156,15 +176,17 @@ dashboard = create_dashboard_ast(
 - `@genui-protocol/ast` — AST node types and helper utilities
 - `@genui-protocol/protocol` — protocol contracts and versioning
 - `@genui-protocol/schemas` — JSON schema definitions
-- `@genui-protocol/runtime-core` — runtime tree reconciliation and diffing
+- `@genui-protocol/runtime-core` — runtime tree, id-keyed diff, RFC 6902 patches, data store, actions, `RuntimeSession`
 - `@genui-protocol/state-engine` — signal-based reactivity
 - `@genui-protocol/event-engine` — event routing for AST interactions
-- `@genui-protocol/stream-engine` — SSE patch streaming
+- `@genui-protocol/stream-engine` — ordered stream consumer (resync), SSE client
 - `@genui-protocol/validation` — AST validation pipeline
 - `@genui-protocol/component-registry` — discoverable component metadata
-- `@genui-protocol/renderer-react` — React renderer adapter
+- `@genui-protocol/renderer-react` — React renderer (all built-in components, bindings, actions, themes)
+- `@genui-protocol/angular` — Angular renderer (reference implementation)
+- `@genui-protocol/theme-engine` — design tokens → CSS variables
 - `@genui-protocol/sdk-js` — JavaScript/TypeScript SDK
-- `@genui-protocol/sdk-python` — Python SDK
+- `genui_protocol_sdk` — Python SDK (minimal)
 
 ---
 
@@ -191,8 +213,8 @@ The AST is the core contract, while renderers remain small adapters.
 
 Contributions are welcome.
 
-- Read `CONTRIBUTING.md`
-- Follow `CODE_OF_CONDUCT.md`
+- Read [`CONTRIBUTING.md`](CONTRIBUTING.md)
+- Follow [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md)
 - Open issues for bugs or feature requests
 - Keep pull requests focused and tested
 

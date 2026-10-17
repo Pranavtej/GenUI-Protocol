@@ -99,3 +99,27 @@ describe("bindings and actions", () => {
         expect(validateDocument({ version: "1.0.0", data: { a: 1 }, root: { t: "page", p: { title: "x" } } }).valid).toBe(true);
     });
 });
+
+describe("custom components", () => {
+    it("registers namespaced components and validates their props", () => {
+        const registry = new ComponentRegistry();
+        registry.registerCustom({
+            id: "acme:gauge", category: "data", renderers: ["react"],
+            schema: { type: "object", properties: { value: { type: "number" } }, required: ["value"] },
+        });
+        const v = createValidator({ registry });
+        expect(v.validateNode({ t: "acme:gauge", p: { value: 42 } })).toEqual({ valid: true });
+        expect(v.validateNode({ t: "acme:gauge", p: { value: "x" } }).valid).toBe(false);
+        // the default registry is unaffected
+        expect(validateNode({ t: "acme:gauge", p: { value: 42 } }).valid).toBe(false);
+    });
+
+    it("refuses un-namespaced or duplicate custom ids and malformed types", () => {
+        const registry = new ComponentRegistry();
+        const entry = { category: "data" as const, renderers: ["react"], schema: { type: "object" } };
+        expect(() => registry.registerCustom({ ...entry, id: "kpi" })).toThrow(/namespaced/);
+        registry.registerCustom({ ...entry, id: "acme:x" });
+        expect(() => registry.registerCustom({ ...entry, id: "acme:x" })).toThrow(/already registered/);
+        expect(validateNode({ t: "Bad Type!" }).errors!.join()).toMatch(/invalid component type/);
+    });
+});

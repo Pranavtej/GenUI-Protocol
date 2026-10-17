@@ -1,7 +1,7 @@
 import Ajv, { ValidateFunction } from "ajv";
 import { z } from "zod";
 import { UINode, ASTDocument } from "@genui-protocol/ast";
-import { PROTOCOL_VERSION, MAX_ACTIONS_PER_EVENT, isActionProp, isSafeUrl, toActionList, validateAction } from "@genui-protocol/protocol";
+import { PROTOCOL_VERSION, MAX_ACTIONS_PER_EVENT, isActionProp, isSafeUrl, isValidComponentType, toActionList, validateAction } from "@genui-protocol/protocol";
 import { registrySchema, nodeSchema } from "@genui-protocol/schemas";
 import { ComponentRegistry } from "@genui-protocol/component-registry";
 
@@ -197,6 +197,10 @@ export const createValidator = (options: ValidatorOptions = {}): Validator => {
             if (node.id !== undefined) {
                 if (seenIds.has(node.id)) errors.push(`Path "${path}": duplicate node id "${node.id}"`);
                 seenIds.add(node.id);
+            }
+
+            if (!isValidComponentType(node.t)) {
+                errors.push(`Path "${path}": invalid component type "${node.t}" (use camelCase, or "vendor:name" for custom components)`);
             }
 
             if (allowed && !allowed.has(node.t)) {

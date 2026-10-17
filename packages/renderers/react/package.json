@@ -7,13 +7,22 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "lint": "echo 'No lint configured'",
-    "test": "echo 'No tests yet'"
+    "test": "vitest run"
   },
   "dependencies": {
-    "@genui-protocol/runtime-core": "workspace:0.1.0"
+    "@genui-protocol/runtime-core": "workspace:0.1.0",
+    "@genui-protocol/protocol": "workspace:0.1.0",
+    "@genui-protocol/theme-engine": "workspace:0.1.0"
   },
   "devDependencies": {
-    "typescript": "^5.5.4"
+    "typescript": "^5.5.4",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "jsdom": "^25.0.1",
+    "@testing-library/react": "^16.0.1",
+    "@testing-library/dom": "^10.4.0"
   },
   "type": "module",
   "license": "MIT",
@@ -32,7 +41,7 @@
   },
   "homepage": "https://genui-protocol.dev",
   "sideEffects": false,
-  "description": "GenUI Protocol \u2014 Renderer React",
+  "description": "GenUI Protocol — React renderer",
   "files": [
     "dist",
     "src"
@@ -48,5 +57,9 @@
     "ai-native",
     "ui",
     "renderer-react"
-  ]
+  ],
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
+  }
 }

@@ -18,11 +18,14 @@ import {
     ChartRenderer,
     GENUI_CORE_RENDERERS
 } from "./components/core-components";
+import { StackRenderer, TabsRenderer, DialogRenderer, DrawerRenderer, WorkflowRenderer, TimelineRenderer, ExecutionGraphRenderer } from "./components/extra-components";
 
 export * from "./provider";
 export * from "./dynamic-renderer.component";
 export * from "./renderer.component";
 export * from "./components/core-components";
+export * from "./components/extra-components";
+export * from "./session";
 export { provideGenUiTheme, GENUI_DEFAULT_THEME_CSS, GENUI_THEME_TOKEN } from "./theme-provider";
 
 export * from "./ui";
@@ -45,5 +48,12 @@ export function provideGenUiRenderer() {
         provideGenUiComponent("kpi", KpiRenderer),
         provideGenUiComponent("dashboard", DashboardRenderer),
         provideGenUiComponent("chart", ChartRenderer),
+        provideGenUiComponent("stack", StackRenderer),
+        provideGenUiComponent("tabs", TabsRenderer),
+        provideGenUiComponent("dialog", DialogRenderer),
+        provideGenUiComponent("drawer", DrawerRenderer),
+        provideGenUiComponent("workflow", WorkflowRenderer),
+        provideGenUiComponent("timeline", TimelineRenderer),
+        provideGenUiComponent("executionGraph", ExecutionGraphRenderer),
     ];
 }

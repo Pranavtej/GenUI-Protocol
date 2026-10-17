@@ -10,7 +10,8 @@
     "test": "echo 'No tests yet'"
   },
   "dependencies": {
-    "@genui-protocol/schemas": "workspace:0.1.0"
+    "@genui-protocol/schemas": "workspace:0.1.0",
+    "@genui-protocol/protocol": "workspace:0.1.0"
   },
   "devDependencies": {
     "typescript": "^5.5.4"
@@ -32,7 +33,7 @@
   },
   "homepage": "https://genui-protocol.dev",
   "sideEffects": false,
-  "description": "GenUI Protocol \u2014 Component Registry",
+  "description": "GenUI Protocol — Component Registry",
   "files": [
     "dist",
     "src"

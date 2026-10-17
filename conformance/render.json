@@ -1,0 +1,290 @@
+{
+  "description": "Renderer conformance. A renderer MUST draw each document so that: every node renders an element marked data-genui-type (in document order) unless a type is listed in noMarker; every string in 'text' is visible text; no string in 'absentText' is; each type in 'unknown' is reported as unknown but its children still render; no element named in 'noElements' exists (prop values are text, never markup).",
+  "cases": [
+    {
+      "name": "page-with-kpis",
+      "document": {
+        "version": "1.0.0",
+        "root": {
+          "t": "page",
+          "p": {
+            "title": "Overview"
+          },
+          "c": [
+            {
+              "t": "kpi",
+              "p": {
+                "label": "Users",
+                "value": "12,847"
+              }
+            },
+            {
+              "t": "kpi",
+              "p": {
+                "label": "Revenue",
+                "value": "$94,201"
+              }
+            }
+          ]
+        }
+      },
+      "expect": {
+        "types": [
+          "page",
+          "kpi",
+          "kpi"
+        ],
+        "text": [
+          "Overview",
+          "Users",
+          "12,847",
+          "Revenue",
+          "$94,201"
+        ]
+      }
+    },
+    {
+      "name": "bound-values-resolve",
+      "document": {
+        "version": "1.0.0",
+        "data": {
+          "user": {
+            "name": "Ada"
+          },
+          "n": 3
+        },
+        "root": {
+          "t": "page",
+          "p": {
+            "title": {
+              "$tpl": "Hi {{user.name}}"
+            }
+          },
+          "c": [
+            {
+              "t": "text",
+              "p": {
+                "content": {
+                  "$bind": "n"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "expect": {
+        "types": [
+          "page",
+          "text"
+        ],
+        "text": [
+          "Hi Ada",
+          "3"
+        ]
+      }
+    },
+    {
+      "name": "unknown-component-does-not-crash-and-renders-children",
+      "document": {
+        "version": "1.0.0",
+        "root": {
+          "t": "page",
+          "p": {
+            "title": "T"
+          },
+          "c": [
+            {
+              "t": "mystery",
+              "c": [
+                {
+                  "t": "text",
+                  "p": {
+                    "content": "still here"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expect": {
+        "types": [
+          "page",
+          "text"
+        ],
+        "text": [
+          "T",
+          "still here"
+        ],
+        "unknown": [
+          "mystery"
+        ]
+      }
+    },
+    {
+      "name": "table-and-chart",
+      "document": {
+        "version": "1.0.0",
+        "root": {
+          "t": "stack",
+          "c": [
+            {
+              "t": "table",
+              "p": {
+                "columns": [
+                  {
+                    "header": "Event",
+                    "accessor": "event"
+                  }
+                ],
+                "data": [
+                  {
+                    "event": "Signup"
+                  },
+                  {
+                    "event": "Payment"
+                  }
+                ]
+              }
+            },
+            {
+              "t": "chart",
+              "p": {
+                "type": "bar",
+                "data": [
+                  {
+                    "label": "Mon",
+                    "value": 10
+                  },
+                  {
+                    "label": "Tue",
+                    "value": 20
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "expect": {
+        "types": [
+          "stack",
+          "table",
+          "chart"
+        ],
+        "text": [
+          "Event",
+          "Signup",
+          "Payment",
+          "Mon",
+          "Tue"
+        ]
+      }
+    },
+    {
+      "name": "props-are-text-not-markup",
+      "document": {
+        "version": "1.0.0",
+        "root": {
+          "t": "text",
+          "p": {
+            "content": "<img src=x onerror=alert(1)>"
+          }
+        }
+      },
+      "expect": {
+        "types": [
+          "text"
+        ],
+        "text": [
+          "<img src=x onerror=alert(1)>"
+        ],
+        "noElements": [
+          "img",
+          "script"
+        ]
+      }
+    },
+    {
+      "name": "closed-dialog-renders-nothing",
+      "document": {
+        "version": "1.0.0",
+        "root": {
+          "t": "page",
+          "p": {
+            "title": "P"
+          },
+          "c": [
+            {
+              "t": "dialog",
+              "p": {
+                "title": "Hidden",
+                "open": false
+              }
+            }
+          ]
+        }
+      },
+      "expect": {
+        "types": [
+          "page"
+        ],
+        "absentText": [
+          "Hidden"
+        ]
+      }
+    },
+    {
+      "name": "open-dialog-and-workflow",
+      "document": {
+        "version": "1.0.0",
+        "root": {
+          "t": "page",
+          "p": {
+            "title": "P"
+          },
+          "c": [
+            {
+              "t": "dialog",
+              "p": {
+                "title": "Confirm",
+                "open": true
+              },
+              "c": [
+                {
+                  "t": "workflow",
+                  "p": {
+                    "steps": [
+                      {
+                        "id": "1",
+                        "name": "Create",
+                        "status": "completed"
+                      },
+                      {
+                        "id": "2",
+                        "name": "Approve",
+                        "status": "active"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expect": {
+        "types": [
+          "page",
+          "dialog",
+          "workflow"
+        ],
+        "text": [
+          "Confirm",
+          "Create",
+          "Approve"
+        ]
+      }
+    }
+  ]
+}

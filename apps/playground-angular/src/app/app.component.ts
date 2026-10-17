@@ -1,15 +1,21 @@
 import { Component, OnInit, signal, computed, effect } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
-import { RuntimeTree, buildRuntimeTree, reconcile, diffRuntimeTree, applyPatch } from "@genui-protocol/runtime-core";
+import { RuntimeTree, buildRuntimeTree, reconcile, diffRuntimeTree, applyPatch, createSession } from "@genui-protocol/runtime-core";
 import { validateASTDocument } from "@genui-protocol/validation";
 import { ComponentRegistry } from "@genui-protocol/component-registry";
 import { eventRouter, UIEvent } from "@genui-protocol/event-engine";
-import { DynamicRendererComponent, GenUiButton, GenUiBadge, GenUiScrollArea, GenUiTabs } from "@genui-protocol/angular";
+import { DynamicRendererComponent, GenUiButton, GenUiBadge, GenUiScrollArea, GenUiTabs, provideGenUiSession } from "@genui-protocol/angular";
 import { defaultASTDocument, ASTDocument, UINode } from "@genui-protocol/ast";
 import { ASTPatch } from "@genui-protocol/protocol";
 
 const registry = new ComponentRegistry();
+
+// One session drives data binding and actions for everything rendered in the canvas.
+let agentEventSink: (event: UIEvent) => void = () => {};
+const session = createSession({
+  onEmit: (e) => agentEventSink({ type: `agent:${e.name}`, target: e.nodeId ?? "", timestamp: e.timestamp, payload: e.payload }),
+});
 
 const DEMO_PRESETS = {
   dashboard: {
@@ -57,6 +63,21 @@ const DEMO_PRESETS = {
       ]
     }
   },
+  interactive: {
+    version: "1.0.0",
+    data: { form: { name: "", plan: "pro", agree: false } },
+    root: {
+      id: "i1", t: "card",
+      p: { title: "Interactive form (data binding + actions)" },
+      c: [
+        { id: "i2", t: "input", p: { label: "Name", value: { $bind: "form.name" } } },
+        { id: "i3", t: "select", p: { label: "Plan", value: { $bind: "form.plan" }, options: [{ label: "Free", value: "free" }, { label: "Pro", value: "pro" }] } },
+        { id: "i4", t: "checkbox", p: { label: "I agree", checked: { $bind: "form.agree" } } },
+        { id: "i5", t: "text", p: { content: { $tpl: "Hello {{form.name}} — plan: {{form.plan}}" } } },
+        { id: "i6", t: "button", p: { label: "Submit", onClick: { do: "submit", name: "register", from: "form" } } },
+      ]
+    }
+  },
   form: {
     version: "1.0.0",
     root: {
@@ -80,6 +101,7 @@ const DEMO_PRESETS = {
     CommonModule, FormsModule, DynamicRendererComponent,
     GenUiButton, GenUiBadge, GenUiScrollArea, GenUiTabs,
   ],
+  providers: [provideGenUiSession(session)],
   template: `
     <div class="h-screen w-screen flex flex-col bg-background text-foreground">
       <!-- TOP NAV -->
@@ -92,6 +114,7 @@ const DEMO_PRESETS = {
         <div class="flex items-center gap-2">
           <genui-button variant="ghost" size="sm" (onClick)="loadPreset('dashboard')">Dashboard</genui-button>
           <genui-button variant="ghost" size="sm" (onClick)="loadPreset('form')">Form</genui-button>
+          <genui-button variant="ghost" size="sm" (onClick)="loadPreset('interactive')">Interactive</genui-button>
           <button class="inline-flex items-center justify-center rounded-md text-sm font-medium h-9 px-4 border bg-transparent hover:bg-accent transition-colors"
                   (click)="toggleTheme()">
             {{ isDark() ? 'Light' : 'Dark' }}
@@ -251,9 +274,9 @@ export class AppComponent implements OnInit {
       }
     });
 
-    eventRouter.subscribeGlobal((ev: UIEvent) => {
-      this.events.update((list) => [ev, ...list]);
-    });
+    const record = (ev: UIEvent) => this.events.update((list) => [ev, ...list]);
+    eventRouter.subscribeGlobal(record);
+    agentEventSink = record;
   }
 
   ngOnInit(): void {
@@ -263,7 +286,7 @@ export class AppComponent implements OnInit {
   setLeftTab(tab: string) { this.leftTab.set(tab); }
   setRightTab(tab: string) { this.rightTab.set(tab); }
 
-  loadPreset(type: "dashboard" | "form") {
+  loadPreset(type: "dashboard" | "form" | "interactive") {
     const preset = DEMO_PRESETS[type];
     this.rawAST = JSON.stringify(preset, null, 2);
     this.parseAndRender(preset as unknown as ASTDocument);
@@ -305,6 +328,7 @@ export class AppComponent implements OnInit {
   });
 
   private parseAndRender(doc: ASTDocument) {
+    session.data.replace(doc.data ?? {});
     const nextTree = buildRuntimeTree(doc);
     const currentTree = this.runtimeTree();
     if (currentTree) {
