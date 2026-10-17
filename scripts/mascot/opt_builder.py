@@ -50,7 +50,7 @@ def block(cv, kind, y, squash=0):
         top = y + squash
         cv.paint(rect(BX - w // 2, top, BX + w // 2, top + h), "w")
         for k, bh in enumerate((6, 10, 8, 12)):
-            x0 = BX - w // 2 + 3 + k * 7
+            x0 = BX - w // 2 + 3 + k * 6
             cv.fill(rect(x0, top + h - 2 - bh, x0 + 4, top + h - 2), "b" if k % 2 == 0 else "k")
     elif kind == "kpi":
         w, h = 28, 11 - squash

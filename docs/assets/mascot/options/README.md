@@ -1,6 +1,7 @@
 # Mascot options
 
-Pick one (or ask for changes). Source: `scripts/mascot/opt_*.py`. Open [`preview.html`](preview.html) for light/dark and small-size previews.
+**Chosen: C · Builder** (the final assets are in the parent folder, built by `scripts/mascot/mascot.py`). The other options are kept here in case you want to switch later. Source: `scripts/mascot/opt_*.py`; open [`preview.html`](preview.html) for light/dark and small-size previews.
+
 
 | | |
 |---|---|

@@ -9,6 +9,7 @@ export default {
   architecture: 'Architecture',
   tutorials: 'Tutorials',
   examples: 'Examples',
+  demos: 'Demos',
   agents: 'Using with LLMs',
   '-- reference': { type: 'separator', title: 'Reference' },
   protocol: 'Protocol specification',

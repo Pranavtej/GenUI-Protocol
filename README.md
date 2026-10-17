@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/assets/mascot/genui-mascot-256.gif" alt="Builder, the GenUI mascot: a robot that stacks UI blocks into a dashboard" width="220" />
+</p>
+
 # GenUI Protocol
 
 **Let AI agents answer with interfaces, not just text — without letting them write frontend code.**
@@ -26,6 +30,30 @@ An agent emits a small declarative JSON **document**. A runtime validates it; a 
   }
 }
 ```
+
+## See it work
+
+Every clip is recorded from the real apps in this repo with [`scripts/demo`](scripts/demo); MP4 versions are in [`docs/assets/demos`](docs/assets/demos) and on the docs site's [Demos](apps/docs/pages/demos.mdx) page.
+
+**Edit JSON, watch charts and graphs re-render** — the playground: change `bar` to `line` to `pie`, change a value, break the document and fix it, then switch to an agent run drawn as an execution graph and timeline.
+
+![Playground: editing the JSON re-renders bar, line and pie charts live; the validator catches a mistake](docs/assets/demos/json-to-ui.gif)
+
+**Charts, KPIs and tables from one data model, updated by a stream**
+
+![Analytics dashboard: tabs switch between a line chart, a pie chart and a table; streamed frames update the chart in place](docs/assets/demos/charts.gif)
+
+**One document, two renderers** — React (left) and Angular (right), updated by the same stream
+
+![The same document rendered by the React and Angular renderers side by side](docs/assets/demos/two-renderers.gif)
+
+**Cards and forms that talk to an agent** — bound inputs, a submit action, and an agent reply that advances a workflow
+
+![Access request form: typing updates the data model, submit sends an event to the agent, the workflow advances](docs/assets/demos/cards-forms.gif)
+
+**A live agent run** — execution graph, counters and timeline updated by sequenced patches
+
+![Agent run monitor updated by streamed frames](docs/assets/demos/agent-monitor.gif)
 
 ## What you get
 
