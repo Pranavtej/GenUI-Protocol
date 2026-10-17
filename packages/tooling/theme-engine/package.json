@@ -1,5 +1,5 @@
 {
-  "name": "@ainative-ui/theme-engine",
+  "name": "@genui-protocol/theme-engine",
   "version": "0.1.0",
   "private": false,
   "main": "dist/src/index.js",
@@ -22,10 +22,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/org/genui-protocol.git"
+    "url": "git+https://github.com/Pranavtej/GenUI-Protocol.git"
   },
   "bugs": {
-    "url": "https://github.com/org/genui-protocol/issues"
+    "url": "https://github.com/Pranavtej/GenUI-Protocol/issues"
   },
   "homepage": "https://genui-protocol.dev",
   "sideEffects": false,

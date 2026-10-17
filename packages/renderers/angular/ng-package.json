@@ -9,8 +9,8 @@
     "class-variance-authority",
     "clsx",
     "tslib",
-    "@ainative-ui/event-engine",
-    "@ainative-ui/runtime-core",
-    "@ainative-ui/state-engine"
+    "@genui-protocol/event-engine",
+    "@genui-protocol/runtime-core",
+    "@genui-protocol/state-engine"
   ]
 }

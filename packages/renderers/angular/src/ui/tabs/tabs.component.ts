@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { cn } from '../lib/utils';
 
 @Component({
-  selector: 'guip-tabs',
+  selector: 'genui-tabs',
   standalone: true,
   imports: [CommonModule],
   template: `
@@ -31,7 +31,7 @@ import { cn } from '../lib/utils';
   `,
   encapsulation: ViewEncapsulation.None,
 })
-export class GuipTabs {
+export class GenUiTabs {
   tabs = input<{ label: string; value: string; icon?: string }[]>([]);
   active = input('');
   onTabChange = output<string>();
@@ -53,7 +53,7 @@ export class GuipTabs {
 }
 
 @Component({
-  selector: 'guip-tab-panel',
+  selector: 'genui-tab-panel',
   standalone: true,
   imports: [CommonModule],
   template: `
@@ -65,6 +65,6 @@ export class GuipTabs {
   `,
   encapsulation: ViewEncapsulation.None,
 })
-export class GuipTabPanel {
+export class GenUiTabPanel {
   active = input(false);
 }

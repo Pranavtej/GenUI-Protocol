@@ -1,4 +1,4 @@
-import { ASTPatch } from "@ainative-ui/protocol";
+import { ASTPatch } from "@genui-protocol/protocol";
 
 export type TransportProtocol = "websocket" | "sse" | "http" | string;
 

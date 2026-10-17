@@ -1,4 +1,4 @@
-import { RuntimeNode } from "@ainative-ui/runtime-core";
+import { RuntimeNode } from "@genui-protocol/runtime-core";
 
 export interface Renderer {
     render(node: RuntimeNode): unknown;

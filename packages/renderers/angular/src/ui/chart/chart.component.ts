@@ -12,12 +12,12 @@ const COLOR_SCHEMES: Record<string, { line: string; fill: string; bar: string }>
 };
 
 @Component({
-  selector: 'guip-chart',
+  selector: 'genui-chart',
   standalone: true,
   imports: [CommonModule],
   template: `<canvas #canvas [style.width]="'100%'" [style.height.px]="chartHeight"></canvas>`
 })
-export class GuipChart implements AfterViewInit {
+export class GenUiChart implements AfterViewInit {
   @Input() type: string = 'line';
   @Input() data: { label: string; value: number }[] = [];
   @Input() chartHeight: number = 260;

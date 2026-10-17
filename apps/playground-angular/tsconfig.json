@@ -23,7 +23,7 @@
         "node_modules/tslib",
         "../../node_modules/tslib"
       ],
-      "@ainative-ui/*": [
+      "@genui-protocol/*": [
         "../../packages/core/*/src",
         "../../packages/runtime/*/src",
         "../../packages/components/*/src",

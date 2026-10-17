@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { createNode, defaultASTDocument, UINode } from "@ainative-ui/ast";
+import { createNode, defaultASTDocument, UINode } from "@genui-protocol/ast";
 
 const initialAST = defaultASTDocument(
     createNode("dashboard", {}, [
@@ -27,7 +27,7 @@ function App() {
     return (
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, padding: 24 }}>
             <section>
-                <h1>AI-Native UI Playground</h1>
+                <h1>GenUI Protocol Playground</h1>
                 <label>
                     Renderer:
                     <select value={renderer} onChange={(event) => setRenderer(event.target.value)}>

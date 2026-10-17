@@ -1,5 +1,5 @@
-import { ASTDocument, createNode, defaultASTDocument, UINode } from "@ainative-ui/ast";
-import { validateASTDocument } from "@ainative-ui/validation";
+import { ASTDocument, createNode, defaultASTDocument, UINode } from "@genui-protocol/ast";
+import { validateASTDocument } from "@genui-protocol/validation";
 
 export type SDKOptions = {
     renderer?: string;

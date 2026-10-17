@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { cn } from '../lib/utils';
 
 @Component({
-  selector: 'guip-separator',
+  selector: 'genui-separator',
   standalone: true,
   imports: [CommonModule],
   template: `
@@ -15,7 +15,7 @@ import { cn } from '../lib/utils';
   `,
   encapsulation: ViewEncapsulation.None,
 })
-export class GuipSeparator {
+export class GenUiSeparator {
   orientation = input<'horizontal' | 'vertical'>('horizontal');
   class = input('');
 

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { cn } from '../lib/utils';
 
 @Component({
-  selector: 'guip-dialog',
+  selector: 'genui-dialog',
   standalone: true,
   imports: [CommonModule],
   template: `
@@ -52,7 +52,7 @@ import { cn } from '../lib/utils';
   `,
   encapsulation: ViewEncapsulation.None,
 })
-export class GuipDialog {
+export class GenUiDialog {
   @Input({ required: true }) open: ReturnType<typeof signal<boolean>> = signal(false);
   title = input('');
   subtitle = input('');

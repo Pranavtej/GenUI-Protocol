@@ -77,7 +77,7 @@ pnpm --filter mcp-server dev
 ### Build an AST
 
 ```ts
-import { buildRuntimeTree, reconcile } from "@ainative-ui/runtime-core";
+import { buildRuntimeTree, reconcile } from "@genui-protocol/runtime-core";
 
 const ast = {
   t: "page",
@@ -101,7 +101,7 @@ const patches = reconcile(previousTree, tree);
 ### Validate an AST
 
 ```ts
-import { validateASTDocument } from "@ainative-ui/validation";
+import { validateASTDocument } from "@genui-protocol/validation";
 
 const result = validateASTDocument(ast);
 if (result.valid) {
@@ -114,7 +114,7 @@ if (result.valid) {
 ### Python SDK example
 
 ```py
-from ai_native_ui_sdk import create_dashboard_ast
+from genui_protocol_sdk import create_dashboard_ast
 
 dashboard = create_dashboard_ast(
     title="Revenue Overview",
@@ -153,18 +153,18 @@ dashboard = create_dashboard_ast(
 
 ## Core Packages
 
-- `@ainative-ui/ast` — AST node types and helper utilities
-- `@ainative-ui/protocol` — protocol contracts and versioning
-- `@ainative-ui/schemas` — JSON schema definitions
-- `@ainative-ui/runtime-core` — runtime tree reconciliation and diffing
-- `@ainative-ui/state-engine` — signal-based reactivity
-- `@ainative-ui/event-engine` — event routing for AST interactions
-- `@ainative-ui/stream-engine` — SSE patch streaming
-- `@ainative-ui/validation` — AST validation pipeline
-- `@ainative-ui/component-registry` — discoverable component metadata
-- `@ainative-ui/renderer-react` — React renderer adapter
-- `@ainative-ui/sdk-js` — JavaScript/TypeScript SDK
-- `@ainative-ui/sdk-python` — Python SDK
+- `@genui-protocol/ast` — AST node types and helper utilities
+- `@genui-protocol/protocol` — protocol contracts and versioning
+- `@genui-protocol/schemas` — JSON schema definitions
+- `@genui-protocol/runtime-core` — runtime tree reconciliation and diffing
+- `@genui-protocol/state-engine` — signal-based reactivity
+- `@genui-protocol/event-engine` — event routing for AST interactions
+- `@genui-protocol/stream-engine` — SSE patch streaming
+- `@genui-protocol/validation` — AST validation pipeline
+- `@genui-protocol/component-registry` — discoverable component metadata
+- `@genui-protocol/renderer-react` — React renderer adapter
+- `@genui-protocol/sdk-js` — JavaScript/TypeScript SDK
+- `@genui-protocol/sdk-python` — Python SDK
 
 ---
 

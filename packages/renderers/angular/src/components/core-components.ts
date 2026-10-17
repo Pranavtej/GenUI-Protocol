@@ -1,18 +1,18 @@
 import { Component, InputSignal, input, computed, forwardRef } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
-import { RuntimeNode } from "@ainative-ui/runtime-core";
-import { eventRouter } from "@ainative-ui/event-engine";
+import { RuntimeNode } from "@genui-protocol/runtime-core";
+import { eventRouter } from "@genui-protocol/event-engine";
 import { DynamicRendererComponent } from "../dynamic-renderer.component";
 import {
-  GuipCard, GuipButton, GuipText, GuipHeading,
-  GuipTable, GuipThead, GuipTbody, GuipTr, GuipTh, GuipTd,
-  GuipInput, GuipStack, GuipFlex, GuipGrid, GuipKpi,
-  GuipSelect, GuipCheckbox,
-  GuipChart,
+  GenUiCard, GenUiButton, GenUiText, GenUiHeading,
+  GenUiTable, GenUiThead, GenUiTbody, GenUiTr, GenUiTh, GenUiTd,
+  GenUiInput, GenUiStack, GenUiFlex, GenUiGrid, GenUiKpi,
+  GenUiSelect, GenUiCheckbox,
+  GenUiChart,
 } from "../ui";
 
-export interface GuipComponent { node: InputSignal<RuntimeNode>; }
+export interface GenUiComponent { node: InputSignal<RuntimeNode>; }
 
 function str(p: any, key: string, fallback = ""): string {
   return String(p?.[key] ?? fallback);
@@ -28,85 +28,85 @@ function bool(p: any, key: string): boolean {
 }
 
 @Component({
-  selector: "guip-page",
+  selector: "genui-page",
   standalone: true,
-  imports: [CommonModule, forwardRef(() => DynamicRendererComponent), GuipCard, GuipStack],
+  imports: [CommonModule, forwardRef(() => DynamicRendererComponent), GenUiCard, GenUiStack],
   template: `
     <div class="min-h-screen bg-background p-6">
-      <guip-card [title]="pageTitle" [subtitle]="pageSubtitle">
-        <guip-stack gap="var(--guip-spacing-lg)">
+      <genui-card [title]="pageTitle" [subtitle]="pageSubtitle">
+        <genui-stack gap="var(--genui-spacing-lg)">
           @for (child of node().children; track child.id) {
-            <guip-dynamic-renderer [node]="child"></guip-dynamic-renderer>
+            <genui-dynamic-renderer [node]="child"></genui-dynamic-renderer>
           }
-        </guip-stack>
-      </guip-card>
+        </genui-stack>
+      </genui-card>
     </div>
   `
 })
-export class PageRenderer implements GuipComponent {
+export class PageRenderer implements GenUiComponent {
   node = input.required<RuntimeNode>();
   get pageTitle(): string { return str(this.node().p, "title"); }
   get pageSubtitle(): string { return str(this.node().p, "subtitle"); }
 }
 
 @Component({
-  selector: "guip-section",
+  selector: "genui-section",
   standalone: true,
-  imports: [CommonModule, forwardRef(() => DynamicRendererComponent), GuipCard, GuipStack],
+  imports: [CommonModule, forwardRef(() => DynamicRendererComponent), GenUiCard, GenUiStack],
   template: `
-    <guip-card [title]="sectionTitle" [subtitle]="sectionDesc">
-      <guip-stack gap="var(--guip-spacing-md)">
+    <genui-card [title]="sectionTitle" [subtitle]="sectionDesc">
+      <genui-stack gap="var(--genui-spacing-md)">
         @for (child of node().children; track child.id) {
-          <guip-dynamic-renderer [node]="child"></guip-dynamic-renderer>
+          <genui-dynamic-renderer [node]="child"></genui-dynamic-renderer>
         }
-      </guip-stack>
-    </guip-card>
+      </genui-stack>
+    </genui-card>
   `
 })
-export class SectionRenderer implements GuipComponent {
+export class SectionRenderer implements GenUiComponent {
   node = input.required<RuntimeNode>();
   get sectionTitle(): string { return str(this.node().p, "title"); }
   get sectionDesc(): string { return str(this.node().p, "description"); }
 }
 
 @Component({
-  selector: "guip-card-renderer",
+  selector: "genui-card-renderer",
   standalone: true,
-  imports: [CommonModule, forwardRef(() => DynamicRendererComponent), GuipCard, GuipStack],
+  imports: [CommonModule, forwardRef(() => DynamicRendererComponent), GenUiCard, GenUiStack],
   template: `
-    <guip-card [title]="cardTitle" [subtitle]="cardSub">
-      <guip-stack gap="var(--guip-spacing-md)">
+    <genui-card [title]="cardTitle" [subtitle]="cardSub">
+      <genui-stack gap="var(--genui-spacing-md)">
         @for (child of node().children; track child.id) {
-          <guip-dynamic-renderer [node]="child"></guip-dynamic-renderer>
+          <genui-dynamic-renderer [node]="child"></genui-dynamic-renderer>
         }
-      </guip-stack>
-    </guip-card>
+      </genui-stack>
+    </genui-card>
   `
 })
-export class CardRenderer implements GuipComponent {
+export class CardRenderer implements GenUiComponent {
   node = input.required<RuntimeNode>();
   get cardTitle(): string { return str(this.node().p, "title"); }
   get cardSub(): string { return str(this.node().p, "subtitle"); }
 }
 
 @Component({
-  selector: "guip-text-renderer",
+  selector: "genui-text-renderer",
   standalone: true,
-  imports: [CommonModule, GuipText],
-  template: `<guip-text>{{ textContent }}</guip-text>`
+  imports: [CommonModule, GenUiText],
+  template: `<genui-text>{{ textContent }}</genui-text>`
 })
-export class TextRenderer implements GuipComponent {
+export class TextRenderer implements GenUiComponent {
   node = input.required<RuntimeNode>();
   get textContent(): string { return str(this.node().p, "content"); }
 }
 
 @Component({
-  selector: "guip-heading-renderer",
+  selector: "genui-heading-renderer",
   standalone: true,
-  imports: [CommonModule, GuipHeading],
-  template: `<guip-heading [level]="headingLevel()">{{ headingText }}</guip-heading>`
+  imports: [CommonModule, GenUiHeading],
+  template: `<genui-heading [level]="headingLevel()">{{ headingText }}</genui-heading>`
 })
-export class HeadingRenderer implements GuipComponent {
+export class HeadingRenderer implements GenUiComponent {
   node = input.required<RuntimeNode>();
   get headingText(): string { return str(this.node().p, "text"); }
   headingLevel(): 1 | 2 | 3 | 4 | 5 | 6 {
@@ -117,16 +117,16 @@ export class HeadingRenderer implements GuipComponent {
 }
 
 @Component({
-  selector: "guip-button-renderer",
+  selector: "genui-button-renderer",
   standalone: true,
-  imports: [CommonModule, GuipButton],
+  imports: [CommonModule, GenUiButton],
   template: `
-    <guip-button (onClick)="onClick()" [variant]="btnVariant" [size]="btnSize">
+    <genui-button (onClick)="onClick()" [variant]="btnVariant" [size]="btnSize">
       {{ btnLabel }}
-    </guip-button>
+    </genui-button>
   `
 })
-export class ButtonRenderer implements GuipComponent {
+export class ButtonRenderer implements GenUiComponent {
   node = input.required<RuntimeNode>();
   get btnLabel(): string { return str(this.node().p, "label"); }
   get btnVariant(): string { return str(this.node().p, "variant", "default"); }
@@ -137,23 +137,23 @@ export class ButtonRenderer implements GuipComponent {
 }
 
 @Component({
-  selector: "guip-input-renderer",
+  selector: "genui-input-renderer",
   standalone: true,
-  imports: [CommonModule, FormsModule, GuipInput, GuipStack],
+  imports: [CommonModule, FormsModule, GenUiInput, GenUiStack],
   template: `
-    <guip-stack gap="var(--guip-spacing-sm)">
-      <guip-input
+    <genui-stack gap="var(--genui-spacing-sm)">
+      <genui-input
         [placeholder]="inputPlaceholder"
         [disabled]="inputDisabled"
         [(ngModel)]="value"
         [label]="inputLabel"
         (input)="onInput()"
         (change)="onChange()"
-      ></guip-input>
-    </guip-stack>
+      ></genui-input>
+    </genui-stack>
   `
 })
-export class InputRenderer implements GuipComponent {
+export class InputRenderer implements GenUiComponent {
   node = input.required<RuntimeNode>();
   get inputPlaceholder(): string { return str(this.node().p, "placeholder"); }
   get inputLabel(): string { return str(this.node().p, "label"); }
@@ -169,11 +169,11 @@ export class InputRenderer implements GuipComponent {
 }
 
 @Component({
-  selector: "guip-textarea-renderer",
+  selector: "genui-textarea-renderer",
   standalone: true,
-  imports: [CommonModule, FormsModule, GuipStack],
+  imports: [CommonModule, FormsModule, GenUiStack],
   template: `
-    <guip-stack gap="var(--guip-spacing-sm)">
+    <genui-stack gap="var(--genui-spacing-sm)">
       <textarea
         [placeholder]="taPlaceholder"
         [disabled]="taDisabled"
@@ -182,10 +182,10 @@ export class InputRenderer implements GuipComponent {
         (change)="onChange()"
         class="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-none"
       ></textarea>
-    </guip-stack>
+    </genui-stack>
   `
 })
-export class TextareaRenderer implements GuipComponent {
+export class TextareaRenderer implements GenUiComponent {
   node = input.required<RuntimeNode>();
   get taPlaceholder(): string { return str(this.node().p, "placeholder"); }
   get taDisabled(): boolean { return bool(this.node().p, "disabled"); }
@@ -200,23 +200,23 @@ export class TextareaRenderer implements GuipComponent {
 }
 
 @Component({
-  selector: "guip-select-renderer",
+  selector: "genui-select-renderer",
   standalone: true,
-  imports: [CommonModule, FormsModule, GuipSelect, GuipStack],
+  imports: [CommonModule, FormsModule, GenUiSelect, GenUiStack],
   template: `
-    <guip-stack gap="var(--guip-spacing-sm)">
-      <guip-select
+    <genui-stack gap="var(--genui-spacing-sm)">
+      <genui-select
         [label]="selLabel"
         [placeholder]="selPlaceholder"
         [options]="options()"
         [disabled]="selDisabled"
         [(ngModel)]="value"
         (change)="onChange()"
-      ></guip-select>
-    </guip-stack>
+      ></genui-select>
+    </genui-stack>
   `
 })
-export class SelectRenderer implements GuipComponent {
+export class SelectRenderer implements GenUiComponent {
   node = input.required<RuntimeNode>();
   get selLabel(): string { return str(this.node().p, "label"); }
   get selPlaceholder(): string { return str(this.node().p, "placeholder"); }
@@ -232,18 +232,18 @@ export class SelectRenderer implements GuipComponent {
 }
 
 @Component({
-  selector: "guip-checkbox-renderer",
+  selector: "genui-checkbox-renderer",
   standalone: true,
-  imports: [CommonModule, FormsModule, GuipCheckbox],
+  imports: [CommonModule, FormsModule, GenUiCheckbox],
   template: `
-    <guip-checkbox
+    <genui-checkbox
       [label]="cbLabel"
       [(ngModel)]="checked"
       (change)="onChange()"
-    ></guip-checkbox>
+    ></genui-checkbox>
   `
 })
-export class CheckboxRenderer implements GuipComponent {
+export class CheckboxRenderer implements GenUiComponent {
   node = input.required<RuntimeNode>();
   get cbLabel(): string { return str(this.node().p, "label"); }
   get checked(): boolean { return !!this.node().p?.["checked"]; }
@@ -256,86 +256,86 @@ export class CheckboxRenderer implements GuipComponent {
 }
 
 @Component({
-  selector: "guip-table-renderer",
+  selector: "genui-table-renderer",
   standalone: true,
-  imports: [CommonModule, GuipTable, GuipThead, GuipTbody, GuipTr, GuipTh, GuipTd],
+  imports: [CommonModule, GenUiTable, GenUiThead, GenUiTbody, GenUiTr, GenUiTh, GenUiTd],
   template: `
     <div class="rounded-md border">
-      <guip-table>
-        <guip-thead>
-          <guip-tr>
+      <genui-table>
+        <genui-thead>
+          <genui-tr>
             @for (col of columns(); track col.accessor) {
-              <guip-th>{{ col.header }}</guip-th>
+              <genui-th>{{ col.header }}</genui-th>
             }
-          </guip-tr>
-        </guip-thead>
-        <guip-tbody>
+          </genui-tr>
+        </genui-thead>
+        <genui-tbody>
           @for (row of tableData(); track row['id'] || $index) {
-            <guip-tr>
+            <genui-tr>
               @for (col of columns(); track col.accessor) {
-                <guip-td>{{ row[col.accessor] }}</guip-td>
+                <genui-td>{{ row[col.accessor] }}</genui-td>
               }
-            </guip-tr>
+            </genui-tr>
           }
-        </guip-tbody>
-      </guip-table>
+        </genui-tbody>
+      </genui-table>
     </div>
   `
 })
-export class TableRenderer implements GuipComponent {
+export class TableRenderer implements GenUiComponent {
   node = input.required<RuntimeNode>();
   columns = computed(() => (this.node().p?.["columns"] as { header: string; accessor: string }[]) || []);
   tableData = computed(() => (this.node().p?.["data"] as Record<string, any>[]) || []);
 }
 
 @Component({
-  selector: "guip-flex-renderer",
+  selector: "genui-flex-renderer",
   standalone: true,
-  imports: [CommonModule, forwardRef(() => DynamicRendererComponent), GuipFlex],
+  imports: [CommonModule, forwardRef(() => DynamicRendererComponent), GenUiFlex],
   template: `
-    <guip-flex [gap]="flexGap" [justifyContent]="flexJustify" [alignItems]="flexAlign">
+    <genui-flex [gap]="flexGap" [justifyContent]="flexJustify" [alignItems]="flexAlign">
       @for (child of node().children; track child.id) {
-        <guip-dynamic-renderer [node]="child"></guip-dynamic-renderer>
+        <genui-dynamic-renderer [node]="child"></genui-dynamic-renderer>
       }
-    </guip-flex>
+    </genui-flex>
   `
 })
-export class FlexRenderer implements GuipComponent {
+export class FlexRenderer implements GenUiComponent {
   node = input.required<RuntimeNode>();
-  get flexGap(): string { return str(this.node().p, "gap", "var(--guip-spacing-md)"); }
+  get flexGap(): string { return str(this.node().p, "gap", "var(--genui-spacing-md)"); }
   get flexJustify(): string { return str(this.node().p, "justifyContent", "flex-start"); }
   get flexAlign(): string { return str(this.node().p, "alignItems", "stretch"); }
 }
 
 @Component({
-  selector: "guip-grid-renderer",
+  selector: "genui-grid-renderer",
   standalone: true,
-  imports: [CommonModule, forwardRef(() => DynamicRendererComponent), GuipGrid],
+  imports: [CommonModule, forwardRef(() => DynamicRendererComponent), GenUiGrid],
   template: `
-    <guip-grid [columns]="gridCols" [gap]="gridGap">
+    <genui-grid [columns]="gridCols" [gap]="gridGap">
       @for (child of node().children; track child.id) {
-        <guip-dynamic-renderer [node]="child"></guip-dynamic-renderer>
+        <genui-dynamic-renderer [node]="child"></genui-dynamic-renderer>
       }
-    </guip-grid>
+    </genui-grid>
   `
 })
-export class GridRenderer implements GuipComponent {
+export class GridRenderer implements GenUiComponent {
   node = input.required<RuntimeNode>();
   get gridCols(): number { return num(this.node().p, "columns", 1); }
-  get gridGap(): string { return str(this.node().p, "gap", "var(--guip-spacing-md)"); }
+  get gridGap(): string { return str(this.node().p, "gap", "var(--genui-spacing-md)"); }
 }
 
 @Component({
-  selector: "guip-kpi-renderer",
+  selector: "genui-kpi-renderer",
   standalone: true,
-  imports: [CommonModule, GuipKpi],
+  imports: [CommonModule, GenUiKpi],
   template: `
-    <guip-kpi [label]="kpiLabel" [value]="kpiValue"
+    <genui-kpi [label]="kpiLabel" [value]="kpiValue"
               [subtext]="kpiSubtext" [trend]="kpiTrend" [trendValue]="kpiTrendValue">
-    </guip-kpi>
+    </genui-kpi>
   `
 })
-export class KpiRenderer implements GuipComponent {
+export class KpiRenderer implements GenUiComponent {
   node = input.required<RuntimeNode>();
   get kpiLabel(): string { return str(this.node().p, "label"); }
   get kpiValue(): string { return str(this.node().p, "value"); }
@@ -349,33 +349,33 @@ export class KpiRenderer implements GuipComponent {
 }
 
 @Component({
-  selector: "guip-dashboard-renderer",
+  selector: "genui-dashboard-renderer",
   standalone: true,
-  imports: [CommonModule, GuipStack, forwardRef(() => DynamicRendererComponent)],
+  imports: [CommonModule, GenUiStack, forwardRef(() => DynamicRendererComponent)],
   template: `
-    <guip-stack gap="var(--guip-spacing-lg)">
+    <genui-stack gap="var(--genui-spacing-lg)">
       @for (child of node().children; track child.id) {
-        <guip-dynamic-renderer [node]="child"></guip-dynamic-renderer>
+        <genui-dynamic-renderer [node]="child"></genui-dynamic-renderer>
       }
-    </guip-stack>
+    </genui-stack>
   `
 })
-export class DashboardRenderer implements GuipComponent {
+export class DashboardRenderer implements GenUiComponent {
   node = input.required<RuntimeNode>();
 }
 
 @Component({
-  selector: "guip-chart-renderer",
+  selector: "genui-chart-renderer",
   standalone: true,
-  imports: [CommonModule, GuipChart],
+  imports: [CommonModule, GenUiChart],
   template: `
     <div style="width:100%;">
-      <guip-chart [type]="chartType" [data]="chartData" [chartHeight]="chartHeight"
-                  [colorScheme]="chartColorScheme"></guip-chart>
+      <genui-chart [type]="chartType" [data]="chartData" [chartHeight]="chartHeight"
+                  [colorScheme]="chartColorScheme"></genui-chart>
     </div>
   `
 })
-export class ChartRenderer implements GuipComponent {
+export class ChartRenderer implements GenUiComponent {
   node = input.required<RuntimeNode>();
   get chartType(): string { return str(this.node().p, "type", "line"); }
   get chartData(): { label: string; value: number }[] {
@@ -385,7 +385,7 @@ export class ChartRenderer implements GuipComponent {
   get chartColorScheme(): string { return str(this.node().p, "colorScheme", "default"); }
 }
 
-export const GUIP_CORE_RENDERERS = [
+export const GENUI_CORE_RENDERERS = [
   PageRenderer, SectionRenderer, CardRenderer, TextRenderer, HeadingRenderer,
   ButtonRenderer, InputRenderer, TextareaRenderer, SelectRenderer, CheckboxRenderer,
   TableRenderer, FlexRenderer, GridRenderer, KpiRenderer, DashboardRenderer, ChartRenderer,

@@ -64,7 +64,7 @@ echo ""
 echo "=== Done ==="
 echo ""
 echo "To install in your frontend project:"
-echo "  npm install @ainative-ui/angular --registry $VERDACCIO_URL"
+echo "  npm install @genui-protocol/angular --registry $VERDACCIO_URL"
 echo ""
 echo "To stop verdaccio later:"
 if [ -n "${VERDACCIO_PID:-}" ]; then

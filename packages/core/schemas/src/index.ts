@@ -1,4 +1,4 @@
-import { UINode } from "@ainative-ui/ast";
+import { UINode } from "@genui-protocol/ast";
 
 export type ComponentSchema = {
     name: string;

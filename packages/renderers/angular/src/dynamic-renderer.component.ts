@@ -1,10 +1,10 @@
 import { Component, Type, inject, computed, input } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { RuntimeNode } from "@ainative-ui/runtime-core";
-import { GUIP_COMPONENT_MAPPINGS, GuipComponentMapping } from "./provider";
+import { RuntimeNode } from "@genui-protocol/runtime-core";
+import { GENUI_COMPONENT_MAPPINGS, GenUiComponentMapping } from "./provider";
 
 @Component({
-    selector: "guip-dynamic-renderer",
+    selector: "genui-dynamic-renderer",
     standalone: true,
     imports: [CommonModule],
     template: `
@@ -20,7 +20,7 @@ import { GUIP_COMPONENT_MAPPINGS, GuipComponentMapping } from "./provider";
 export class DynamicRendererComponent {
     node = input.required<RuntimeNode>();
 
-    private mappings = inject(GUIP_COMPONENT_MAPPINGS, { optional: true }) || [];
+    private mappings = inject(GENUI_COMPONENT_MAPPINGS, { optional: true }) || [];
 
     protected resolvedComponent = computed<Type<any> | null>(() => {
         const activeNode = this.node();

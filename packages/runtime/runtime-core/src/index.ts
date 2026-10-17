@@ -1,5 +1,5 @@
-import { ASTDocument, UINode } from "@ainative-ui/ast";
-import { ASTPatch } from "@ainative-ui/protocol";
+import { ASTDocument, UINode } from "@genui-protocol/ast";
+import { ASTPatch } from "@genui-protocol/protocol";
 
 export type RuntimeNode = UINode & {
     id: string; // Guaranteed to be defined in RuntimeNode

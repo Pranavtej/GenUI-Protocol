@@ -1,5 +1,5 @@
 {
-  "name": "@ainative-ui/components-core",
+  "name": "@genui-protocol/components-core",
   "version": "0.1.0",
   "private": false,
   "main": "dist/src/index.js",
@@ -10,7 +10,7 @@
     "test": "echo 'No tests yet'"
   },
   "dependencies": {
-    "@ainative-ui/ast": "workspace:0.1.0"
+    "@genui-protocol/ast": "workspace:0.1.0"
   },
   "devDependencies": {
     "typescript": "^5.5.4"
@@ -25,10 +25,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/org/genui-protocol.git"
+    "url": "git+https://github.com/Pranavtej/GenUI-Protocol.git"
   },
   "bugs": {
-    "url": "https://github.com/org/genui-protocol/issues"
+    "url": "https://github.com/Pranavtej/GenUI-Protocol/issues"
   },
   "homepage": "https://genui-protocol.dev",
   "sideEffects": false,

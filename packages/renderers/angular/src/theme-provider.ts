@@ -1,10 +1,10 @@
 import { InjectionToken, Provider, APP_INITIALIZER } from '@angular/core';
 
 /**
- * GUIP Theme CSS Content - injected at runtime
+ * GenUI Theme CSS Content - injected at runtime
  * This allows the renderer package to be completely self-contained
  */
-const GUIP_DEFAULT_THEME_CSS = `
+const GENUI_DEFAULT_THEME_CSS = `
 :root {
   --background: 240 10% 3.9%;
   --foreground: 0 0% 98%;
@@ -85,39 +85,39 @@ button { font-family: inherit; }
 input, select, textarea { font-family: inherit; }
 `;
 
-const GUIP_THEME_TOKEN = new InjectionToken<string>('guip.theme.css');
+const GENUI_THEME_TOKEN = new InjectionToken<string>('genui.theme.css');
 
 /**
- * Injects GUIP default theme CSS into the document head
+ * Injects GenUI default theme CSS into the document head
  * This is called automatically when the renderer is initialized
  */
-function initializeGuipTheme(themeCss: string): void {
+function initializeGenUiTheme(themeCss: string): void {
   if (typeof document === 'undefined') return; // SSR safety
 
   // Check if theme is already injected
-  const existingStyle = document.getElementById('guip-theme-styles');
+  const existingStyle = document.getElementById('genui-theme-styles');
   if (existingStyle) return;
 
   // Create and inject style element
   const style = document.createElement('style');
-  style.id = 'guip-theme-styles';
+  style.id = 'genui-theme-styles';
   style.textContent = themeCss;
   document.head.insertBefore(style, document.head.firstChild);
 }
 
 /**
- * Provider factory: injects GUIP theme at app initialization
+ * Provider factory: injects GenUI theme at app initialization
  * Use this in your bootstrapApplication or AppConfig
  */
-export function provideGuipTheme(customThemeCss?: string): Provider[] {
-  const themeCss = customThemeCss || GUIP_DEFAULT_THEME_CSS;
+export function provideGenUiTheme(customThemeCss?: string): Provider[] {
+  const themeCss = customThemeCss || GENUI_DEFAULT_THEME_CSS;
 
   return [
-    { provide: GUIP_THEME_TOKEN, useValue: themeCss },
+    { provide: GENUI_THEME_TOKEN, useValue: themeCss },
     {
       provide: APP_INITIALIZER,
-      useFactory: (themeCss: string) => () => initializeGuipTheme(themeCss),
-      deps: [GUIP_THEME_TOKEN],
+      useFactory: (themeCss: string) => () => initializeGenUiTheme(themeCss),
+      deps: [GENUI_THEME_TOKEN],
       multi: true
     }
   ];
@@ -126,4 +126,4 @@ export function provideGuipTheme(customThemeCss?: string): Provider[] {
 /**
  * Export for custom theme creation
  */
-export { GUIP_DEFAULT_THEME_CSS, GUIP_THEME_TOKEN };
+export { GENUI_DEFAULT_THEME_CSS, GENUI_THEME_TOKEN };

@@ -1,10 +1,10 @@
 /**
- * @ainative-ui/components-core
+ * @genui-protocol/components-core
  *
  * Type-safe UINode builder utilities for core protocol components.
  * Every builder returns a valid UINode aligned with the component-registry schemas.
  */
-import { UINode } from "@ainative-ui/ast";
+import { UINode } from "@genui-protocol/ast";
 
 // ---------------------------------------------------------------------------
 // Page

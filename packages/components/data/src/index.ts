@@ -1,10 +1,10 @@
 /**
- * @ainative-ui/components-data
+ * @genui-protocol/components-data
  *
  * Type-safe UINode builder utilities for data-display components.
  * Covers table, chart, KPI, timeline, and execution graph.
  */
-import { UINode } from "@ainative-ui/ast";
+import { UINode } from "@genui-protocol/ast";
 
 // ---------------------------------------------------------------------------
 // Table

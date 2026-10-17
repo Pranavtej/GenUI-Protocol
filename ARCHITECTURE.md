@@ -1,4 +1,4 @@
-# AI-Native UI Runtime Architecture
+# GenUI Protocol Architecture
 
 ## Design principles
 

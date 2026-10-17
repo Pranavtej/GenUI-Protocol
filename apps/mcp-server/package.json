@@ -1,21 +1,21 @@
 {
-    "name": "ai-native-ui-mcp-server",
+    "name": "genui-protocol-mcp-server",
     "version": "0.1.0",
     "private": true,
     "type": "module",
     "main": "dist/index.js",
     "scripts": {
-        "predev": "pnpm --filter @ainative-ui/ast build && pnpm --filter @ainative-ui/component-registry build && pnpm --filter @ainative-ui/protocol build && pnpm --filter @ainative-ui/validation build",
+        "predev": "pnpm --filter @genui-protocol/ast build && pnpm --filter @genui-protocol/component-registry build && pnpm --filter @genui-protocol/protocol build && pnpm --filter @genui-protocol/validation build",
         "dev": "node --enable-source-maps dist/index.js",
         "build": "tsc -p tsconfig.json",
         "lint": "echo 'No lint configured'",
         "test": "echo 'No tests yet'"
     },
     "dependencies": {
-        "@ainative-ui/ast": "workspace:0.1.0",
-        "@ainative-ui/component-registry": "workspace:0.1.0",
-        "@ainative-ui/validation": "workspace:0.1.0",
-        "@ainative-ui/protocol": "workspace:0.1.0",
+        "@genui-protocol/ast": "workspace:0.1.0",
+        "@genui-protocol/component-registry": "workspace:0.1.0",
+        "@genui-protocol/validation": "workspace:0.1.0",
+        "@genui-protocol/protocol": "workspace:0.1.0",
         "@modelcontextprotocol/sdk": "^1.29.0",
         "express": "^4.18.2",
         "cors": "^2.8.5",

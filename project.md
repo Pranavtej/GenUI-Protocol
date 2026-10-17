@@ -1,4 +1,4 @@
-AI-Native UI Runtime
+GenUI Protocol
 Problem
 Today, AI assistants and agents mostly return text.
 However, modern AI systems already have access to:

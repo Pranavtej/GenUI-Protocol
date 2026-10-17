@@ -1,11 +1,11 @@
 /**
- * @ainative-ui/components-charts
+ * @genui-protocol/components-charts
  *
  * Type-safe UINode builder utilities for chart components.
  * All chart variants (line, bar, pie) use the same component type
  * with a `type` prop as defined in the component-registry schema.
  */
-import { UINode } from "@ainative-ui/ast";
+import { UINode } from "@genui-protocol/ast";
 
 // ---------------------------------------------------------------------------
 // Chart Types

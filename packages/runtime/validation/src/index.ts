@@ -1,8 +1,8 @@
 import Ajv from "ajv";
 import { z } from "zod";
-import { UINode, ASTDocument } from "@ainative-ui/ast";
-import { registrySchema, nodeSchema } from "@ainative-ui/schemas";
-import { ComponentRegistry } from "@ainative-ui/component-registry";
+import { UINode, ASTDocument } from "@genui-protocol/ast";
+import { registrySchema, nodeSchema } from "@genui-protocol/schemas";
+import { ComponentRegistry } from "@genui-protocol/component-registry";
 
 const ajv = new Ajv({ allErrors: true, strict: false });
 const validateNodeJSON = ajv.compile(nodeSchema);

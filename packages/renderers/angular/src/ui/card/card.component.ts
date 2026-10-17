@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { cn } from '../lib/utils';
 
 @Component({
-  selector: 'guip-card',
+  selector: 'genui-card',
   standalone: true,
   imports: [CommonModule],
   template: `
@@ -23,14 +23,14 @@ import { cn } from '../lib/utils';
       </div>
       @if (hasFooter()) {
         <div class="flex items-center p-6 pt-0">
-          <ng-content select="[guip-card-footer]"></ng-content>
+          <ng-content select="[genui-card-footer]"></ng-content>
         </div>
       }
     </div>
   `,
   encapsulation: ViewEncapsulation.None,
 })
-export class GuipCard {
+export class GenUiCard {
   title = input('');
   subtitle = input('');
   class = input('');
@@ -47,7 +47,7 @@ export class GuipCard {
 }
 
 @Component({
-  selector: 'guip-card-header',
+  selector: 'genui-card-header',
   standalone: true,
   imports: [CommonModule],
   template: `
@@ -57,40 +57,40 @@ export class GuipCard {
   `,
   encapsulation: ViewEncapsulation.None,
 })
-export class GuipCardHeader {}
+export class GenUiCardHeader {}
 
 @Component({
-  selector: 'guip-card-title',
+  selector: 'genui-card-title',
   standalone: true,
   imports: [CommonModule],
   template: `<h3 class="text-2xl font-semibold leading-none tracking-tight"><ng-content></ng-content></h3>`,
   encapsulation: ViewEncapsulation.None,
 })
-export class GuipCardTitle {}
+export class GenUiCardTitle {}
 
 @Component({
-  selector: 'guip-card-description',
+  selector: 'genui-card-description',
   standalone: true,
   imports: [CommonModule],
   template: `<p class="text-sm text-muted-foreground"><ng-content></ng-content></p>`,
   encapsulation: ViewEncapsulation.None,
 })
-export class GuipCardDescription {}
+export class GenUiCardDescription {}
 
 @Component({
-  selector: 'guip-card-content',
+  selector: 'genui-card-content',
   standalone: true,
   imports: [CommonModule],
   template: `<div class="p-6 pt-0"><ng-content></ng-content></div>`,
   encapsulation: ViewEncapsulation.None,
 })
-export class GuipCardContent {}
+export class GenUiCardContent {}
 
 @Component({
-  selector: 'guip-card-footer',
+  selector: 'genui-card-footer',
   standalone: true,
   imports: [CommonModule],
   template: `<div class="flex items-center p-6 pt-0"><ng-content></ng-content></div>`,
   encapsulation: ViewEncapsulation.None,
 })
-export class GuipCardFooter {}
+export class GenUiCardFooter {}

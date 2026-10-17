@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { cn } from '../lib/utils';
 
 @Component({
-  selector: 'guip-table',
+  selector: 'genui-table',
   standalone: true,
   imports: [CommonModule],
   template: `
@@ -15,37 +15,37 @@ import { cn } from '../lib/utils';
   `,
   encapsulation: ViewEncapsulation.None,
 })
-export class GuipTable {}
+export class GenUiTable {}
 
 @Component({
-  selector: 'guip-thead',
+  selector: 'genui-thead',
   standalone: true,
   imports: [CommonModule],
   template: `<thead class="[&_tr]:border-b"><ng-content></ng-content></thead>`,
   encapsulation: ViewEncapsulation.None,
 })
-export class GuipThead {}
+export class GenUiThead {}
 
 @Component({
-  selector: 'guip-tbody',
+  selector: 'genui-tbody',
   standalone: true,
   imports: [CommonModule],
   template: `<tbody class="[&_tr:last-child]:border-0"><ng-content></ng-content></tbody>`,
   encapsulation: ViewEncapsulation.None,
 })
-export class GuipTbody {}
+export class GenUiTbody {}
 
 @Component({
-  selector: 'guip-tr',
+  selector: 'genui-tr',
   standalone: true,
   imports: [CommonModule],
   template: `<tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"><ng-content></ng-content></tr>`,
   encapsulation: ViewEncapsulation.None,
 })
-export class GuipTr {}
+export class GenUiTr {}
 
 @Component({
-  selector: 'guip-th',
+  selector: 'genui-th',
   standalone: true,
   imports: [CommonModule],
   template: `
@@ -55,10 +55,10 @@ export class GuipTr {}
   `,
   encapsulation: ViewEncapsulation.None,
 })
-export class GuipTh {}
+export class GenUiTh {}
 
 @Component({
-  selector: 'guip-td',
+  selector: 'genui-td',
   standalone: true,
   imports: [CommonModule],
   template: `
@@ -68,4 +68,4 @@ export class GuipTh {}
   `,
   encapsulation: ViewEncapsulation.None,
 })
-export class GuipTd {}
+export class GenUiTd {}

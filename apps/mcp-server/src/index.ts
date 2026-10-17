@@ -4,9 +4,9 @@ import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprot
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
-import { ComponentRegistry } from "@ainative-ui/component-registry";
-import { validateASTDocument } from "@ainative-ui/validation";
-import { defaultASTDocument, UINode } from "@ainative-ui/ast";
+import { ComponentRegistry } from "@genui-protocol/component-registry";
+import { validateASTDocument } from "@genui-protocol/validation";
+import { defaultASTDocument, UINode } from "@genui-protocol/ast";
 
 const registry = new ComponentRegistry();
 

@@ -10,7 +10,7 @@ This page gives you a minimal path from installation to a valid AST document.
 ## Build an AST
 
 ```ts
-import { buildRuntimeTree } from '@ainative-ui/runtime-core';
+import { buildRuntimeTree } from '@genui-protocol/runtime-core';
 
 const ast = {
   t: 'page',
@@ -25,7 +25,7 @@ console.log(tree);
 ## Validate an AST
 
 ```ts
-import { validateASTDocument } from '@ainative-ui/validation';
+import { validateASTDocument } from '@genui-protocol/validation';
 
 const result = validateASTDocument(ast);
 if (result.valid) {

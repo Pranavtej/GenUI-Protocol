@@ -1,4 +1,4 @@
-import { ComponentSchema } from "@ainative-ui/schemas";
+import { ComponentSchema } from "@genui-protocol/schemas";
 
 export type RegistryEntry = ComponentSchema & {
     id: string;

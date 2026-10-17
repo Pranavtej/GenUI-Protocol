@@ -1,4 +1,4 @@
-import { provideGuipComponent } from "./provider";
+import { provideGenUiComponent } from "./provider";
 import {
     PageRenderer,
     SectionRenderer,
@@ -16,34 +16,34 @@ import {
     KpiRenderer,
     DashboardRenderer,
     ChartRenderer,
-    GUIP_CORE_RENDERERS
+    GENUI_CORE_RENDERERS
 } from "./components/core-components";
 
 export * from "./provider";
 export * from "./dynamic-renderer.component";
 export * from "./renderer.component";
 export * from "./components/core-components";
-export { provideGuipTheme, GUIP_DEFAULT_THEME_CSS, GUIP_THEME_TOKEN } from "./theme-provider";
+export { provideGenUiTheme, GENUI_DEFAULT_THEME_CSS, GENUI_THEME_TOKEN } from "./theme-provider";
 
 export * from "./ui";
 
-export function provideGuipRenderer() {
+export function provideGenUiRenderer() {
     return [
-        provideGuipComponent("page", PageRenderer),
-        provideGuipComponent("section", SectionRenderer),
-        provideGuipComponent("card", CardRenderer),
-        provideGuipComponent("text", TextRenderer),
-        provideGuipComponent("heading", HeadingRenderer),
-        provideGuipComponent("button", ButtonRenderer),
-        provideGuipComponent("input", InputRenderer),
-        provideGuipComponent("textarea", TextareaRenderer),
-        provideGuipComponent("select", SelectRenderer),
-        provideGuipComponent("checkbox", CheckboxRenderer),
-        provideGuipComponent("table", TableRenderer),
-        provideGuipComponent("grid", GridRenderer),
-        provideGuipComponent("flex", FlexRenderer),
-        provideGuipComponent("kpi", KpiRenderer),
-        provideGuipComponent("dashboard", DashboardRenderer),
-        provideGuipComponent("chart", ChartRenderer),
+        provideGenUiComponent("page", PageRenderer),
+        provideGenUiComponent("section", SectionRenderer),
+        provideGenUiComponent("card", CardRenderer),
+        provideGenUiComponent("text", TextRenderer),
+        provideGenUiComponent("heading", HeadingRenderer),
+        provideGenUiComponent("button", ButtonRenderer),
+        provideGenUiComponent("input", InputRenderer),
+        provideGenUiComponent("textarea", TextareaRenderer),
+        provideGenUiComponent("select", SelectRenderer),
+        provideGenUiComponent("checkbox", CheckboxRenderer),
+        provideGenUiComponent("table", TableRenderer),
+        provideGenUiComponent("grid", GridRenderer),
+        provideGenUiComponent("flex", FlexRenderer),
+        provideGenUiComponent("kpi", KpiRenderer),
+        provideGenUiComponent("dashboard", DashboardRenderer),
+        provideGenUiComponent("chart", ChartRenderer),
     ];
 }

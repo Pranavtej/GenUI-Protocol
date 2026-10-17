@@ -4,7 +4,7 @@ import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { cn } from '../lib/utils';
 
 @Component({
-  selector: 'guip-switch',
+  selector: 'genui-switch',
   standalone: true,
   imports: [CommonModule],
   template: `
@@ -33,12 +33,12 @@ import { cn } from '../lib/utils';
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => GuipSwitch),
+      useExisting: forwardRef(() => GenUiSwitch),
       multi: true,
     },
   ],
 })
-export class GuipSwitch implements ControlValueAccessor {
+export class GenUiSwitch implements ControlValueAccessor {
   id = input(`switch-${Math.random().toString(36).substr(2, 9)}`);
   label = input('');
   disabled = model(false);

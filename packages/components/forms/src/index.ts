@@ -1,10 +1,10 @@
 /**
- * @ainative-ui/components-forms
+ * @genui-protocol/components-forms
  *
  * Type-safe UINode builder utilities for form components.
  * Covers input, textarea, select, and checkbox as defined in the component-registry.
  */
-import { UINode } from "@ainative-ui/ast";
+import { UINode } from "@genui-protocol/ast";
 
 // ---------------------------------------------------------------------------
 // Input

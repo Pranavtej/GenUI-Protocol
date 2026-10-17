@@ -1,10 +1,10 @@
 /**
- * @ainative-ui/components-workflows
+ * @genui-protocol/components-workflows
  *
  * Type-safe UINode builder utilities for workflow and dashboard components.
  * Covers workflow pipelines and dashboard layouts as defined in the component-registry.
  */
-import { UINode } from "@ainative-ui/ast";
+import { UINode } from "@genui-protocol/ast";
 
 // ---------------------------------------------------------------------------
 // Workflow

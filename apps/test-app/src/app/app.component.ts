@@ -1,10 +1,10 @@
 import { Component, OnInit, OnDestroy, effect, signal, viewChild, ViewContainerRef } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
-import { RuntimeTree, buildRuntimeTree } from "@ainative-ui/runtime-core";
-import { eventRouter, UIEvent } from "@ainative-ui/event-engine";
-import { DynamicRendererComponent } from "@ainative-ui/angular";
-import { ASTDocument } from "@ainative-ui/ast";
+import { RuntimeTree, buildRuntimeTree } from "@genui-protocol/runtime-core";
+import { eventRouter, UIEvent } from "@genui-protocol/event-engine";
+import { DynamicRendererComponent } from "@genui-protocol/angular";
+import { ASTDocument } from "@genui-protocol/ast";
 
 interface ChatMessage {
   role: "user" | "agent";

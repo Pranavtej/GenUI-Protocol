@@ -19,5 +19,5 @@ jobs:
                   node-version: 20
                   cache: pnpm
             - run: pnpm install --frozen-lockfile
-            - run: pnpm --filter ai-native-ui-docs lint
-            - run: pnpm --filter ai-native-ui-docs build
+            - run: pnpm --filter genui-protocol-docs lint
+            - run: pnpm --filter genui-protocol-docs build

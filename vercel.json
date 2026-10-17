@@ -1,6 +1,6 @@
 {
     "version": 2,
     "framework": "nextjs",
-    "buildCommand": "pnpm --filter ai-native-ui-docs build",
+    "buildCommand": "pnpm --filter genui-protocol-docs build",
     "outputDirectory": "apps/docs/.next"
 }
