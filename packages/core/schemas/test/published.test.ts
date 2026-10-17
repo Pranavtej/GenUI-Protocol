@@ -24,6 +24,15 @@ describe("published schemas", () => {
         expect(doc({ version: "1.0.0", root: { t: "page", c: [{ p: {} }] } })).toBe(false);
         expect(patch({ op: "replace", path: "/p/a", value: 1 })).toBe(true);
         expect(patch({ op: "move", path: "/c/0" })).toBe(false);
+        const action = ajv.getSchema("https://genui-protocol.dev/schemas/v1/action.json")!;
+        const frame = ajv.getSchema("https://genui-protocol.dev/schemas/v1/stream-frame.json")!;
+        expect(action({ do: "toggle", path: "open" })).toBe(true);
+        expect(action({ do: "eval", code: "x" })).toBe(false);
+        expect(action({ do: "emit", name: "go", payload: { a: 1 } })).toBe(true);
+        expect(frame({ type: "snapshot", sequence: 1, document: { version: "1.0.0", root: { t: "page" } } })).toBe(true);
+        expect(frame({ type: "snapshot" })).toBe(false);
+        expect(frame({ type: "patch", patches: [{ op: "remove", path: "/c/0" }], dataPatches: [] })).toBe(true);
+        expect(frame({ type: "error", message: "x" })).toBe(true);
         expect(event({ sequence: 1, timestamp: "2026-01-01T00:00:00Z", patches: [{ op: "remove", path: "/c/0" }] })).toBe(true);
     });
 });

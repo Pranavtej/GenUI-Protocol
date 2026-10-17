@@ -10,6 +10,9 @@
     },
     "root": {
       "$ref": "node.json"
+    },
+    "data": {
+      "type": "object"
     }
   },
   "required": [

@@ -42,7 +42,7 @@ const arrayIndex = (token: string, length: number, allowEnd: boolean, patch: AST
 };
 
 /** Resolves the container that holds the last token of `tokens`. On `add`, a missing `p` object or `c` array is created. */
-const resolveParent = (doc: { root: Json }, tokens: string[], patch: ASTPatch): Container => {
+const resolveParent = (doc: { root: Json }, tokens: string[], patch: ASTPatch, lenient: boolean): Container => {
     let current: Json = doc.root;
     for (let i = 0; i < tokens.length - 1; i++) {
         const token = tokens[i];
@@ -50,7 +50,7 @@ const resolveParent = (doc: { root: Json }, tokens: string[], patch: ASTPatch): 
         if (Array.isArray(current)) {
             current = current[arrayIndex(token, current.length, false, patch)];
         } else if (isObject(current)) {
-            if (!(token in current) && patch.op === "add" && (token === "p" || token === "c")) current[token] = token === "p" ? {} : [];
+            if (lenient && !(token in current) && patch.op === "add" && (token === "p" || token === "c")) current[token] = token === "p" ? {} : [];
             if (!(token in current)) throw new PatchError(`Path segment "${token}" does not exist`, patch);
             current = current[token];
         } else {
@@ -61,30 +61,30 @@ const resolveParent = (doc: { root: Json }, tokens: string[], patch: ASTPatch): 
     return current as Container;
 };
 
-const getValue = (doc: { root: Json }, tokens: string[], patch: ASTPatch): Json => {
+const getValue = (doc: { root: Json }, tokens: string[], patch: ASTPatch, lenient: boolean): Json => {
     if (tokens.length === 0) return doc.root;
-    const parent = resolveParent(doc, tokens, patch);
+    const parent = resolveParent(doc, tokens, patch, lenient);
     const last = tokens[tokens.length - 1];
     if (Array.isArray(parent)) return parent[arrayIndex(last, parent.length, false, patch)];
     if (!(last in parent)) throw new PatchError(`Path segment "${last}" does not exist`, patch);
     return parent[last];
 };
 
-const addAt = (doc: { root: Json }, tokens: string[], value: Json, patch: ASTPatch) => {
+const addAt = (doc: { root: Json }, tokens: string[], value: Json, patch: ASTPatch, lenient: boolean) => {
     if (tokens.length === 0) {
         doc.root = value;
         return;
     }
-    const parent = resolveParent(doc, tokens, patch);
+    const parent = resolveParent(doc, tokens, patch, lenient);
     const last = tokens[tokens.length - 1];
     if (FORBIDDEN_KEYS.has(last)) throw new PatchError(`Forbidden path token "${last}"`, patch);
     if (Array.isArray(parent)) parent.splice(arrayIndex(last, parent.length, true, patch), 0, value);
     else parent[last] = value;
 };
 
-const removeAt = (doc: { root: Json }, tokens: string[], patch: ASTPatch): Json => {
+const removeAt = (doc: { root: Json }, tokens: string[], patch: ASTPatch, lenient: boolean): Json => {
     if (tokens.length === 0) throw new PatchError("Cannot remove the document root", patch);
-    const parent = resolveParent(doc, tokens, patch);
+    const parent = resolveParent(doc, tokens, patch, lenient);
     const last = tokens[tokens.length - 1];
     if (Array.isArray(parent)) return parent.splice(arrayIndex(last, parent.length, false, patch), 1)[0];
     if (!(last in parent)) throw new PatchError(`Path segment "${last}" does not exist`, patch);
@@ -93,21 +93,21 @@ const removeAt = (doc: { root: Json }, tokens: string[], patch: ASTPatch): Json 
     return old;
 };
 
-const applyOne = (doc: { root: Json }, patch: ASTPatch) => {
+const applyOne = (doc: { root: Json }, patch: ASTPatch, lenient: boolean) => {
     const tokens = parsePointer(patch.path);
     switch (patch.op) {
         case "add":
-            addAt(doc, tokens, cloneJson(patch.value), patch);
+            addAt(doc, tokens, cloneJson(patch.value), patch, lenient);
             break;
         case "remove":
-            removeAt(doc, tokens, patch);
+            removeAt(doc, tokens, patch, lenient);
             break;
         case "replace": {
             if (tokens.length === 0) {
                 doc.root = cloneJson(patch.value);
                 break;
             }
-            const parent = resolveParent(doc, tokens, patch);
+            const parent = resolveParent(doc, tokens, patch, lenient);
             const last = tokens[tokens.length - 1];
             if (Array.isArray(parent)) parent[arrayIndex(last, parent.length, false, patch)] = cloneJson(patch.value);
             else if (last in parent && !FORBIDDEN_KEYS.has(last)) parent[last] = cloneJson(patch.value);
@@ -120,17 +120,17 @@ const applyOne = (doc: { root: Json }, patch: ASTPatch) => {
             if (tokens.length > from.length && from.every((t, i) => tokens[i] === t)) {
                 throw new PatchError('"move" target cannot be inside its source', patch);
             }
-            const moved = removeAt(doc, from, patch);
-            addAt(doc, tokens, moved, patch);
+            const moved = removeAt(doc, from, patch, lenient);
+            addAt(doc, tokens, moved, patch, lenient);
             break;
         }
         case "copy": {
             if (patch.from === undefined) throw new PatchError('"copy" requires "from"', patch);
-            addAt(doc, tokens, cloneJson(getValue(doc, parsePointer(patch.from), patch)), patch);
+            addAt(doc, tokens, cloneJson(getValue(doc, parsePointer(patch.from), patch, lenient)), patch, lenient);
             break;
         }
         case "test":
-            if (!deepEqual(getValue(doc, tokens, patch), patch.value)) throw new PatchError(`"test" failed at "${patch.path}"`, patch);
+            if (!deepEqual(getValue(doc, tokens, patch, lenient), patch.value)) throw new PatchError(`"test" failed at "${patch.path}"`, patch);
             break;
         default:
             throw new PatchError(`Unknown patch op "${(patch as ASTPatch).op}"`, patch);
@@ -138,11 +138,14 @@ const applyOne = (doc: { root: Json }, patch: ASTPatch) => {
 };
 
 /**
- * Applies RFC 6902 patches to a plain AST node (paths are JSON Pointers into the node: `/c/0/p/label`).
- * The input is never mutated. The batch is atomic: any failure throws a PatchError and nothing is returned.
+ * Applies RFC 6902 patches to any JSON value. The input is never mutated and the batch is atomic:
+ * any failure throws a PatchError. `lenient` (used for AST nodes) auto-creates a missing `p`/`c` on `add`.
  */
-export const applyPatches = (root: UINode, patches: ASTPatch[]): UINode => {
-    const doc = { root: cloneJson(root) as Json };
-    for (const patch of patches) applyOne(doc, patch);
-    return doc.root as UINode;
+export const applyJsonPatch = <T>(value: T, patches: ASTPatch[], options: { lenient?: boolean } = {}): T => {
+    const doc = { root: cloneJson(value) as Json };
+    for (const patch of patches) applyOne(doc, patch, options.lenient ?? false);
+    return doc.root as T;
 };
+
+/** Applies RFC 6902 patches to a plain AST node (paths are JSON Pointers into the node: `/c/0/p/label`). */
+export const applyPatches = (root: UINode, patches: ASTPatch[]): UINode => applyJsonPatch(root, patches, { lenient: true });

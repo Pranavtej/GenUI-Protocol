@@ -57,9 +57,21 @@ Wire values in patches are plain nodes (§3); runtime-only fields (e.g. parent l
 
 ## 6. Streaming
 
-A stream event is `{ sequence, timestamp, patches, transport? }` (see `stream-event.json`). `sequence` is a strictly increasing integer per stream starting at 1. Consumers apply events in sequence order.
+Producers send **frames** (`stream-frame.json`) over any ordered transport (SSE, WebSocket, stdio):
 
-**(planned)** Snapshot/resync frames, gap detection and acknowledgements, partial-document streaming with `pending` nodes, and error frames.
+| `type` | Fields | Effect |
+|---|---|---|
+| `snapshot` | `document` | Replace tree and data. Establishes the baseline sequence. (`ast` with an `ast` field is a legacy alias.) |
+| `patch` | `patches`, `dataPatches?` | Apply node patches (§5), then data patches (§10.3). |
+| `data` | `patches` | Apply data patches only. |
+| `error` | `message`, `code?` | Producer-side failure; surfaced to the host, no state change. |
+
+- `sequence` is a strictly increasing integer per stream, starting at 1. Frames without `sequence` are applied immediately (legacy).
+- A consumer MUST apply sequenced frames in order, MUST drop duplicates (`sequence` below the next expected), and SHOULD buffer early frames briefly.
+- A consumer MUST request a **resync** (a fresh `snapshot`) when: a gap is not filled within a timeout, its buffer overflows, it joins mid-stream (first sequenced non-snapshot frame is not 1), or applying a frame fails. After requesting a resync it MUST ignore deltas until a snapshot arrives. A snapshot with sequence *n* resets the next expected sequence to *n+1* and discards buffered frames ≤ *n*.
+- A frame that fails to apply MUST leave state unchanged (patches are atomic, §5).
+
+**(planned)** Partial-document streaming while the model is still generating, with `pending` placeholder nodes.
 
 ## 7. Registry & components
 
@@ -74,4 +86,46 @@ The component registry is the source of truth for available components: name, ve
 
 ## 9. Not yet specified (planned)
 
-Data binding and data sources, declarative actions and the UI→agent event channel, form state/validation rules, theming tokens, accessibility requirements per component, capability negotiation between agent and renderer.
+Remote data sources with loading/error states, form validation rules, theming tokens in the document, accessibility requirements per component, capability negotiation between agent and renderer, namespaced custom components (`vendor:name`).
+
+## 10. Data binding
+
+A document MAY carry an initial data model: `{ "version": "1.0.0", "data": { "user": { "name": "Ada" } }, "root": … }`. `data` MUST be a JSON object.
+
+### 10.1 Expressions
+Any prop value (at any depth) MAY be replaced by an expression, resolved by the runtime before rendering:
+
+- `{ "$bind": "user.name", "default": "n/a" }` — the value at that path, or `default` (else absent) when missing.
+- `{ "$tpl": "Hello {{user.name}}, {{count}} new" }` — string interpolation; a missing path renders as `""`.
+
+Paths are dotted (`items.0.name`) or JSON Pointers (`/items/0/name`). Expressions are **lookups only**: there are no operators, function calls or code. Tokens `__proto__`, `constructor`, `prototype` MUST resolve to absent. Expression objects MUST NOT contain other keys (`$bind` allows only `default`; `$tpl` nothing else).
+
+Props holding expressions are exempt from the component schema's type check (the schema describes the resolved value) but count as present for `required`.
+
+### 10.2 Two-way binding
+An input component whose `value` / `checked` prop is a pure `$bind` is **two-way bound**: user edits MUST write the new value to that path in the data model, and re-render.
+
+### 10.3 Data patches
+`dataPatches` and `data` frames carry RFC 6902 operations over the **data object** (`/user/name`). Unlike node patches, no `p`/`c` auto-creation applies.
+
+## 11. Actions
+
+Interactivity is declared, never coded. Props named `on` + capital letter (`onClick`, `onChange`, `onSubmit`) hold an **action** or an ordered **list of actions** (`action.json`). Each is one of:
+
+| Action | Fields | Effect |
+|---|---|---|
+| `setData` | `path`, `value` | Set a data path; `value` may contain expressions, resolved at run time. |
+| `toggle` | `path` | Negate a boolean at a data path. |
+| `navigate` | `to` | Ask the host to navigate; `to` MUST pass the §4 URL check. |
+| `emit` | `name`, `payload?` | Send a named event with a resolved payload to the host/agent. |
+| `submit` | `name`, `from` | `emit` with `{ data: <value at from> }` — form submission. |
+
+- Actions run **in order**. An invalid or disallowed action is skipped and reported; it MUST NOT abort the others or throw into the renderer.
+- At most **20** actions per event.
+- Inside action values, the scope variable `$event` exposes event details (e.g. `{ "$bind": "$event.value" }` for an input's new value).
+- Hosts MAY restrict the permitted action kinds per session. `emit`/`submit` are the only way a document talks back to the agent; the host decides what to do with them.
+- Validators MUST check actions (§4) in addition to props.
+
+## 12. Runtime session (informative)
+
+Reference runtimes expose one framework-neutral object that renderers drive: it owns the tree and the data model, applies frames, resolves expressions, runs actions and notifies subscribers (`RuntimeSession` in `@genui-protocol/runtime-core`). Renderers subscribe, draw, and forward user input to it.

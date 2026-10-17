@@ -1,0 +1,124 @@
+{
+  "description": "Resolve a prop value against a data model. 'expected' null means the value resolves to undefined/absent.",
+  "cases": [
+    {
+      "name": "bind-simple",
+      "data": {
+        "user": {
+          "name": "Ada"
+        }
+      },
+      "value": {
+        "$bind": "user.name"
+      },
+      "expected": "Ada"
+    },
+    {
+      "name": "bind-pointer",
+      "data": {
+        "user": {
+          "name": "Ada"
+        }
+      },
+      "value": {
+        "$bind": "/user/name"
+      },
+      "expected": "Ada"
+    },
+    {
+      "name": "bind-array-index",
+      "data": {
+        "items": [
+          {
+            "n": 1
+          },
+          {
+            "n": 2
+          }
+        ]
+      },
+      "value": {
+        "$bind": "items.1.n"
+      },
+      "expected": 2
+    },
+    {
+      "name": "bind-missing-default",
+      "data": {},
+      "value": {
+        "$bind": "a.b",
+        "default": "n/a"
+      },
+      "expected": "n/a"
+    },
+    {
+      "name": "bind-missing-undefined",
+      "data": {},
+      "value": {
+        "$bind": "a.b"
+      },
+      "expected": null
+    },
+    {
+      "name": "template",
+      "data": {
+        "user": {
+          "name": "Ada"
+        },
+        "n": 3
+      },
+      "value": {
+        "$tpl": "Hi {{user.name}}, {{n}} new, {{missing}}!"
+      },
+      "expected": "Hi Ada, 3 new, !"
+    },
+    {
+      "name": "nested-in-array-and-object",
+      "data": {
+        "a": 1
+      },
+      "value": {
+        "rows": [
+          {
+            "v": {
+              "$bind": "a"
+            }
+          }
+        ]
+      },
+      "expected": {
+        "rows": [
+          {
+            "v": 1
+          }
+        ]
+      }
+    },
+    {
+      "name": "plain-values-untouched",
+      "data": {},
+      "value": {
+        "a": [
+          1,
+          "x",
+          null
+        ]
+      },
+      "expected": {
+        "a": [
+          1,
+          "x",
+          null
+        ]
+      }
+    },
+    {
+      "name": "prototype-path-blocked",
+      "data": {},
+      "value": {
+        "$bind": "__proto__.polluted"
+      },
+      "expected": null
+    }
+  ]
+}

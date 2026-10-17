@@ -10,6 +10,8 @@ export type UINode = {
 export type ASTDocument = {
     version: string;
     root: UINode;
+    /** Initial data model that `$bind` / `$tpl` expressions resolve against. */
+    data?: Record<string, unknown>;
 };
 
 export const createNode = (type: string, props?: UINodeProps, children?: UINode[] | UINode): UINode => {

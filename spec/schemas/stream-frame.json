@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://genui-protocol.dev/schemas/v1/stream-frame.json",
+  "title": "GenUI Stream Frame",
+  "type": "object",
+  "properties": {
+    "type": {
+      "enum": [
+        "snapshot",
+        "patch",
+        "data",
+        "error",
+        "ast"
+      ]
+    },
+    "sequence": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "document": {
+      "$ref": "document.json"
+    },
+    "ast": {
+      "$ref": "document.json"
+    },
+    "patches": {
+      "type": "array",
+      "items": {
+        "$ref": "patch.json"
+      }
+    },
+    "dataPatches": {
+      "type": "array",
+      "items": {
+        "$ref": "patch.json"
+      }
+    },
+    "message": {
+      "type": "string"
+    },
+    "code": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "type"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "snapshot"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "document"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "ast"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "ast"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "enum": [
+              "patch",
+              "data"
+            ]
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "patches"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "error"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "message"
+        ]
+      }
+    }
+  ]
+}

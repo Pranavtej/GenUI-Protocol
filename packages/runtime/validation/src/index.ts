@@ -1,7 +1,7 @@
 import Ajv, { ValidateFunction } from "ajv";
 import { z } from "zod";
 import { UINode, ASTDocument } from "@genui-protocol/ast";
-import { PROTOCOL_VERSION } from "@genui-protocol/protocol";
+import { PROTOCOL_VERSION, MAX_ACTIONS_PER_EVENT, isActionProp, isSafeUrl, toActionList, validateAction } from "@genui-protocol/protocol";
 import { registrySchema, nodeSchema } from "@genui-protocol/schemas";
 import { ComponentRegistry } from "@genui-protocol/component-registry";
 
@@ -56,16 +56,20 @@ export type ValidatorOptions = {
 
 /** Prop names that carry URLs and are therefore scheme-checked. */
 const URL_PROPS = new Set(["href", "src", "url", "link", "action", "poster", "srcset"]);
-const SAFE_URL_SCHEMES = new Set(["http:", "https:", "mailto:", "tel:"]);
 
-/** Returns true when `value` is a relative reference or uses an allowed scheme (no javascript:, data:, vbscript:, ...). */
-export const isSafeUrl = (value: string): boolean => {
-    // Browsers ignore whitespace/control characters inside a scheme ("java\tscript:"), so strip them first.
-    // eslint-disable-next-line no-control-regex
-    const cleaned = value.replace(/[\u0000- \u007f-\u009f]/g, "");
-    const match = /^([a-zA-Z][a-zA-Z0-9+.-]*:)/.exec(cleaned);
-    if (!match) return true; // relative URL, fragment, query
-    return SAFE_URL_SCHEMES.has(match[1].toLowerCase());
+export { isSafeUrl };
+
+const isExpression = (v: unknown): boolean =>
+    typeof v === "object" && v !== null && !Array.isArray(v) && ("$bind" in v || "$tpl" in v);
+
+/** Copy of a component schema with the given props removed from `properties` and `required`. */
+const withoutProps = (schema: Record<string, unknown>, names: string[]): Record<string, unknown> => {
+    const out: Record<string, unknown> = { ...schema };
+    if (schema["properties"] && typeof schema["properties"] === "object") {
+        out["properties"] = Object.fromEntries(Object.entries(schema["properties"] as object).filter(([k]) => !names.includes(k)));
+    }
+    if (Array.isArray(schema["required"])) out["required"] = (schema["required"] as string[]).filter((k) => !names.includes(k));
+    return out;
 };
 
 const MAJOR = (v: string) => v.split(".")[0];
@@ -82,13 +86,19 @@ export const createValidator = (options: ValidatorOptions = {}): Validator => {
     const allowed = options.allowedComponents ? new Set(options.allowedComponents) : undefined;
     const componentAjv = new Ajv({ allErrors: true, strict: false });
     // Compiled validators are cached per schema object, so a node set is compiled once, not once per node.
-    const compiled = new WeakMap<object, ValidateFunction>();
+    const compiled = new WeakMap<object, Map<string, ValidateFunction>>();
 
-    const validatorFor = (schema: Record<string, unknown>): ValidateFunction => {
-        let fn = compiled.get(schema);
+    const validatorFor = (schema: Record<string, unknown>, exempt: string[] = []): ValidateFunction => {
+        const variantKey = [...exempt].sort().join("\u0000");
+        let variants = compiled.get(schema);
+        if (!variants) {
+            variants = new Map();
+            compiled.set(schema, variants);
+        }
+        let fn = variants.get(variantKey);
         if (!fn) {
-            fn = componentAjv.compile(schema);
-            compiled.set(schema, fn);
+            fn = componentAjv.compile(exempt.length > 0 ? withoutProps(schema, exempt) : schema);
+            variants.set(variantKey, fn);
         }
         return fn;
     };
@@ -98,8 +108,16 @@ export const createValidator = (options: ValidatorOptions = {}): Validator => {
         if (!entry) {
             return { valid: false, errors: [`Unknown component type: "${node.t}"`] };
         }
-        const validate = validatorFor(entry.schema);
-        if (!validate(node.p || {})) {
+        // Props holding actions or $bind/$tpl expressions are validated separately (checkProps); the component
+        // schema describes the *resolved* value, so those props are exempt from the type check (and count as present).
+        const schemaProps: Record<string, unknown> = {};
+        const exempt: string[] = [];
+        for (const [k, v] of Object.entries(node.p || {})) {
+            if (isActionProp(k) || isExpression(v)) exempt.push(k);
+            else schemaProps[k] = v;
+        }
+        const validate = validatorFor(entry.schema, exempt);
+        if (!validate(schemaProps)) {
             const errors = validate.errors?.map((err) => `Props validation error for component "${node.t}": ${err.instancePath} ${err.message}`) || [];
             return { valid: false, errors };
         }
@@ -126,6 +144,22 @@ export const createValidator = (options: ValidatorOptions = {}): Validator => {
     const checkProps = (node: UINode, path: string, errors: string[]) => {
         if (!node.p) return;
         for (const [key, value] of Object.entries(node.p)) {
+            if (isActionProp(key)) {
+                const actions = toActionList(value);
+                if (actions.length > MAX_ACTIONS_PER_EVENT) errors.push(`Path "${path}": prop "${key}" has more than ${MAX_ACTIONS_PER_EVENT} actions`);
+                actions.slice(0, MAX_ACTIONS_PER_EVENT).forEach((a, i) => {
+                    validateAction(a).forEach((e) => errors.push(`Path "${path}": prop "${key}"[${i}]: ${e}`));
+                });
+                continue;
+            }
+            if (isExpression(value)) {
+                const v = value as Record<string, unknown>;
+                const validBind = typeof v["$bind"] === "string" && v["$bind"].length > 0 && Object.keys(v).every((k) => k === "$bind" || k === "default");
+                const validTpl = typeof v["$tpl"] === "string" && Object.keys(v).length === 1;
+                if (!validBind && !validTpl) errors.push(`Path "${path}": prop "${key}" is a malformed $bind/$tpl expression`);
+                else if (validTpl && (v["$tpl"] as string).length > limits.maxStringLength) errors.push(`Path "${path}": prop "${key}" template exceeds maximum string length`);
+                continue;
+            }
             if (typeof value !== "string") continue;
             if (value.length > limits.maxStringLength) {
                 errors.push(`Path "${path}": prop "${key}" exceeds maximum string length of ${limits.maxStringLength}`);
@@ -194,7 +228,10 @@ export const createValidator = (options: ValidatorOptions = {}): Validator => {
         if (typeof doc !== "object" || doc === null || typeof (doc as ASTDocument).version !== "string" || !("root" in doc)) {
             return { valid: false, errors: ['Document must be an object with "version" (string) and "root" (node)'] };
         }
-        const { version, root } = doc as ASTDocument;
+        const { version, root, data } = doc as ASTDocument;
+        if (data !== undefined && (typeof data !== "object" || data === null || Array.isArray(data))) {
+            return { valid: false, errors: ['"data" must be an object'] };
+        }
         if (!/^\d+\.\d+\.\d+/.test(version)) {
             return { valid: false, errors: [`Invalid version "${version}": expected semver`] };
         }

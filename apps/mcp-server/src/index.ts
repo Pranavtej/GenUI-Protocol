@@ -5,7 +5,7 @@ import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
 import { ComponentRegistry } from "@genui-protocol/component-registry";
-import { validateASTDocument } from "@genui-protocol/validation";
+import { validateASTDocument, validateDocument } from "@genui-protocol/validation";
 import { defaultASTDocument, UINode } from "@genui-protocol/ast";
 
 const registry = new ComponentRegistry();
@@ -504,6 +504,10 @@ const startExpressServer = () => {
   app.use(bodyParser.json({ limit: "10mb" }));
 
   let sseClients: any[] = [];
+  let streamSequence = 0;
+  // Frames since (and including) the latest snapshot, replayed to late joiners (capped).
+  let history: Record<string, unknown>[] = [];
+  const MAX_HISTORY = 200;
 
   app.get("/api/health", (_req, res) => {
     res.json({ status: "ok", mode: "http-mcp" });
@@ -641,23 +645,47 @@ const startExpressServer = () => {
     res.setHeader("Connection", "keep-alive");
     res.flushHeaders();
     sseClients.push(res);
+    history.forEach((frame) => res.write(`data: ${JSON.stringify(frame)}\n\n`));
     req.on("close", () => {
       sseClients = sseClients.filter((client) => client !== res);
     });
   });
 
-  app.post("/api/stream_patch", (req, res) => {
-    const { patches } = req.body;
-    const payload = JSON.stringify({ type: "patch", patches });
+  // Frames follow spec/SPEC.md section 6: sequenced, with the latest snapshot replayed to late joiners
+  // so they can start from a consistent baseline.
+  const broadcast = (frame: Record<string, unknown>) => {
+    if (frame.type === "snapshot") history = [frame];
+    else if (history.length > 0) history.push(frame);
+    if (history.length > MAX_HISTORY) history = [];
+    const payload = JSON.stringify(frame);
     sseClients.forEach((client) => client.write(`data: ${payload}\n\n`));
-    res.json({ status: "success", clientsNotified: sseClients.length });
+    return sseClients.length;
+  };
+
+  app.post("/api/stream_patch", (req, res) => {
+    const { patches, dataPatches } = req.body;
+    if (!Array.isArray(patches)) return res.status(400).json({ error: "patches must be an array" });
+    const sequence = ++streamSequence;
+    const clientsNotified = broadcast({ type: "patch", sequence, patches, ...(dataPatches ? { dataPatches } : {}) });
+    res.json({ status: "success", sequence, clientsNotified });
+  });
+
+  app.post("/api/stream_data", (req, res) => {
+    const { patches } = req.body;
+    if (!Array.isArray(patches)) return res.status(400).json({ error: "patches must be an array" });
+    const sequence = ++streamSequence;
+    const clientsNotified = broadcast({ type: "data", sequence, patches });
+    res.json({ status: "success", sequence, clientsNotified });
   });
 
   app.post("/api/stream_ast", (req, res) => {
     const { ast } = req.body;
-    const payload = JSON.stringify({ type: "ast", ast });
-    sseClients.forEach((client) => client.write(`data: ${payload}\n\n`));
-    res.json({ status: "success", clientsNotified: sseClients.length });
+    const check = validateDocument(ast);
+    if (!check.valid) return res.status(400).json({ error: "invalid_ast", errors: check.errors });
+    // A snapshot starts a new baseline: the next frame is sequence + 1.
+    const sequence = ++streamSequence;
+    const clientsNotified = broadcast({ type: "snapshot", sequence, document: ast });
+    res.json({ status: "success", sequence, clientsNotified });
   });
 
   const port = process.env.PORT || 4000;

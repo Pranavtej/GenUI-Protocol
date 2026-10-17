@@ -1,0 +1,180 @@
+{
+  "description": "Run actions against a data model. Events are the agent-bound events (emit/submit), compared on name+payload. expectedErrors = number of reported problems (default 0).",
+  "cases": [
+    {
+      "name": "setData",
+      "data": {},
+      "actions": {
+        "do": "setData",
+        "path": "form.name",
+        "value": "Ada"
+      },
+      "expectedData": {
+        "form": {
+          "name": "Ada"
+        }
+      },
+      "expectedEvents": []
+    },
+    {
+      "name": "setData-resolves-binding",
+      "data": {
+        "a": 5
+      },
+      "actions": {
+        "do": "setData",
+        "path": "b",
+        "value": {
+          "$bind": "a"
+        }
+      },
+      "expectedData": {
+        "a": 5,
+        "b": 5
+      },
+      "expectedEvents": []
+    },
+    {
+      "name": "setData-from-event",
+      "data": {},
+      "event": {
+        "value": "typed"
+      },
+      "actions": {
+        "do": "setData",
+        "path": "q",
+        "value": {
+          "$bind": "$event.value"
+        }
+      },
+      "expectedData": {
+        "q": "typed"
+      },
+      "expectedEvents": []
+    },
+    {
+      "name": "toggle",
+      "data": {
+        "open": false
+      },
+      "actions": [
+        {
+          "do": "toggle",
+          "path": "open"
+        },
+        {
+          "do": "toggle",
+          "path": "open"
+        },
+        {
+          "do": "toggle",
+          "path": "open"
+        }
+      ],
+      "expectedData": {
+        "open": true
+      },
+      "expectedEvents": []
+    },
+    {
+      "name": "emit",
+      "data": {
+        "id": 7
+      },
+      "actions": {
+        "do": "emit",
+        "name": "approve",
+        "payload": {
+          "id": {
+            "$bind": "id"
+          }
+        }
+      },
+      "expectedData": {
+        "id": 7
+      },
+      "expectedEvents": [
+        {
+          "name": "approve",
+          "payload": {
+            "id": 7
+          }
+        }
+      ]
+    },
+    {
+      "name": "submit-collects-form",
+      "data": {
+        "form": {
+          "email": "a@b.co"
+        }
+      },
+      "actions": {
+        "do": "submit",
+        "name": "signup",
+        "from": "form"
+      },
+      "expectedData": {
+        "form": {
+          "email": "a@b.co"
+        }
+      },
+      "expectedEvents": [
+        {
+          "name": "signup",
+          "payload": {
+            "data": {
+              "email": "a@b.co"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "invalid-action-skipped-others-run",
+      "data": {},
+      "actions": [
+        {
+          "do": "eval",
+          "code": "x"
+        },
+        {
+          "do": "setData",
+          "path": "ok",
+          "value": true
+        }
+      ],
+      "expectedData": {
+        "ok": true
+      },
+      "expectedEvents": [],
+      "expectedErrors": 1
+    },
+    {
+      "name": "navigate-unsafe-url-rejected",
+      "data": {},
+      "actions": {
+        "do": "navigate",
+        "to": "javascript:alert(1)"
+      },
+      "expectedData": {},
+      "expectedEvents": [],
+      "expectedErrors": 1
+    },
+    {
+      "name": "disallowed-kind",
+      "data": {},
+      "allowedActions": [
+        "toggle"
+      ],
+      "actions": {
+        "do": "setData",
+        "path": "x",
+        "value": 1
+      },
+      "expectedData": {},
+      "expectedEvents": [],
+      "expectedErrors": 1
+    }
+  ]
+}

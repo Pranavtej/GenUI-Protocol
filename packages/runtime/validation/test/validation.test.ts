@@ -72,3 +72,30 @@ describe("validateNode", () => {
         expect(r.valid).toBe(false);
     });
 });
+
+describe("bindings and actions", () => {
+    it("accepts $bind/$tpl and valid actions in props", () => {
+        const r = validateNode({
+            t: "page", p: { title: { $tpl: "Hi {{user}}" } },
+            c: [{ t: "button", p: { label: { $bind: "label" }, onClick: [{ do: "toggle", path: "open" }, { do: "emit", name: "go" }] } }]
+        });
+        expect(r).toEqual({ valid: true });
+    });
+
+    it("rejects malformed expressions and bad actions", () => {
+        const r = validateNode({
+            t: "page", p: { title: { $bind: 5 } },
+            c: [{ t: "button", p: { label: "x", onClick: [{ do: "eval", code: "x" }, { do: "navigate", to: "javascript:1" }, { do: "setData", path: "a" }] } }]
+        });
+        const msg = r.errors!.join("\n");
+        expect(msg).toMatch(/malformed \$bind/);
+        expect(msg).toMatch(/Unknown action "eval"/);
+        expect(msg).toMatch(/disallowed URL scheme/);
+        expect(msg).toMatch(/setData requires "value"/);
+    });
+
+    it("validates the optional data envelope", () => {
+        expect(validateDocument({ version: "1.0.0", data: [], root: { t: "page", p: { title: "x" } } }).valid).toBe(false);
+        expect(validateDocument({ version: "1.0.0", data: { a: 1 }, root: { t: "page", p: { title: "x" } } }).valid).toBe(true);
+    });
+});

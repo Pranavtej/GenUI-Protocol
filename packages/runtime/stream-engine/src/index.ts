@@ -20,10 +20,10 @@ export class PatchStreamer {
     private transport: StreamTransport;
     private patchQueue: ASTPatch[] = [];
     private sequence = 0;
-    private batchTimer: any = null;
+    private batchTimer: ReturnType<typeof setTimeout> | null = null;
     private batchIntervalMs: number;
 
-    constructor(transport: StreamTransport, batchIntervalMs = 50) {
+    constructor(transport: StreamTransport, batchIntervalMs = 50, private transportName: TransportProtocol = "custom") {
         this.transport = transport;
         this.batchIntervalMs = batchIntervalMs;
     }
@@ -54,7 +54,7 @@ export class PatchStreamer {
         if (this.patchQueue.length === 0) return;
 
         const event: StreamEvent = {
-            transport: "custom",
+            transport: this.transportName,
             patches: [...this.patchQueue],
             timestamp: new Date().toISOString(),
             sequence: ++this.sequence,
@@ -100,3 +100,8 @@ export class LocalStreamTransport implements StreamTransport {
     }
 }
 
+
+export { StreamConsumer } from "./consumer.js";
+export type { ApplyResult, ResyncReason, StreamConsumerOptions } from "./consumer.js";
+export { SSEParser, parseFrame, connectSSE } from "./sse.js";
+export type { SSEConnection } from "./sse.js";

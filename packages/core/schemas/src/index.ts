@@ -86,7 +86,8 @@ export const astDocumentJsonSchema = {
     type: "object",
     properties: {
         version: { type: "string", pattern: "^\\d+\\.\\d+\\.\\d+" },
-        root: { $ref: "node.json" }
+        root: { $ref: "node.json" },
+        data: { type: "object" }
     },
     required: ["version", "root"],
     additionalProperties: false
@@ -125,7 +126,46 @@ export const streamEventJsonSchema = {
     required: ["sequence", "timestamp", "patches"]
 } as const;
 
+export const actionJsonSchema = {
+    $schema: "https://json-schema.org/draft/2020-12/schema",
+    $id: `${SCHEMA_BASE}/action.json`,
+    title: "GenUI Action",
+    oneOf: [
+        { type: "object", properties: { do: { const: "setData" }, path: { type: "string", minLength: 1 }, value: {} }, required: ["do", "path", "value"], additionalProperties: false },
+        { type: "object", properties: { do: { const: "toggle" }, path: { type: "string", minLength: 1 } }, required: ["do", "path"], additionalProperties: false },
+        { type: "object", properties: { do: { const: "navigate" }, to: { type: "string", minLength: 1 } }, required: ["do", "to"], additionalProperties: false },
+        { type: "object", properties: { do: { const: "emit" }, name: { type: "string", minLength: 1 }, payload: { type: "object" } }, required: ["do", "name"], additionalProperties: false },
+        { type: "object", properties: { do: { const: "submit" }, name: { type: "string", minLength: 1 }, from: { type: "string", minLength: 1 } }, required: ["do", "name", "from"], additionalProperties: false }
+    ]
+} as const;
+
+export const streamFrameJsonSchema = {
+    $schema: "https://json-schema.org/draft/2020-12/schema",
+    $id: `${SCHEMA_BASE}/stream-frame.json`,
+    title: "GenUI Stream Frame",
+    type: "object",
+    properties: {
+        type: { enum: ["snapshot", "patch", "data", "error", "ast"] },
+        sequence: { type: "integer", minimum: 1 },
+        document: { $ref: "document.json" },
+        ast: { $ref: "document.json" },
+        patches: { type: "array", items: { $ref: "patch.json" } },
+        dataPatches: { type: "array", items: { $ref: "patch.json" } },
+        message: { type: "string" },
+        code: { type: "string" }
+    },
+    required: ["type"],
+    allOf: [
+        { if: { properties: { type: { const: "snapshot" } } }, then: { required: ["document"] } },
+        { if: { properties: { type: { const: "ast" } } }, then: { required: ["ast"] } },
+        { if: { properties: { type: { enum: ["patch", "data"] } } }, then: { required: ["patches"] } },
+        { if: { properties: { type: { const: "error" } } }, then: { required: ["message"] } }
+    ]
+} as const;
+
 export const publishedSchemas = {
+    "action.json": actionJsonSchema,
+    "stream-frame.json": streamFrameJsonSchema,
     "node.json": astNodeJsonSchema,
     "document.json": astDocumentJsonSchema,
     "patch.json": astPatchJsonSchema,

@@ -3,7 +3,13 @@ import { ASTPatch } from "@genui-protocol/protocol";
 import { applyPatches, cloneJson, deepEqual } from "./patch.js";
 import { buildPointer, escapePointerToken, parsePointer } from "./pointer.js";
 
-export { applyPatches, PatchError, deepEqual } from "./patch.js";
+export { applyPatches, applyJsonPatch, PatchError, deepEqual, cloneJson } from "./patch.js";
+export { DataStore, parseDataPath, getAtPath } from "./data.js";
+export { resolveProps, resolveValue, interpolate, isBind, isTemplate, getBindPath, lookupIn } from "./bindings.js";
+export { createActionRunner } from "./actions.js";
+export type { AgentEvent, ActionRunnerOptions, ActionContext, ActionResult, ActionRunner } from "./actions.js";
+export { RuntimeSession, createSession } from "./session.js";
+export type { SessionOptions, FrameResult } from "./session.js";
 export { buildPointer, escapePointerToken, unescapePointerToken, parsePointer } from "./pointer.js";
 
 export type RuntimeNode = UINode & {
