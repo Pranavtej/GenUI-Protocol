@@ -32,3 +32,4 @@ __pycache__/
 .next/
 .angular/
 next-env.d.ts
+docs/assets/mascot/options/_sheet-*.png
