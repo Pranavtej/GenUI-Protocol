@@ -1,0 +1,83 @@
+name: Dependabot auto-merge
+
+# Patch and minor Dependabot updates are approved and set to auto-merge. GitHub then merges them only once every
+# required status check has passed, so a broken update waits (or fails) instead of landing.
+# Major updates, and anything not from Dependabot, are left for a human.
+#
+# One-time repository setup (this workflow cannot do it for you):
+#   1. Settings > General > Pull Requests: enable "Allow auto-merge".
+#   2. Settings > Branches: protect `main` and require the status checks `node`, `packages` and `python`
+#      (without required checks, auto-merge merges immediately).
+#   3. Settings > Actions > General: enable "Allow GitHub Actions to create and approve pull requests"
+#      (only needed if the branch rule requires an approving review).
+
+on:
+    pull_request_target:
+        types: [opened, reopened, synchronize, ready_for_review]
+
+# `pull_request_target` runs with a write token. That is safe here because this workflow never checks out or runs
+# code from the pull request: it only reads Dependabot's metadata and calls the GitHub API.
+permissions:
+    contents: write
+    pull-requests: write
+
+concurrency:
+    group: dependabot-auto-merge-${{ github.event.pull_request.number }}
+    cancel-in-progress: true
+
+jobs:
+    auto-merge:
+        # `user.login` is the PR author; unlike `github.actor` it does not change when someone else re-runs the job.
+        if: github.event.pull_request.user.login == 'dependabot[bot]' && !github.event.pull_request.draft
+        runs-on: ubuntu-latest
+        timeout-minutes: 5
+        steps:
+            - name: Read Dependabot metadata
+              id: meta
+              uses: dependabot/fetch-metadata@v2
+              with:
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Decide
+              id: decide
+              env:
+                  UPDATE_TYPE: ${{ steps.meta.outputs.update-type }}
+                  DEPENDENCY_NAMES: ${{ steps.meta.outputs.dependency-names }}
+              run: |
+                  # Majors may contain breaking changes: never auto-merge them.
+                  # Anything with no update type (e.g. a grouped update mixing majors) is treated the same way.
+                  case "$UPDATE_TYPE" in
+                    version-update:semver-patch|version-update:semver-minor) echo "merge=true" >> "$GITHUB_OUTPUT" ;;
+                    *) echo "merge=false" >> "$GITHUB_OUTPUT" ;;
+                  esac
+                  echo "Updating: $DEPENDENCY_NAMES ($UPDATE_TYPE)"
+
+            - name: Approve
+              if: steps.decide.outputs.merge == 'true'
+              env:
+                  PR_URL: ${{ github.event.pull_request.html_url }}
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              # Not fatal: if reviews are not required (or Actions may not approve PRs) auto-merge still works.
+              run: gh pr review --approve "$PR_URL" || echo "::warning::could not approve (enable 'Allow GitHub Actions to create and approve pull requests' if reviews are required)"
+
+            - name: Enable auto-merge (squash)
+              if: steps.decide.outputs.merge == 'true'
+              env:
+                  PR_URL: ${{ github.event.pull_request.html_url }}
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: |
+                  gh pr merge --auto --squash "$PR_URL" || {
+                    echo "::error::Could not enable auto-merge. Enable Settings > General > 'Allow auto-merge' and require status checks on main."
+                    exit 1
+                  }
+
+            - name: Explain why a human is needed
+              if: steps.decide.outputs.merge != 'true'
+              env:
+                  PR_URL: ${{ github.event.pull_request.html_url }}
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  UPDATE_TYPE: ${{ steps.meta.outputs.update-type }}
+              run: |
+                  gh label create needs-review --color FBCA04 --description "Needs a human before merging" 2>/dev/null || true
+                  gh pr edit "$PR_URL" --add-label "needs-review" 2>/dev/null || true
+                  echo "::notice::Not auto-merging ($UPDATE_TYPE): major or unknown update types need a human review."

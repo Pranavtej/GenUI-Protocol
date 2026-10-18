@@ -1,11 +1,35 @@
 version: 2
+
+# Minor and patch updates are grouped into one PR per ecosystem per week, so there is less to review and the
+# auto-merge workflow (.github/workflows/dependabot-auto-merge.yml) handles them in one go. Majors stay separate
+# PRs and always wait for a human.
 updates:
     - package-ecosystem: npm
-      directory: /
-      schedule: { interval: weekly }
+      directories: ["/", "/apps/*", "/packages/*/*", "/examples/*"]
+      schedule: { interval: weekly, day: monday }
+      open-pull-requests-limit: 10
+      groups:
+          minor-and-patch:
+              update-types: [minor, patch]
+      labels: [dependencies]
+
     - package-ecosystem: github-actions
       directory: /
-      schedule: { interval: weekly }
+      schedule: { interval: weekly, day: monday }
+      groups:
+          actions:
+              update-types: [minor, patch]
+      labels: [dependencies, ci]
+
     - package-ecosystem: pip
-      directory: /apps/python-test
-      schedule: { interval: weekly }
+      directories: ["/apps/python-test", "/packages/sdk/python"]
+      schedule: { interval: weekly, day: monday }
+      groups:
+          minor-and-patch:
+              update-types: [minor, patch]
+      labels: [dependencies, python]
+
+    - package-ecosystem: docker
+      directory: /apps/mcp-server
+      schedule: { interval: weekly, day: monday }
+      labels: [dependencies, docker]
